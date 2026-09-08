@@ -34,7 +34,7 @@ cp packages/api/.env.example packages/api/.env
 # fill in required values in packages/api/.env — see Environment variables below
 ```
 
-You'll need a reachable PostgreSQL database (`DATABASE_URL`) and, to actually send email, an SMTP sink such as [Mailpit](https://mailpit.axllent.org). Docker Compose for local Postgres/Mailpit isn't wired into this monorepo yet — until then, point `DATABASE_URL`/`SMTP_*` at whatever you have running locally, or run the original standalone repo's `docker-compose up` alongside this one.
+You'll need a reachable PostgreSQL database (`DATABASE_URL`) and, to actually send email, an SMTP sink such as [Mailpit](https://mailpit.axllent.org). The repo root's `docker compose up` (see the [root README](../../README.md#docker)) starts both for you — or point `DATABASE_URL`/`SMTP_*` at whatever you already have running locally.
 
 Apply migrations, then start the dev server:
 
