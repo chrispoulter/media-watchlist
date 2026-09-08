@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug API",
+      "cwd": "${workspaceFolder}/packages/api",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--import", "tsx"],
+      "program": "${workspaceFolder}/packages/api/src/index.ts",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug UI (Chrome)",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/packages/ui",
+      "preLaunchTask": "dev: ui"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug Full Stack",
+      "configurations": ["Debug API", "Debug UI (Chrome)"]
+    }
+  ]
+}
