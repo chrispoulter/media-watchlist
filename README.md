@@ -21,7 +21,7 @@ Installs dependencies for both workspaces from the repo root.
 
 | Command                | Description                                                                                                      |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `npm run dev`          | Starts the API (`:3001`) and UI dev server (`:5173`) together via Turborepo; the UI proxies `/api/*` to the API. |
+| `npm run dev`          | Starts the API (`:3000`) and UI dev server (`:5173`) together via Turborepo; the UI proxies `/api/*` to the API. |
 | `npm run build`        | Builds both packages via Turborepo (cached — unchanged packages are skipped on rebuild).                         |
 | `npm run lint`         | Lints the whole workspace with the shared root ESLint config.                                                    |
 | `npm run lint:fix`     | Same, applying auto-fixes.                                                                                       |

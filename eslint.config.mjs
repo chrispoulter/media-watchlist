@@ -25,6 +25,9 @@ export default tseslint.config(
   {
     files: ['packages/api/**/*.ts'],
     languageOptions: { globals: globals.node },
+    rules: {
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    },
   },
 
   // Browser + React-specific rules for the UI package

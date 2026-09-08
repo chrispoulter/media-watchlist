@@ -1,12 +1,38 @@
-import express from 'express';
+import app from './app.js';
+import { config } from './lib/config.js';
+import { logger } from './lib/logger.js';
 
-const app = express();
-const port = process.env.PORT ? Number(process.env.PORT) : 3001;
+import { shutdown as shutdownDb } from './db/index.js';
+import { shutdown as shutdownMailer } from './lib/mailer.js';
 
-app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok' });
+const SHUTDOWN_TIMEOUT_MS = 10_000;
+
+const server = app.listen(config.PORT, () => {
+  logger.info({ port: config.PORT, local: `http://localhost:${config.PORT}` }, 'Server started');
 });
 
-app.listen(port, () => {
-  console.log(`API listening on http://localhost:${port}`);
-});
+const shutdown = (signal: string) => {
+  logger.info({ signal }, 'Shutdown signal received');
+
+  server.close(() => {
+    void (async () => {
+      try {
+        await shutdownDb();
+        shutdownMailer();
+        logger.info('Shutdown complete');
+        process.exit(0);
+      } catch (err) {
+        logger.error({ err }, 'Error during shutdown');
+        process.exit(1);
+      }
+    })();
+  });
+
+  setTimeout(() => {
+    logger.error('Shutdown timeout exceeded, forcing exit');
+    process.exit(1);
+  }, SHUTDOWN_TIMEOUT_MS).unref();
+};
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
