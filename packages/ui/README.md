@@ -1,32 +1,94 @@
-# React + TypeScript + Vite
+# @media-watchlist/ui
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A React SPA for tracking movies and TV shows you want to watch. Talks to [`packages/api`](../api) for data and authentication.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Email/password authentication and social login (Google OAuth)
+- Email verification and password reset flows
+- Two-factor authentication (TOTP), with backup codes
+- Search for movies and TV shows via TMDB
+- Personal watchlist management — add and remove items
+- Light/dark/system theme
 
-## React Compiler
+## Tech stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Layer          | Technology                        |
+| -------------- | --------------------------------- |
+| Build tool     | Vite                              |
+| Framework      | React 19                          |
+| Styling        | Tailwind CSS + shadcn/ui (Radix)  |
+| Data fetching  | TanStack Query                    |
+| Forms          | React Hook Form + Zod             |
+| Authentication | better-auth (cookie-based client) |
+| Routing        | React Router                      |
+| HTTP client    | ky                                |
+| Toasts         | Sonner                            |
 
-## Expanding the Oxlint configuration
+## Setup
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+From the repo root:
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```sh
+npm install
+cp packages/ui/.env.example packages/ui/.env
+# fill in VITE_API_URL if it differs from the default
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+The API ([`packages/api`](../api)) needs to be running for anything beyond the login/register pages to work. Then:
+
+```sh
+npm run dev -w packages/ui
+```
+
+Or use the root-level `npm run dev`, which starts this alongside the API via Turborepo.
+
+## Environment variables
+
+| Variable       | Required | Default                 | Description         |
+| -------------- | -------- | ----------------------- | ------------------- |
+| `VITE_API_URL` | Yes      | `http://localhost:3000` | Base URL of the API |
+
+## Pages
+
+### Auth
+
+| Path               | Access     | Description                             |
+| ------------------ | ---------- | --------------------------------------- |
+| `/login`           | Guest only | Sign in with email/password or Google   |
+| `/register`        | Guest only | Create an account                       |
+| `/forgot-password` | Guest only | Request a password reset email          |
+| `/reset-password`  | Anyone     | Reset password from an emailed link     |
+| `/two-factor`      | Anyone     | TOTP / backup code challenge at sign-in |
+| `/auth/error`      | Anyone     | OAuth error fallback                    |
+
+### Profile (`/profile`, requires auth)
+
+| Path                | Description                                                  |
+| ------------------- | ------------------------------------------------------------ |
+| `/profile`          | Update name/date of birth, change email                      |
+| `/profile/security` | Change password, linked social accounts, two-factor settings |
+| `/profile/danger`   | Delete account                                               |
+
+### Search & watchlist (require auth)
+
+| Path      | Description                                   |
+| --------- | --------------------------------------------- |
+| `/search` | Search TMDB for movies and TV shows           |
+| `/`       | Your watchlist — add/remove items from search |
+
+## Scripts
+
+Run with `-w packages/ui` from the repo root (or `cd packages/ui` first).
+
+| Script              | Description                                          |
+| ------------------- | ---------------------------------------------------- |
+| `dev`               | Start the Vite dev server with hot reload            |
+| `build`             | Type-check and build for production                  |
+| `preview`           | Preview the production build locally                 |
+| `typecheck`         | Run TypeScript type checking                         |
+| `lint`              | Lint this package with the shared root ESLint config |
+| `lint:fix`          | Same, applying auto-fixes                            |
+| `generate-favicons` | Regenerate the favicon set from source art           |
+
+`format`/`format:check` are handled at the workspace root (`npm run format`) — Prettier isn't part of the per-package Turborepo task graph the way `lint`/`typecheck`/`build` are.

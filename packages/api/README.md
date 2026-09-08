@@ -124,17 +124,19 @@ All auth routes are handled by Better Auth.
 
 Run with `-w packages/api` from the repo root (or `cd packages/api` first).
 
-| Script        | Description                              |
-| ------------- | ---------------------------------------- |
-| `dev`         | Start development server with hot reload |
-| `build`       | Compile TypeScript to `dist/`            |
-| `start`       | Run the compiled server                  |
-| `typecheck`   | Run TypeScript type checking             |
-| `db:generate` | Generate a new Drizzle migration         |
-| `db:migrate`  | Apply pending migrations                 |
-| `db:studio`   | Open Drizzle Studio                      |
-| `email:dev`   | Preview email templates (port 3001)      |
+| Script        | Description                                          |
+| ------------- | ---------------------------------------------------- |
+| `dev`         | Start development server with hot reload             |
+| `build`       | Compile TypeScript to `dist/`                        |
+| `start`       | Run the compiled server                              |
+| `typecheck`   | Run TypeScript type checking                         |
+| `lint`        | Lint this package with the shared root ESLint config |
+| `lint:fix`    | Same, applying auto-fixes                            |
+| `db:generate` | Generate a new Drizzle migration                     |
+| `db:migrate`  | Apply pending migrations                             |
+| `db:studio`   | Open Drizzle Studio                                  |
+| `email:dev`   | Preview email templates (port 3001)                  |
 
-`lint` and `format` are handled at the workspace root (`npm run lint`, `npm run format`) via the shared config — there's no package-local equivalent.
+`format`/`format:check` are handled at the workspace root (`npm run format`) — Prettier isn't part of the per-package Turborepo task graph the way `lint`/`typecheck`/`build` are.
 
 `db:generate`/`db:migrate`/`db:studio` are intentionally not wired into Turborepo's task graph — they're one-off, side-effecting commands against a real database rather than cacheable build steps.
