@@ -8,6 +8,19 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "lint": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "lint:fix": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "outputs": []
     }
   }
 }

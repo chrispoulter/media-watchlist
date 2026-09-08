@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge';
-import type { MediaType } from '@/types';
+import type { MediaType } from '@media-watchlist/shared';
 
 interface MediaCardProps {
   title: string;
@@ -19,7 +19,7 @@ export function MediaCard({
   actions,
 }: MediaCardProps) {
   const year = releaseDate ? new Date(releaseDate).getFullYear() : undefined;
-  const fallback = mediaType === 'tv' ? '/default-tv-show.svg' : '/default-movie.svg';
+  const fallback = mediaType === 'tv-show' ? '/default-tv-show.svg' : '/default-movie.svg';
 
   return (
     <div className="flex flex-row overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm">

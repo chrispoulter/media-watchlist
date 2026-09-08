@@ -12,8 +12,9 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

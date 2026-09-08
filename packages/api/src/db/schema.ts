@@ -9,6 +9,7 @@ import {
   timestamp,
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
+import { MEDIA_TYPES } from '@media-watchlist/shared';
 
 // ---------------------------------------------------------------------------
 // better-auth core tables
@@ -143,7 +144,7 @@ export const watchlistItem = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
     providerId: text('provider_id').notNull(),
-    mediaType: text('media_type', { enum: ['movie', 'tv-show'] }).notNull(),
+    mediaType: text('media_type', { enum: MEDIA_TYPES }).notNull(),
     title: text('title').notNull(),
     posterUrl: text('poster_url'),
     overview: text('overview'),

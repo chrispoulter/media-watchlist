@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { SearchResult } from '@/types';
+import type { SearchResult } from '@media-watchlist/shared';
 import { apiClient } from '@/lib/api-client';
 
 export const searchKeys = {

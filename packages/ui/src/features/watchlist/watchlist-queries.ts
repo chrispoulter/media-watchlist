@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { searchKeys } from '@/features/search/search-queries';
 import { apiClient } from '@/lib/api-client';
-import type { WatchlistItem, SearchResult } from '@/types';
+import type { WatchlistItem, SearchResult } from '@media-watchlist/shared';
 
 const watchlistKeys = {
   all: ['watchlist'] as const,

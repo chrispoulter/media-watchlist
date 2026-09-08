@@ -1,3 +1,4 @@
+import type { SearchResult } from '@media-watchlist/shared';
 import type { HealthStatus } from '../types/health.js';
 import { config } from './config.js';
 import { logger } from './logger.js';
@@ -17,15 +18,6 @@ interface TmdbSearchResponse {
     release_date: string | null;
     first_air_date: string | null;
   }[];
-}
-
-interface SearchResult {
-  providerId: string;
-  mediaType: 'movie' | 'tv-show';
-  title: string;
-  posterUrl: string | null;
-  overview: string | null;
-  releaseDate: string | null;
 }
 
 export const check = async (): Promise<HealthStatus> => {
@@ -80,9 +72,9 @@ export const search = async (query: string): Promise<SearchResult[]> => {
         providerId: `tmdb:${item.id}`,
         mediaType: item.media_type == 'movie' ? 'movie' : 'tv-show',
         title: item.title || item.name,
-        posterUrl: item.poster_path ? `${IMAGE_URL}${item.poster_path}` : null,
-        overview: item.overview,
-        releaseDate: item.release_date || item.first_air_date || null,
+        posterUrl: item.poster_path ? `${IMAGE_URL}${item.poster_path}` : undefined,
+        overview: item.overview ?? undefined,
+        releaseDate: item.release_date || item.first_air_date || undefined,
       }));
 
     return results;

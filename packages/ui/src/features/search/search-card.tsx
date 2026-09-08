@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { MediaCard } from '@/components/media-card';
 import { useAddToWatchlist, useRemoveFromWatchlist } from '@/features/watchlist/watchlist-queries';
-import type { SearchResult } from '@/types';
+import type { SearchResult } from '@media-watchlist/shared';
 
 interface SearchCardProps {
   result: SearchResult;

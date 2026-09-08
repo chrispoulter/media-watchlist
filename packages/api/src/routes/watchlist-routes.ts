@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { and, eq } from 'drizzle-orm';
 import { z } from 'zod';
+import { mediaTypeSchema, type WatchlistItem } from '@media-watchlist/shared';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
 import { requireAuth } from '../middleware/require-auth.js';
@@ -15,7 +16,7 @@ router.get('/', async (req, res) => {
   const data = await db.select().from(watchlistItem).where(eq(watchlistItem.userId, req.user!.id));
 
   res.json(
-    data.map((item) => ({
+    data.map((item): WatchlistItem => ({
       id: item.id,
       providerId: item.providerId,
       mediaType: item.mediaType,
@@ -23,14 +24,14 @@ router.get('/', async (req, res) => {
       posterUrl: item.posterUrl ?? undefined,
       overview: item.overview ?? undefined,
       releaseDate: item.releaseDate ?? undefined,
-      addedAt: item.addedAt,
+      addedAt: item.addedAt.toISOString(),
     })),
   );
 });
 
 const addWatchlistItemSchema = z.object({
   providerId: z.string().min(1),
-  mediaType: z.enum(['movie', 'tv-show']),
+  mediaType: mediaTypeSchema,
   title: z.string().min(1),
   posterUrl: z.url().optional(),
   overview: z.string().optional(),
@@ -70,7 +71,7 @@ router.post('/', async (req, res) => {
       return;
     }
 
-    res.status(201).json({
+    const response: WatchlistItem = {
       id: created.id,
       providerId: created.providerId,
       mediaType: created.mediaType,
@@ -78,8 +79,10 @@ router.post('/', async (req, res) => {
       posterUrl: created.posterUrl ?? undefined,
       overview: created.overview ?? undefined,
       releaseDate: created.releaseDate ?? undefined,
-      addedAt: created.addedAt,
-    });
+      addedAt: created.addedAt.toISOString(),
+    };
+
+    res.status(201).json(response);
 
     req.log.info(
       {

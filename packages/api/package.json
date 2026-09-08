@@ -9,6 +9,8 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
@@ -16,6 +18,7 @@
     "vercel-build": "tsx src/db/migrate.ts"
   },
   "dependencies": {
+    "@media-watchlist/shared": "*",
     "@react-email/ui": "^6.6.5",
     "@scalar/express-api-reference": "^0.10.7",
     "better-auth": "^1.6.23",
