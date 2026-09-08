@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { searchKeys } from '@/features/search/search-queries';
 import { apiClient } from '@/lib/api-client';
-import type { WatchlistItem, SearchResult } from '@media-watchlist/shared';
+import type { WatchlistItem, SearchResult, AddWatchlistItemRequest } from '@media-watchlist/shared';
 
 const watchlistKeys = {
   all: ['watchlist'] as const,
@@ -14,13 +14,11 @@ export function useWatchlist() {
   });
 }
 
-type AddToWatchlistVariables = Omit<WatchlistItem, 'id' | 'addedAt'>;
-
 export function useAddToWatchlist() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (item: AddToWatchlistVariables) =>
+    mutationFn: (item: AddWatchlistItemRequest) =>
       apiClient.post('/api/watchlist', { json: item }).json<WatchlistItem>(),
     onSuccess: (data, variables) => {
       queryClient.setQueryData<WatchlistItem[]>(watchlistKeys.all, (old) =>

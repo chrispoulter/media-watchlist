@@ -1,11 +1,8 @@
 import ky, { HTTPError } from 'ky';
+import type { ApiErrorResponse } from '@media-watchlist/shared';
 import { authClient } from '@/lib/auth-client';
 import { queryClient } from '@/lib/query-client';
 import { config } from '@/lib/config';
-
-interface ApiError {
-  error?: string;
-}
 
 export const apiClient = ky.create({
   prefix: config.VITE_API_URL,
@@ -25,7 +22,7 @@ export const apiClient = ky.create({
     beforeError: [
       ({ error }) => {
         if (error instanceof HTTPError) {
-          const body = error.data as ApiError;
+          const body = error.data as ApiErrorResponse;
           error.message = body?.error || error.message;
         }
         return error;

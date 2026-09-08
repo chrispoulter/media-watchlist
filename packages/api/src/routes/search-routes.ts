@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { and, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
-import type { SearchResult } from '@media-watchlist/shared';
+import type { ApiErrorResponse, SearchResult } from '@media-watchlist/shared';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
 import { requireAuth } from '../middleware/require-auth.js';
@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
     res.status(400).json({
       error: 'Invalid request query',
       details: result.error.issues,
-    });
+    } satisfies ApiErrorResponse);
     return;
   }
 

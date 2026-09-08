@@ -26,3 +26,19 @@ export const searchResultSchema = z.object({
   watchlistItemId: z.number().optional(),
 });
 export type SearchResult = z.infer<typeof searchResultSchema>;
+
+export const addWatchlistItemSchema = z.object({
+  providerId: z.string().min(1),
+  mediaType: mediaTypeSchema,
+  title: z.string().min(1),
+  posterUrl: z.url().optional(),
+  overview: z.string().optional(),
+  releaseDate: z.string().optional(),
+});
+export type AddWatchlistItemRequest = z.infer<typeof addWatchlistItemSchema>;
+
+export const apiErrorResponseSchema = z.object({
+  error: z.string(),
+  details: z.array(z.unknown()).optional(),
+});
+export type ApiErrorResponse = z.infer<typeof apiErrorResponseSchema>;

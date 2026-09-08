@@ -1,7 +1,11 @@
 import { Router } from 'express';
 import { and, eq } from 'drizzle-orm';
 import { z } from 'zod';
-import { mediaTypeSchema, type WatchlistItem } from '@media-watchlist/shared';
+import {
+  addWatchlistItemSchema,
+  type ApiErrorResponse,
+  type WatchlistItem,
+} from '@media-watchlist/shared';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
 import { requireAuth } from '../middleware/require-auth.js';
@@ -29,15 +33,6 @@ router.get('/', async (req, res) => {
   );
 });
 
-const addWatchlistItemSchema = z.object({
-  providerId: z.string().min(1),
-  mediaType: mediaTypeSchema,
-  title: z.string().min(1),
-  posterUrl: z.url().optional(),
-  overview: z.string().optional(),
-  releaseDate: z.string().optional(),
-});
-
 router.post('/', async (req, res) => {
   const result = addWatchlistItemSchema.safeParse(req.body);
 
@@ -45,7 +40,7 @@ router.post('/', async (req, res) => {
     res.status(400).json({
       error: 'Invalid request body',
       details: result.error.issues,
-    });
+    } satisfies ApiErrorResponse);
     return;
   }
 
@@ -56,7 +51,7 @@ router.post('/', async (req, res) => {
   if (count >= WATCHLIST_ITEM_LIMIT) {
     res.status(429).json({
       error: `Watchlist limit of ${WATCHLIST_ITEM_LIMIT} items reached`,
-    });
+    } satisfies ApiErrorResponse);
     return;
   }
 
@@ -67,7 +62,7 @@ router.post('/', async (req, res) => {
       .returning();
 
     if (!created) {
-      res.status(500).json({ error: 'Failed to add item to watchlist' });
+      res.status(500).json({ error: 'Failed to add item to watchlist' } satisfies ApiErrorResponse);
       return;
     }
 
@@ -105,7 +100,9 @@ router.post('/', async (req, res) => {
         'Duplicate watchlist item',
       );
 
-      res.status(409).json({ error: 'Item already exists in watchlist' });
+      res
+        .status(409)
+        .json({ error: 'Item already exists in watchlist' } satisfies ApiErrorResponse);
       return;
     }
 
@@ -124,7 +121,7 @@ router.delete('/:id', async (req, res) => {
     res.status(400).json({
       error: 'Invalid request parameters',
       details: result.error.issues,
-    });
+    } satisfies ApiErrorResponse);
     return;
   }
 
@@ -138,7 +135,7 @@ router.delete('/:id', async (req, res) => {
 
   if (!deleted) {
     req.log.warn({ itemId: id }, 'Watchlist item not found');
-    res.status(404).json({ error: 'Item not found in watchlist' });
+    res.status(404).json({ error: 'Item not found in watchlist' } satisfies ApiErrorResponse);
     return;
   }
 

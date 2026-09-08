@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import { fromNodeHeaders } from 'better-auth/node';
+import type { ApiErrorResponse } from '@media-watchlist/shared';
 import { auth } from '../lib/auth.js';
 
 export const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
@@ -9,7 +10,7 @@ export const requireAuth = async (req: Request, res: Response, next: NextFunctio
 
   if (!sessionData) {
     req.log.warn({ path: req.path }, 'Unauthenticated request rejected');
-    res.status(401).json({ error: 'Unauthorized' });
+    res.status(401).json({ error: 'Unauthorized' } satisfies ApiErrorResponse);
     return;
   }
 
