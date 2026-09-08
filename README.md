@@ -17,16 +17,18 @@ npm install
 
 Installs dependencies for both workspaces from the repo root.
 
+Each package needs its own local `.env`, copied from its `.env.example` (see [packages/api/README.md](packages/api/README.md) and `packages/ui/.env.example`) — the UI talks to the API over an absolute `VITE_API_URL` (CORS + cookies), not a dev-server proxy.
+
 ## Commands
 
-| Command                | Description                                                                                                      |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `npm run dev`          | Starts the API (`:3000`) and UI dev server (`:5173`) together via Turborepo; the UI proxies `/api/*` to the API. |
-| `npm run build`        | Builds both packages via Turborepo (cached — unchanged packages are skipped on rebuild).                         |
-| `npm run lint`         | Lints the whole workspace with the shared root ESLint config.                                                    |
-| `npm run lint:fix`     | Same, applying auto-fixes.                                                                                       |
-| `npm run format`       | Formats the whole workspace with Prettier.                                                                       |
-| `npm run format:check` | Checks formatting without writing changes.                                                                       |
+| Command                | Description                                                                              |
+| ---------------------- | ---------------------------------------------------------------------------------------- |
+| `npm run dev`          | Starts the API (`:3000`) and UI dev server (`:5173`) together via Turborepo.             |
+| `npm run build`        | Builds both packages via Turborepo (cached — unchanged packages are skipped on rebuild). |
+| `npm run lint`         | Lints the whole workspace with the shared root ESLint config.                            |
+| `npm run lint:fix`     | Same, applying auto-fixes.                                                               |
+| `npm run format`       | Formats the whole workspace with Prettier.                                               |
+| `npm run format:check` | Checks formatting without writing changes.                                               |
 
 ## Debugging
 

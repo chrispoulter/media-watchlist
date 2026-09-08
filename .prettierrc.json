@@ -4,5 +4,15 @@
   "trailingComma": "all",
   "printWidth": 100,
   "tabWidth": 2,
-  "endOfLine": "lf"
+  "endOfLine": "lf",
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "overrides": [
+    {
+      "files": "packages/ui/**",
+      "options": {
+        "tailwindStylesheet": "./packages/ui/src/index.css",
+        "tailwindFunctions": ["cn", "cva"]
+      }
+    }
+  ]
 }

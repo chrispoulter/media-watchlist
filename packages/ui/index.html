@@ -2,12 +2,45 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ui</title>
+
+    <title>Media Watchlist</title>
+    <meta
+      name="description"
+      content="Track movies and TV shows you want to watch. Search TMDB, build your watchlist, and manage your account — all in one place."
+    />
+    <meta name="theme-color" content="#2b2d3a" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Media Watchlist" />
+    <meta
+      property="og:description"
+      content="Track movies and TV shows you want to watch. Search TMDB, build your watchlist, and manage your account."
+    />
+    <meta property="og:image" content="/android-chrome-512x512.png" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Media Watchlist" />
+    <meta name="twitter:description" content="Track movies and TV shows you want to watch." />
+    <meta name="twitter:image" content="/android-chrome-512x512.png" />
+
+    <!-- Resource hints -->
+    <link rel="preconnect" href="https://image.tmdb.org" />
+    <link rel="dns-prefetch" href="https://image.tmdb.org" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
   </head>
   <body>
     <div id="root"></div>
+    <script src="/env.js?v=%VITE_APP_VERSION%"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
