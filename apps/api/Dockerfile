@@ -12,7 +12,6 @@ COPY --from=pruner /app/out/json/ .
 RUN npm ci
 COPY --from=pruner /app/out/full/ .
 COPY --from=pruner /app/turbo.json ./turbo.json
-COPY --from=pruner /app/tsconfig.base.json ./tsconfig.base.json
 RUN npx turbo run build --filter=@media-watchlist/api
 
 FROM base AS prod-deps

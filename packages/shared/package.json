@@ -16,6 +16,8 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@media-watchlist/eslint-config": "*",
+    "@media-watchlist/typescript-config": "*",
     "typescript": "^6.0.3"
   }
 }

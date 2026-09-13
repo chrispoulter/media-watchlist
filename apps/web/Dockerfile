@@ -12,7 +12,6 @@ COPY --from=pruner /app/out/json/ .
 RUN npm ci
 COPY --from=pruner /app/out/full/ .
 COPY --from=pruner /app/turbo.json ./turbo.json
-COPY --from=pruner /app/tsconfig.base.json ./tsconfig.base.json
 ARG GIT_COMMIT_SHA
 ENV GIT_COMMIT_SHA=$GIT_COMMIT_SHA
 RUN npx turbo run build --filter=@media-watchlist/web
