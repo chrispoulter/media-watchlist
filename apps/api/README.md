@@ -30,8 +30,8 @@ From the repo root:
 
 ```sh
 npm install
-cp packages/api/.env.example packages/api/.env
-# fill in required values in packages/api/.env — see Environment variables below
+cp apps/api/.env.example apps/api/.env
+# fill in required values in apps/api/.env — see Environment variables below
 ```
 
 You'll need a reachable PostgreSQL database (`DATABASE_URL`) and, to actually send email, an SMTP sink such as [Mailpit](https://mailpit.axllent.org). The repo root's `docker compose up` (see the [root README](../../README.md#docker)) starts both for you — or point `DATABASE_URL`/`SMTP_*` at whatever you already have running locally.
@@ -39,8 +39,8 @@ You'll need a reachable PostgreSQL database (`DATABASE_URL`) and, to actually se
 Apply migrations, then start the dev server:
 
 ```sh
-npm run db:migrate -w packages/api
-npm run dev -w packages/api
+npm run db:migrate -w apps/api
+npm run dev -w apps/api
 ```
 
 Or use the root-level `npm run dev`, which starts this alongside the UI via Turborepo.
@@ -122,7 +122,7 @@ All auth routes are handled by Better Auth.
 
 ## Scripts
 
-Run with `-w packages/api` from the repo root (or `cd packages/api` first).
+Run with `-w apps/api` from the repo root (or `cd apps/api` first).
 
 | Script        | Description                                          |
 | ------------- | ---------------------------------------------------- |

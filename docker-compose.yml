@@ -3,7 +3,7 @@ services:
     image: media-watchlist-api:latest
     build:
       context: .
-      dockerfile: packages/api/Dockerfile
+      dockerfile: apps/api/Dockerfile
     environment:
       PORT: 3000
       DATABASE_URL: postgresql://postgres:password@postgres:5432/media_watchlist
@@ -37,8 +37,8 @@ services:
     image: media-watchlist-api:latest
     build:
       context: .
-      dockerfile: packages/api/Dockerfile
-    command: node packages/api/dist/db/migrate.js
+      dockerfile: apps/api/Dockerfile
+    command: node apps/api/dist/db/migrate.js
     environment:
       DATABASE_URL: postgresql://postgres:password@postgres:5432/media_watchlist
     depends_on:
@@ -46,11 +46,11 @@ services:
         condition: service_healthy
     restart: 'no'
 
-  ui:
-    image: media-watchlist-ui:latest
+  web:
+    image: media-watchlist-web:latest
     build:
       context: .
-      dockerfile: packages/ui/Dockerfile
+      dockerfile: apps/web/Dockerfile
     environment:
       VITE_API_URL: http://localhost:3000
     ports:

@@ -8,9 +8,9 @@
   "plugins": ["prettier-plugin-tailwindcss"],
   "overrides": [
     {
-      "files": "packages/ui/**",
+      "files": "apps/web/**",
       "options": {
-        "tailwindStylesheet": "./packages/ui/src/index.css",
+        "tailwindStylesheet": "./apps/web/src/index.css",
         "tailwindFunctions": ["cn", "cva"]
       }
     }

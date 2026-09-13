@@ -13,8 +13,8 @@ export default defineConfig(
       '**/build/**',
       '**/node_modules/**',
       '**/coverage/**',
-      'packages/ui/public/**',
-      'packages/ui/scripts/**',
+      'apps/web/public/**',
+      'apps/web/scripts/**',
     ],
   },
 
@@ -32,16 +32,16 @@ export default defineConfig(
 
   // Node/Express globals for the API package
   {
-    files: ['packages/api/**/*.ts'],
+    files: ['apps/api/**/*.ts'],
     languageOptions: { globals: globals.node },
     rules: {
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
 
-  // Browser + React-specific rules for the UI package
+  // Browser + React-specific rules for the web app
   {
-    files: ['packages/ui/**/*.{ts,tsx}'],
+    files: ['apps/web/**/*.{ts,tsx}'],
     languageOptions: { globals: globals.browser },
     plugins: { 'react-hooks': reactHooks, 'react-refresh': reactRefresh },
     rules: {

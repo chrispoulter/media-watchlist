@@ -5,26 +5,26 @@
       "type": "node",
       "request": "launch",
       "name": "Debug API",
-      "cwd": "${workspaceFolder}/packages/api",
+      "cwd": "${workspaceFolder}/apps/api",
       "runtimeExecutable": "node",
       "runtimeArgs": ["--import", "tsx"],
-      "program": "${workspaceFolder}/packages/api/src/index.ts",
+      "program": "${workspaceFolder}/apps/api/src/index.ts",
       "console": "integratedTerminal",
       "skipFiles": ["<node_internals>/**"]
     },
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Debug UI (Chrome)",
+      "name": "Debug Web (Chrome)",
       "url": "http://localhost:5173",
-      "webRoot": "${workspaceFolder}/packages/ui",
-      "preLaunchTask": "dev: ui"
+      "webRoot": "${workspaceFolder}/apps/web",
+      "preLaunchTask": "dev: web"
     }
   ],
   "compounds": [
     {
       "name": "Debug Full Stack",
-      "configurations": ["Debug API", "Debug UI (Chrome)"]
+      "configurations": ["Debug API", "Debug Web (Chrome)"]
     }
   ]
 }

@@ -1,6 +1,6 @@
-# @media-watchlist/ui
+# @media-watchlist/web
 
-A React SPA for tracking movies and TV shows you want to watch. Talks to [`packages/api`](../api) for data and authentication.
+A React SPA for tracking movies and TV shows you want to watch. Talks to [`apps/api`](../api) for data and authentication.
 
 ## Features
 
@@ -31,14 +31,14 @@ From the repo root:
 
 ```sh
 npm install
-cp packages/ui/.env.example packages/ui/.env
+cp apps/web/.env.example apps/web/.env
 # fill in VITE_API_URL if it differs from the default
 ```
 
-The API ([`packages/api`](../api)) needs to be running for anything beyond the login/register pages to work. Then:
+The API ([`apps/api`](../api)) needs to be running for anything beyond the login/register pages to work. Then:
 
 ```sh
-npm run dev -w packages/ui
+npm run dev -w apps/web
 ```
 
 Or use the root-level `npm run dev`, which starts this alongside the API via Turborepo.
@@ -79,7 +79,7 @@ Or use the root-level `npm run dev`, which starts this alongside the API via Tur
 
 ## Scripts
 
-Run with `-w packages/ui` from the repo root (or `cd packages/ui` first).
+Run with `-w apps/web` from the repo root (or `cd apps/web` first).
 
 | Script              | Description                                          |
 | ------------------- | ---------------------------------------------------- |
