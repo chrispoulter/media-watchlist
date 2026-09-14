@@ -8,31 +8,34 @@ import { shutdown as shutdownMailer } from './lib/mailer.js';
 const SHUTDOWN_TIMEOUT_MS = 10_000;
 
 const server = app.listen(config.PORT, () => {
-  logger.info({ port: config.PORT, local: `http://localhost:${config.PORT}` }, 'Server started');
+    logger.info(
+        { port: config.PORT, local: `http://localhost:${config.PORT}` },
+        'Server started'
+    );
 });
 
 const shutdown = (signal: string) => {
-  logger.info({ signal }, 'Shutdown signal received');
+    logger.info({ signal }, 'Shutdown signal received');
 
-  server.close(() => {
-    void (async () => {
-      try {
-        await shutdownDb();
-        shutdownMailer();
+    server.close(() => {
+        void (async () => {
+            try {
+                await shutdownDb();
+                shutdownMailer();
 
-        logger.info('Shutdown complete');
-        process.exit(0);
-      } catch (err) {
-        logger.error({ err }, 'Error during shutdown');
+                logger.info('Shutdown complete');
+                process.exit(0);
+            } catch (err) {
+                logger.error({ err }, 'Error during shutdown');
+                process.exit(1);
+            }
+        })();
+    });
+
+    setTimeout(() => {
+        logger.error('Shutdown timeout exceeded, forcing exit');
         process.exit(1);
-      }
-    })();
-  });
-
-  setTimeout(() => {
-    logger.error('Shutdown timeout exceeded, forcing exit');
-    process.exit(1);
-  }, SHUTDOWN_TIMEOUT_MS).unref();
+    }, SHUTDOWN_TIMEOUT_MS).unref();
 };
 
 process.on('SIGTERM', () => shutdown('SIGTERM'));

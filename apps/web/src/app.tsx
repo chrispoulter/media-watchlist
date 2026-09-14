@@ -7,15 +7,15 @@ import { searchRoutes } from '@/features/search/search-routes';
 import { watchlistRoutes } from '@/features/watchlist/watchlist-routes';
 
 export default function App() {
-  return (
-    <Routes>
-      <Route element={<RootLayout />}>
-        {authRoutes}
-        {profileRoutes}
-        {searchRoutes}
-        {watchlistRoutes}
-        <Route path="*" element={<NotFoundPage />} />
-      </Route>
-    </Routes>
-  );
+    return (
+        <Routes>
+            <Route element={<RootLayout />}>
+                {authRoutes}
+                {profileRoutes}
+                {searchRoutes}
+                {watchlistRoutes}
+                <Route path="*" element={<NotFoundPage />} />
+            </Route>
+        </Routes>
+    );
 }

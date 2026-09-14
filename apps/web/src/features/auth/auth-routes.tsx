@@ -8,14 +8,14 @@ import { ResetPasswordPage } from './reset-password/reset-password-page';
 import { AuthErrorPage } from './auth-error-page';
 
 export const authRoutes = (
-  <>
-    <Route element={<RequireGuest />}>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-    </Route>
-    <Route path="/two-factor" element={<TwoFactorPage />} />
-    <Route path="/reset-password" element={<ResetPasswordPage />} />
-    <Route path="/auth/error" element={<AuthErrorPage />} />
-  </>
+    <>
+        <Route element={<RequireGuest />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        </Route>
+        <Route path="/two-factor" element={<TwoFactorPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/auth/error" element={<AuthErrorPage />} />
+    </>
 );

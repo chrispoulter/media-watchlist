@@ -19,11 +19,11 @@ const app = express();
 // });
 
 app.use(
-  cors({
-    origin: config.CLIENT_ORIGIN.split(','),
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true,
-  }),
+    cors({
+        origin: config.CLIENT_ORIGIN.split(','),
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        credentials: true,
+    })
 );
 
 app.use(requestLogger);

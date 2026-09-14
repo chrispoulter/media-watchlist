@@ -1,29 +1,29 @@
 {
-  "name": "media-watchlist",
-  "private": true,
-  "version": "0.1.0",
-  "engines": {
-    "node": ">=20.19.0"
-  },
-  "packageManager": "npm@11.13.0",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "typecheck": "turbo run typecheck",
-    "lint": "turbo run lint",
-    "lint:fix": "turbo run lint:fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
-  },
-  "devDependencies": {
-    "eslint": "^10.10.0",
-    "prettier": "^3.9.6",
-    "prettier-plugin-tailwindcss": "^0.8.0",
-    "turbo": "^2.10.12",
-    "typescript": "^6.0.3"
-  }
+    "name": "media-watchlist",
+    "private": true,
+    "version": "0.1.0",
+    "engines": {
+        "node": ">=20.19.0"
+    },
+    "packageManager": "npm@11.13.0",
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "scripts": {
+        "dev": "turbo run dev",
+        "build": "turbo run build",
+        "typecheck": "turbo run typecheck",
+        "lint": "turbo run lint",
+        "lint:fix": "turbo run lint:fix",
+        "format": "prettier --write .",
+        "format:check": "prettier --check ."
+    },
+    "devDependencies": {
+        "eslint": "^10.10.0",
+        "prettier": "^3.9.6",
+        "prettier-plugin-tailwindcss": "^0.8.0",
+        "turbo": "^2.10.12",
+        "typescript": "^6.0.3"
+    }
 }

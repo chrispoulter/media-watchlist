@@ -6,11 +6,13 @@ import { migrate } from 'drizzle-orm/node-postgres/migrator';
 console.log('Migrating database...');
 
 const db = drizzle(process.env.DATABASE_URL!);
-const migrationsFolder = fileURLToPath(new URL('../../drizzle', import.meta.url));
+const migrationsFolder = fileURLToPath(
+    new URL('../../drizzle', import.meta.url)
+);
 
 try {
-  await migrate(db, { migrationsFolder });
-  console.log('Database migrated successfully');
+    await migrate(db, { migrationsFolder });
+    console.log('Database migrated successfully');
 } finally {
-  await db.$client.end();
+    await db.$client.end();
 }

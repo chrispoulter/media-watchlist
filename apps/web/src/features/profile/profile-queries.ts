@@ -2,116 +2,128 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { authClient } from '@/lib/auth-client';
 
 const profileKeys = {
-  all: ['profile'] as const,
+    all: ['profile'] as const,
 };
 
 export function useAccounts() {
-  return useQuery({
-    queryKey: profileKeys.all,
-    queryFn: async () => {
-      const { data, error } = await authClient.listAccounts();
+    return useQuery({
+        queryKey: profileKeys.all,
+        queryFn: async () => {
+            const { data, error } = await authClient.listAccounts();
 
-      if (error) {
-        throw new Error(error.message ?? 'Failed to load accounts');
-      }
+            if (error) {
+                throw new Error(error.message ?? 'Failed to load accounts');
+            }
 
-      return data;
-    },
-  });
+            return data;
+        },
+    });
 }
 
 export function useUpdateUser() {
-  return useMutation({
-    mutationFn: (values: { name: string }) => authClient.updateUser(values),
-  });
+    return useMutation({
+        mutationFn: (values: { name: string }) => authClient.updateUser(values),
+    });
 }
 
 export function useChangeEmail() {
-  return useMutation({
-    mutationFn: (newEmail: string) =>
-      authClient.changeEmail({
-        newEmail,
-        callbackURL: `${window.location.origin}/profile`,
-      }),
-  });
+    return useMutation({
+        mutationFn: (newEmail: string) =>
+            authClient.changeEmail({
+                newEmail,
+                callbackURL: `${window.location.origin}/profile`,
+            }),
+    });
 }
 
 interface ChangePasswordVariables {
-  currentPassword: string;
-  newPassword: string;
+    currentPassword: string;
+    newPassword: string;
 }
 
 export function useChangePassword() {
-  return useMutation({
-    mutationFn: ({ currentPassword, newPassword }: ChangePasswordVariables) =>
-      authClient.changePassword({
-        currentPassword,
-        newPassword,
-        revokeOtherSessions: true,
-      }),
-  });
+    return useMutation({
+        mutationFn: ({
+            currentPassword,
+            newPassword,
+        }: ChangePasswordVariables) =>
+            authClient.changePassword({
+                currentPassword,
+                newPassword,
+                revokeOtherSessions: true,
+            }),
+    });
 }
 
 export function useSetPasswordReset() {
-  return useMutation({
-    mutationFn: (email: string) =>
-      authClient.requestPasswordReset({
-        email,
-        redirectTo: `${window.location.origin}/reset-password`,
-      }),
-  });
+    return useMutation({
+        mutationFn: (email: string) =>
+            authClient.requestPasswordReset({
+                email,
+                redirectTo: `${window.location.origin}/reset-password`,
+            }),
+    });
 }
 
 export function useDeleteUser() {
-  return useMutation({
-    mutationFn: () => authClient.deleteUser(),
-  });
+    return useMutation({
+        mutationFn: () => authClient.deleteUser(),
+    });
 }
 
 export function useLinkSocial() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (provider: string) =>
-      authClient.linkSocial({
-        provider,
-        callbackURL: window.location.href,
-        errorCallbackURL: `${window.location.origin}/auth/error`,
-      }),
-    // NOTE: linkSocial redirects for OAuth; onSuccess only fires on error paths.
-    // Successful link re-fetches naturally when callbackURL remounts the page.
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: profileKeys.all }),
-  });
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (provider: string) =>
+            authClient.linkSocial({
+                provider,
+                callbackURL: window.location.href,
+                errorCallbackURL: `${window.location.origin}/auth/error`,
+            }),
+        // NOTE: linkSocial redirects for OAuth; onSuccess only fires on error paths.
+        // Successful link re-fetches naturally when callbackURL remounts the page.
+        onSuccess: () =>
+            queryClient.invalidateQueries({ queryKey: profileKeys.all }),
+    });
 }
 
 export function useUnlinkAccount() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({ accountId }: { accountId: string; providerId: string }) =>
-      authClient.unlinkAccount({ accountId }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: profileKeys.all }),
-  });
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({
+            accountId,
+        }: {
+            accountId: string;
+            providerId: string;
+        }) => authClient.unlinkAccount({ accountId }),
+        onSuccess: () =>
+            queryClient.invalidateQueries({ queryKey: profileKeys.all }),
+    });
 }
 
 export function useEnableTwoFactor() {
-  return useMutation({
-    mutationFn: (password: string) => authClient.twoFactor.enable({ password }),
-  });
+    return useMutation({
+        mutationFn: (password: string) =>
+            authClient.twoFactor.enable({ password }),
+    });
 }
 
 export function useDisableTwoFactor() {
-  return useMutation({
-    mutationFn: (password: string) => authClient.twoFactor.disable({ password }),
-  });
+    return useMutation({
+        mutationFn: (password: string) =>
+            authClient.twoFactor.disable({ password }),
+    });
 }
 
 export function useVerifyTotpSetup() {
-  return useMutation({
-    mutationFn: (code: string) => authClient.twoFactor.verifyTotp({ code }),
-  });
+    return useMutation({
+        mutationFn: (code: string) => authClient.twoFactor.verifyTotp({ code }),
+    });
 }
 
 export function useGenerateBackupCodes() {
-  return useMutation({
-    mutationFn: (password: string) => authClient.twoFactor.generateBackupCodes({ password }),
-  });
+    return useMutation({
+        mutationFn: (password: string) =>
+            authClient.twoFactor.generateBackupCodes({ password }),
+    });
 }

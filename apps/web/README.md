@@ -1,94 +1,147 @@
-# @media-watchlist/web
+# Media Watchlist
 
-A React SPA for tracking movies and TV shows you want to watch. Talks to [`apps/api`](../api) for data and authentication.
+A React SPA for tracking movies and TV shows you want to watch. Search TMDB, build your list, manage your account — all in one place.
+
+Connects to [media-watchlist-api](https://github.com/chrispoulter/media-watchlist-api) for data and authentication.
+
+## Tech Stack
+
+- **[Vite 8](https://vite.dev/)** + **[React 19](https://react.dev/)** + **[TypeScript](https://www.typescriptlang.org/)**
+- **[Tailwind CSS v4](https://tailwindcss.com/)** for styling
+- **[shadcn/ui](https://ui.shadcn.com/)** component library (New York style, Radix UI primitives)
+- **[TanStack Query v5](https://tanstack.com/query/latest)** for server state
+- **[React Hook Form](https://react-hook-form.com/)** + **[Zod](https://zod.dev/)** for forms and validation
+- **[better-auth](https://better-auth.com/)** for authentication (cookie-based sessions)
+- **[React Router v7](https://reactrouter.com/)** for client-side routing
+- **[ky](https://github.com/sindresorhus/ky)** for API requests
+- **[Sonner](https://sonner.emilkowal.ski/)** for toast notifications
 
 ## Features
 
-- Email/password authentication and social login (Google OAuth)
-- Email verification and password reset flows
-- Two-factor authentication (TOTP), with backup codes
-- Search for movies and TV shows via TMDB
-- Personal watchlist management — add and remove items
-- Light/dark/system theme
+### Authentication
 
-## Tech stack
+- Register with email, password, first name, last name, and date of birth
+- Register / sign in with Google OAuth
+- Sign in with email and password (remember me option)
+- Two-factor authentication (TOTP) at sign-in
+- Forgot password / reset password via email link
 
-| Layer          | Technology                        |
-| -------------- | --------------------------------- |
-| Build tool     | Vite                              |
-| Framework      | React 19                          |
-| Styling        | Tailwind CSS + shadcn/ui (Radix)  |
-| Data fetching  | TanStack Query                    |
-| Forms          | React Hook Form + Zod             |
-| Authentication | better-auth (cookie-based client) |
-| Routing        | React Router                      |
-| HTTP client    | ky                                |
-| Toasts         | Sonner                            |
+### Watchlist
 
-## Setup
+- Search TMDB for movies and TV shows with debounced input and type filter (All / Movies / TV)
+- Add titles to your watchlist directly from search results
+- View your full watchlist as a poster grid
+- Remove titles from your watchlist
 
-From the repo root:
+### Profile
 
-```sh
+- Update name and date of birth
+- Change email address
+- Change password (revokes other sessions)
+- Enable / disable TOTP two-factor authentication with QR code setup flow
+- Delete account
+
+## Prerequisites
+
+- **Node 24+**
+- **media-watchlist-api** running (see its README for setup)
+
+## Getting Started
+
+```bash
+# 1. Copy environment file and set the API URL
+cp .env.example .env
+
+# 2. Install dependencies
 npm install
-cp apps/web/.env.example apps/web/.env
-# fill in VITE_API_URL if it differs from the default
+
+# 3. Start the dev server
+npm run dev
 ```
 
-The API ([`apps/api`](../api)) needs to be running for anything beyond the login/register pages to work. Then:
+The app will be available at `http://localhost:5173`. API requests are directed to `VITE_API_URL` during development.
 
-```sh
-npm run dev -w apps/web
+## Environment Variables
+
+| Variable       | Description                         | Default                 |
+| -------------- | ----------------------------------- | ----------------------- |
+| `VITE_API_URL` | Base URL of the media-watchlist-api | `http://localhost:3000` |
+
+## Available Scripts
+
+| Script            | Description                          |
+| ----------------- | ------------------------------------ |
+| `npm run dev`     | Start Vite dev server with HMR       |
+| `npm run build`   | Type check and build for production  |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint`    | Run ESLint                           |
+| `npm run format`  | Format all files with Prettier       |
+
+## Docker
+
+### Development
+
+`docker compose up` starts the full stack:
+
+| Service  | URL                   |
+| -------- | --------------------- |
+| Frontend | http://localhost:5173 |
+| API      | http://localhost:3000 |
+| Mailpit  | http://localhost:8025 |
+
+Create a `.env` file in the project root with the required secrets before starting:
+
+```env
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+TMDB_API_READ_TOKEN=...
 ```
 
-Or use the root-level `npm run dev`, which starts this alongside the API via Turborepo.
+```bash
+docker compose up
+```
 
-## Environment variables
+`VITE_API_URL` is set automatically to the API service inside the compose network.
 
-| Variable       | Required | Default                 | Description         |
-| -------------- | -------- | ----------------------- | ------------------- |
-| `VITE_API_URL` | Yes      | `http://localhost:3000` | Base URL of the API |
+### Production
 
-## Pages
+Build the image (nginx serves the static site):
 
-### Auth
+```bash
+docker build -t media-watchlist-web .
+```
 
-| Path               | Access     | Description                             |
-| ------------------ | ---------- | --------------------------------------- |
-| `/login`           | Guest only | Sign in with email/password or Google   |
-| `/register`        | Guest only | Create an account                       |
-| `/forgot-password` | Guest only | Request a password reset email          |
-| `/reset-password`  | Anyone     | Reset password from an emailed link     |
-| `/two-factor`      | Anyone     | TOTP / backup code challenge at sign-in |
-| `/auth/error`      | Anyone     | OAuth error fallback                    |
+Run with the API URL supplied at runtime:
 
-### Profile (`/profile`, requires auth)
+```bash
+docker run -p 80:80 \
+  -e VITE_API_URL=https://your-api.example.com \
+  media-watchlist-web
+```
 
-| Path                | Description                                                  |
-| ------------------- | ------------------------------------------------------------ |
-| `/profile`          | Update name/date of birth, change email                      |
-| `/profile/security` | Change password, linked social accounts, two-factor settings |
-| `/profile/danger`   | Delete account                                               |
+At container startup, `VITE_API_URL` is injected into `env.js` by the entrypoint script. The app reads it at runtime via `window.__ENV__`, so the same image runs in any environment without rebuilding. nginx serves the SPA via `try_files $uri /index.html`.
 
-### Search & watchlist (require auth)
+## CI/CD
 
-| Path      | Description                                   |
-| --------- | --------------------------------------------- |
-| `/search` | Search TMDB for movies and TV shows           |
-| `/`       | Your watchlist — add/remove items from search |
+A single CI workflow runs on every push and pull request to any branch. It type checks, lints, and builds the project using Node.js 24.
 
-## Scripts
+## Project Structure
 
-Run with `-w apps/web` from the repo root (or `cd apps/web` first).
+```
+src/
+├── lib/                    # API client, better-auth singleton, utilities
+├── types/                  # shared TypeScript types
+├── components/
+│   ├── ui/                 # shadcn/ui generated components
+│   └── ...                 # layout, route guards, header, shared UI
+├── pages/                  # error and not-found fallback pages
+└── features/
+    ├── auth/               # login, register, two-factor, forgot/reset password
+    ├── profile/            # profile info, security (2FA settings), danger zone
+    ├── watchlist/          # React Query hooks, grid, item cards
+    └── search/             # debounced search bar, result cards
+```
 
-| Script              | Description                                          |
-| ------------------- | ---------------------------------------------------- |
-| `dev`               | Start the Vite dev server with hot reload            |
-| `build`             | Type-check and build for production                  |
-| `preview`           | Preview the production build locally                 |
-| `typecheck`         | Run TypeScript type checking                         |
-| `lint`              | Lint this package with the shared root ESLint config |
-| `lint:fix`          | Same, applying auto-fixes                            |
-| `generate-favicons` | Regenerate the favicon set from source art           |
+## License
 
-`format`/`format:check` are handled at the workspace root (`npm run format`) — Prettier isn't part of the per-package Turborepo task graph the way `lint`/`typecheck`/`build` are.
+[MIT](LICENSE)

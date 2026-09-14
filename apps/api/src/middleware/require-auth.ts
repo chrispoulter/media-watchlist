@@ -3,21 +3,27 @@ import { fromNodeHeaders } from 'better-auth/node';
 import type { ApiErrorResponse } from '@media-watchlist/shared';
 import { auth } from '../lib/auth.js';
 
-export const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
-  const sessionData = await auth.api.getSession({
-    headers: fromNodeHeaders(req.headers),
-  });
+export const requireAuth = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const sessionData = await auth.api.getSession({
+        headers: fromNodeHeaders(req.headers),
+    });
 
-  if (!sessionData) {
-    req.log.warn({ path: req.path }, 'Unauthenticated request rejected');
-    res.status(401).json({ error: 'Unauthorized' } satisfies ApiErrorResponse);
-    return;
-  }
+    if (!sessionData) {
+        req.log.warn({ path: req.path }, 'Unauthenticated request rejected');
+        res.status(401).json({
+            error: 'Unauthorized',
+        } satisfies ApiErrorResponse);
+        return;
+    }
 
-  req.user = sessionData.user;
-  req.session = sessionData.session;
+    req.user = sessionData.user;
+    req.session = sessionData.session;
 
-  req.log = req.log.child({ userId: sessionData.user.id });
+    req.log = req.log.child({ userId: sessionData.user.id });
 
-  next();
+    next();
 };

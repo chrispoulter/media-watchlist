@@ -1,14 +1,16 @@
 {
-  "name": "@media-watchlist/eslint-config",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "exports": {
-    "./base": "./base.js"
-  },
-  "dependencies": {
-    "@eslint/js": "^10.0.1",
-    "eslint-config-prettier": "^10.1.8",
-    "typescript-eslint": "^8.70.0"
-  }
+    "name": "@media-watchlist/eslint-config",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "files": [
+        "library.js",
+        "server.js",
+        "vite.js"
+    ],
+    "dependencies": {
+        "@eslint/js": "^10.0.1",
+        "eslint-config-prettier": "^10.1.8",
+        "typescript-eslint": "^8.70.0"
+    }
 }

@@ -12,23 +12,23 @@ import App from './app.tsx';
 import './index.css';
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-          <ErrorBoundary
-            fallback={
-              <div className="flex min-h-screen items-center justify-center p-8 text-center">
-                Something went wrong. Please refresh the page.
-              </div>
-            }
-          >
-            <App />
-          </ErrorBoundary>
-          <Toaster richColors />
-        </ThemeProvider>
-      </BrowserRouter>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-  </StrictMode>,
+    <StrictMode>
+        <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+                <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+                    <ErrorBoundary
+                        fallback={
+                            <div className="flex min-h-screen items-center justify-center p-8 text-center">
+                                Something went wrong. Please refresh the page.
+                            </div>
+                        }
+                    >
+                        <App />
+                    </ErrorBoundary>
+                    <Toaster richColors />
+                </ThemeProvider>
+            </BrowserRouter>
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+    </StrictMode>
 );
