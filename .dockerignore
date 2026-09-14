@@ -1,29 +1,41 @@
+# Dependencies
 node_modules
-**/node_modules
 
-dist
-**/dist
-
+# Build output
 .turbo
-**/.turbo
+dist
 
-out
-
-.git
-.github
-.vscode
-.claude
-
+# Environment variables
 .env
 .env.*
 !.env.example
-!**/.env.example
 
+# Logs
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
+# OS
 .DS_Store
 Thumbs.db
 
+# Editor
+.vscode
+.idea
+.claude
+
+# TypeScript cache
 *.tsbuildinfo
+
+# Version control
+.git
+.github
+.gitignore
+
+# Linting / formatting
 .eslintcache
+eslint.config.mjs
+.prettierrc

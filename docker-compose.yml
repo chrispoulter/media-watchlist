@@ -1,4 +1,17 @@
 services:
+    web:
+        image: media-watchlist-web:latest
+        build:
+            context: .
+            dockerfile: apps/web/Dockerfile
+        environment:
+            VITE_API_URL: http://localhost:3000
+        ports:
+            - 5173:80
+        depends_on:
+            api:
+                condition: service_healthy
+
     api:
         image: media-watchlist-api:latest
         build:
@@ -20,8 +33,7 @@ services:
         ports:
             - 3000:3000
         healthcheck:
-            test:
-                ['CMD', 'wget', '--spider', '-q', 'http://localhost:3000/alive']
+            test: [ 'CMD', 'wget', '--spider', '-q', 'http://localhost:3000/alive' ]
             interval: 30s
             timeout: 5s
             retries: 3
@@ -47,19 +59,6 @@ services:
                 condition: service_healthy
         restart: 'no'
 
-    web:
-        image: media-watchlist-web:latest
-        build:
-            context: .
-            dockerfile: apps/web/Dockerfile
-        environment:
-            VITE_API_URL: http://localhost:3000
-        ports:
-            - 5173:80
-        depends_on:
-            api:
-                condition: service_healthy
-
     postgres:
         image: postgres:18.3
         user: postgres
@@ -72,7 +71,7 @@ services:
             - postgres_data:/var/lib/postgresql
         restart: always
         healthcheck:
-            test: ['CMD', 'pg_isready']
+            test: [ 'CMD', 'pg_isready' ]
             interval: 30s
             timeout: 5s
             retries: 5
