@@ -52,7 +52,7 @@ services:
         build:
             context: .
             dockerfile: apps/api/Dockerfile
-        command: node apps/api/dist/src/db/migrate.js
+        command: node apps/api/dist/db/migrate.js
         environment:
             DATABASE_URL: postgresql://postgres:password@postgres:5432/media_watchlist
         depends_on:
