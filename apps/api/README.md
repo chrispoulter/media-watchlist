@@ -1,4 +1,4 @@
-# @media-watchlist/api
+# Media Watchlist API
 
 A REST API for tracking movies and TV shows you want to watch. Built with Express, TypeScript, and PostgreSQL.
 
@@ -11,41 +11,58 @@ A REST API for tracking movies and TV shows you want to watch. Built with Expres
 - Personal watchlist management — add and remove items
 - Transactional emails with React Email templates
 - Interactive API documentation (Scalar) at the root route
+- Docker Compose for local development
 
-## Tech stack
+## Tech Stack
 
-| Layer          | Technology               |
-| -------------- | ------------------------ |
-| Framework      | Express 5                |
-| Database       | PostgreSQL + Drizzle ORM |
-| Authentication | Better Auth              |
-| Media search   | TMDB API                 |
-| Email          | Nodemailer + React Email |
-| API docs       | Scalar (OpenAPI)         |
-| Logging        | Pino                     |
+| Layer            | Technology                  |
+| ---------------- | --------------------------- |
+| Runtime          | Node.js 24, TypeScript      |
+| Framework        | Express 5                   |
+| Database         | PostgreSQL 17 + Drizzle ORM |
+| Authentication   | Better Auth                 |
+| Media Search     | TMDB API                    |
+| Email            | Nodemailer + React Email    |
+| API Docs         | Scalar (OpenAPI)            |
+| Logging          | Pino                        |
+| Containerisation | Docker, Docker Compose      |
 
-## Setup
+## Prerequisites
 
-From the repo root:
+- [Node.js 24+](https://nodejs.org)
+- [Docker](https://www.docker.com) (for local dev via Docker Compose)
+- [TMDB API read token](https://developer.themoviedb.org/docs/getting-started) (for search)
+- Google OAuth credentials (optional — for social login)
 
-```sh
+## Getting Started
+
+### Docker Compose
+
+Starts the API, a PostgreSQL database, and [Mailpit](https://mailpit.axllent.org) for local email testing:
+
+```bash
+cp .env.example .env
+# Fill in required values in .env (see Environment Variables below)
+docker-compose up
+```
+
+| Service | URL                   |
+| ------- | --------------------- |
+| API     | http://localhost:3000 |
+| Mailpit | http://localhost:8025 |
+
+### Manual Setup
+
+```bash
 npm install
-cp apps/api/.env.example apps/api/.env
-# fill in required values in apps/api/.env — see Environment variables below
+cp .env.example .env
+# Fill in required values in .env
+
+npm run db:migrate
+npm run dev
 ```
 
-You'll need a reachable PostgreSQL database (`DATABASE_URL`) and, to actually send email, an SMTP sink such as [Mailpit](https://mailpit.axllent.org). The repo root's `docker compose up` (see the [root README](../../README.md#docker)) starts both for you — or point `DATABASE_URL`/`SMTP_*` at whatever you already have running locally.
-
-Apply migrations, then start the dev server:
-
-```sh
-npm run db:migrate -w apps/api
-npm run dev -w apps/api
-```
-
-Or use the root-level `npm run dev`, which starts this alongside the UI via Turborepo.
-
-## Environment variables
+## Environment Variables
 
 | Variable               | Required | Default                 | Description                                                      |
 | ---------------------- | -------- | ----------------------- | ---------------------------------------------------------------- |
@@ -65,7 +82,7 @@ Or use the root-level `npm run dev`, which starts this alongside the UI via Turb
 | `SMTP_PASS`            | No       | —                       | SMTP password                                                    |
 | `LOG_LEVEL`            | No       | `info`                  | Log level: `fatal`, `error`, `warn`, `info`, `debug`, or `trace` |
 
-## API overview
+## API Overview
 
 Interactive documentation with a request explorer is available at `GET /` when the server is running.
 
@@ -122,21 +139,23 @@ All auth routes are handled by Better Auth.
 
 ## Scripts
 
-Run with `-w apps/api` from the repo root (or `cd apps/api` first).
+| Script                | Description                              |
+| --------------------- | ---------------------------------------- |
+| `npm run dev`         | Start development server with hot reload |
+| `npm run build`       | Compile TypeScript to `dist/`            |
+| `npm run start`       | Run the compiled server                  |
+| `npm run typecheck`   | Run TypeScript type checking             |
+| `npm run lint`        | Run ESLint                               |
+| `npm run format`      | Format code with Prettier                |
+| `npm run db:generate` | Generate a new Drizzle migration         |
+| `npm run db:migrate`  | Apply pending migrations                 |
+| `npm run db:studio`   | Open Drizzle Studio                      |
+| `npm run email:dev`   | Preview email templates (port 3001)      |
 
-| Script        | Description                                          |
-| ------------- | ---------------------------------------------------- |
-| `dev`         | Start development server with hot reload             |
-| `build`       | Compile TypeScript to `dist/`                        |
-| `start`       | Run the compiled server                              |
-| `typecheck`   | Run TypeScript type checking                         |
-| `lint`        | Lint this package with the shared root ESLint config |
-| `lint:fix`    | Same, applying auto-fixes                            |
-| `db:generate` | Generate a new Drizzle migration                     |
-| `db:migrate`  | Apply pending migrations                             |
-| `db:studio`   | Open Drizzle Studio                                  |
-| `email:dev`   | Preview email templates (port 3001)                  |
+## CI/CD
 
-`format`/`format:check` are handled at the workspace root (`npm run format`) — Prettier isn't part of the per-package Turborepo task graph the way `lint`/`typecheck`/`build` are.
+A single CI workflow runs on every push and pull request to any branch. It type checks, lints, and builds the project using Node.js 24.
 
-`db:generate`/`db:migrate`/`db:studio` are intentionally not wired into Turborepo's task graph — they're one-off, side-effecting commands against a real database rather than cacheable build steps.
+## License
+
+[MIT](LICENSE)
