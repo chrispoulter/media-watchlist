@@ -1,8 +1,8 @@
 {
     "name": "@media-watchlist/typescript-config",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "private": true,
-    "exports": {
-        "./base.json": "./base.json"
+    "publishConfig": {
+        "access": "public"
     }
 }
