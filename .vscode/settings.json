@@ -1,17 +1,10 @@
 {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "explicit"
+    "files.exclude": {
+        "**/node_modules": true,
+        "**/dist": true,
+        "**/.turbo": true
     },
-    "eslint.workingDirectories": [
-        { "pattern": "apps/*" },
-        { "pattern": "packages/*" }
-    ],
-    "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-    "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" }
+    "files.associations": {
+        "*.css": "tailwindcss"
+    }
 }
