@@ -15,7 +15,7 @@ const shutdown = (signal: string) => {
   logger.info({ signal }, 'Shutdown signal received');
 
   server.close(() => {
-    (async () => {
+    void (async () => {
       try {
         await shutdownDb();
         shutdownMailer();
