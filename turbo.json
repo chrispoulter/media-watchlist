@@ -1,6 +1,7 @@
 {
     "$schema": "https://turbo.build/schema.json",
     "globalPassThroughEnv": [
+        "PORT",
         "DATABASE_URL",
         "BETTER_AUTH_SECRET",
         "BETTER_AUTH_URL",
@@ -19,8 +20,9 @@
     "tasks": {
         "build": {
             "dependsOn": ["^build"],
-            "env": ["VITE_API_URL"],
-            "outputs": ["dist/**"]
+            "inputs": ["$TURBO_DEFAULT$", ".env*"],
+            "outputs": ["dist/**"],
+            "env": ["VITE_API_URL"]
         },
         "dev": {
             "dependsOn": ["^build"],
@@ -28,17 +30,11 @@
             "persistent": true
         },
         "typecheck": {
-            "dependsOn": ["^build"],
-            "outputs": []
+            "dependsOn": ["^build"]
         },
-        "lint": {
-            "dependsOn": ["^build"],
-            "outputs": []
-        },
+        "lint": {},
         "lint:fix": {
-            "dependsOn": ["^build"],
-            "cache": false,
-            "outputs": []
+            "cache": false
         }
     }
 }
