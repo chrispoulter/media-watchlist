@@ -1,17 +1,17 @@
 import 'dotenv/config';
 import { z } from 'zod';
 import { createRequire } from 'node:module';
+import { join } from 'node:path';
 
-const require = createRequire(import.meta.url);
+const require = createRequire(join(process.cwd(), 'package.json'));
 
 const gitCommitSha =
     process.env.VERCEL_GIT_COMMIT_SHA ||
     process.env.GIT_COMMIT_SHA ||
     undefined;
 
-const packageJson = require('../../package.json') as { version: string };
-
-export const version = gitCommitSha?.slice(0, 7) ?? packageJson.version;
+export const version =
+    gitCommitSha?.slice(0, 7) ?? require('./package.json').version;
 
 const configSchema = z.object({
     PORT: z.coerce.number().default(3000),

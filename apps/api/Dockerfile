@@ -32,4 +32,4 @@ COPY --from=builder /app/apps/api/drizzle ./apps/api/drizzle
 COPY --from=builder /app/packages/shared/package.json ./packages/shared/package.json
 COPY --from=builder /app/packages/shared/dist ./packages/shared/dist
 EXPOSE 3000
-CMD ["node", "apps/api/dist/index.js"]
+CMD ["node", "apps/api/dist/src/index.js"]
