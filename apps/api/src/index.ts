@@ -19,6 +19,7 @@ const shutdown = (signal: string) => {
       try {
         await shutdownDb();
         shutdownMailer();
+
         logger.info('Shutdown complete');
         process.exit(0);
       } catch (err) {

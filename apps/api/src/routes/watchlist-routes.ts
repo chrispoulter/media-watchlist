@@ -66,7 +66,7 @@ router.post('/', async (req, res) => {
       return;
     }
 
-    const response: WatchlistItem = {
+    res.status(201).json({
       id: created.id,
       providerId: created.providerId,
       mediaType: created.mediaType,
@@ -75,9 +75,7 @@ router.post('/', async (req, res) => {
       overview: created.overview ?? undefined,
       releaseDate: created.releaseDate ?? undefined,
       addedAt: created.addedAt.toISOString(),
-    };
-
-    res.status(201).json(response);
+    } satisfies WatchlistItem);
 
     req.log.info(
       {
