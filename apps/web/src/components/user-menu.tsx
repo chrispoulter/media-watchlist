@@ -18,7 +18,7 @@ export function UserMenu() {
 
   const handleSignOut = async () => {
     await signOut();
-    void navigate('/login');
+    await navigate('/login');
   };
 
   if (!session) {

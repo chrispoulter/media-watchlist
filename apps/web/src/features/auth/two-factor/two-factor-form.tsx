@@ -38,7 +38,7 @@ export function TwoFactorForm({ onBack }: TwoFactorFormProps) {
       return;
     }
 
-    void navigate('/');
+    await navigate('/');
   };
 
   return (

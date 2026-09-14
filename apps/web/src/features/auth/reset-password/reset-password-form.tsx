@@ -45,7 +45,7 @@ export function ResetPasswordForm() {
     }
 
     toast.success('Password reset successfully. Please sign in.');
-    void navigate('/login');
+    await navigate('/login');
   };
 
   if (!token) {

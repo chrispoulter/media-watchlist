@@ -35,7 +35,7 @@ export function RecoveryCodeForm({ onBack }: RecoveryCodeFormProps) {
       return;
     }
 
-    void navigate('/');
+    await navigate('/');
   };
 
   return (

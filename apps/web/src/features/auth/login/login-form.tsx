@@ -42,7 +42,7 @@ export function LoginForm() {
       return;
     }
 
-    void navigate(from, { replace: true });
+    await navigate(from, { replace: true });
   };
 
   return (

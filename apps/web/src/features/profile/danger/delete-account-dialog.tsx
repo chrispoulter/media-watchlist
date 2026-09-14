@@ -28,7 +28,7 @@ export function DeleteAccountDialog() {
 
     setIsOpen(false);
     toast.success('Account deleted');
-    void navigate('/login');
+    await navigate('/login');
   };
 
   return (

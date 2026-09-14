@@ -49,7 +49,7 @@ export function RegisterForm() {
     }
 
     toast.success('Account created! Welcome.');
-    void navigate('/');
+    await navigate('/');
   };
 
   return (
