@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-export const MEDIA_TYPES = ['movie', 'tv-show'] as const;
-export const mediaTypeSchema = z.enum(MEDIA_TYPES);
+export const mediaTypeSchema = z.enum(['movie', 'tv-show']);
+
 export type MediaType = z.infer<typeof mediaTypeSchema>;
 
 export const watchlistItemSchema = z.object({
