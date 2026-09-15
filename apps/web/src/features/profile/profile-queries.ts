@@ -87,15 +87,16 @@ export function useLinkSocial() {
     });
 }
 
+interface UnlinkAccountVariables {
+    accountId: string;
+    providerId: string;
+}
+
 export function useUnlinkAccount() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({
-            accountId,
-        }: {
-            accountId: string;
-            providerId: string;
-        }) => authClient.unlinkAccount({ accountId }),
+        mutationFn: ({ accountId }: UnlinkAccountVariables) =>
+            authClient.unlinkAccount({ accountId }),
         onSuccess: () =>
             queryClient.invalidateQueries({ queryKey: profileKeys.all }),
     });
