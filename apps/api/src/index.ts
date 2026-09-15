@@ -17,19 +17,15 @@ const server = app.listen(config.PORT, () => {
 const shutdown = (signal: string) => {
     logger.info({ signal }, 'Shutdown signal received');
 
-    server.close(() => {
-        void (async () => {
-            try {
-                await shutdownDb();
-                shutdownMailer();
-
-                logger.info('Shutdown complete');
-                process.exit(0);
-            } catch (err) {
-                logger.error({ err }, 'Error during shutdown');
-                process.exit(1);
-            }
-        })();
+    server.close(async () => {
+        try {
+            await Promise.all([shutdownDb(), shutdownMailer()]);
+            logger.info('Shutdown complete');
+            process.exit(0);
+        } catch (err) {
+            logger.error({ err }, 'Error during shutdown');
+            process.exit(1);
+        }
     });
 
     setTimeout(() => {
