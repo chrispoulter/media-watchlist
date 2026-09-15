@@ -1,6 +1,8 @@
 {
     "$schema": "https://v2-10-13.turborepo.dev/schema.json",
     "globalPassThroughEnv": [
+        "NODE_ENV",
+
         "PORT",
         "DATABASE_URL",
         "BETTER_AUTH_SECRET",
@@ -15,14 +17,16 @@
         "SMTP_FROM",
         "SMTP_USER",
         "SMTP_PASS",
-        "LOG_LEVEL"
+        "LOG_LEVEL",
+        "VERCEL_GIT_COMMIT_SHA",
+        "GIT_COMMIT_SHA"
     ],
     "tasks": {
         "build": {
             "dependsOn": ["^build"],
             "inputs": ["$TURBO_DEFAULT$", ".env*"],
             "outputs": ["dist/**"],
-            "env": ["VITE_API_URL"]
+            "env": ["GIT_COMMIT_SHA", "npm_package_version"]
         },
         "dev": {
             "dependsOn": ["^build"],
