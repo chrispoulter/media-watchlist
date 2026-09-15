@@ -1,5 +1,6 @@
 {
     "$schema": "https://openapi.vercel.sh/vercel.json",
     "framework": "express",
-    "installCommand": "npm install --workspace=@media-watchlist/api"
+    "installCommand": "npm install --workspace=@media-watchlist/api",
+    "buildCommand": "(cd ../.. && turbo run build --filter=@media-watchlist/shared) && tsx src/db/migrate.ts"
 }
