@@ -1,15 +1,15 @@
 import { memo, useState } from 'react';
 import { toast } from 'sonner';
+import type { SearchResponse } from '@media-watchlist/shared';
 import { Button } from '@/components/ui/button';
 import { MediaCard } from '@/components/media-card';
 import {
     useAddToWatchlist,
     useRemoveFromWatchlist,
 } from '@/features/watchlist/watchlist-queries';
-import type { SearchResult } from '@media-watchlist/shared';
 
 interface SearchCardProps {
-    result: SearchResult;
+    result: SearchResponse[number];
 }
 
 function SearchCardComponent({ result }: SearchCardProps) {

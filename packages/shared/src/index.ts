@@ -1,31 +1,34 @@
 import { z } from 'zod';
 
+export interface ErrorResponse {
+    error: string;
+    details?: object[];
+}
+
 export const mediaTypeSchema = z.enum(['movie', 'tv-show']);
 
 export type MediaType = z.infer<typeof mediaTypeSchema>;
 
-export const watchlistItemSchema = z.object({
-    id: z.number(),
-    providerId: z.string(),
-    mediaType: mediaTypeSchema,
-    title: z.string(),
-    posterUrl: z.string().optional(),
-    overview: z.string().optional(),
-    releaseDate: z.string().optional(),
-    addedAt: z.string(),
-});
-export type WatchlistItem = z.infer<typeof watchlistItemSchema>;
+export type SearchResponse = {
+    providerId: string;
+    mediaType: MediaType;
+    title: string;
+    posterUrl?: string;
+    overview?: string;
+    releaseDate?: string;
+    watchlistItemId?: number;
+}[];
 
-export const searchResultSchema = z.object({
-    providerId: z.string(),
-    mediaType: mediaTypeSchema,
-    title: z.string(),
-    posterUrl: z.string().optional(),
-    overview: z.string().optional(),
-    releaseDate: z.string().optional(),
-    watchlistItemId: z.number().optional(),
-});
-export type SearchResult = z.infer<typeof searchResultSchema>;
+export type WatchlistResponse = {
+    id: number;
+    providerId: string;
+    mediaType: MediaType;
+    title: string;
+    posterUrl?: string;
+    overview?: string;
+    releaseDate?: string;
+    addedAt: string;
+}[];
 
 export const addWatchlistItemSchema = z.object({
     providerId: z.string().min(1),
@@ -35,10 +38,16 @@ export const addWatchlistItemSchema = z.object({
     overview: z.string().optional(),
     releaseDate: z.string().optional(),
 });
+
 export type AddWatchlistItemRequest = z.infer<typeof addWatchlistItemSchema>;
 
-export const apiErrorResponseSchema = z.object({
-    error: z.string(),
-    details: z.array(z.unknown()).optional(),
-});
-export type ApiErrorResponse = z.infer<typeof apiErrorResponseSchema>;
+export interface AddWatchlistItemResponse {
+    id: number;
+    providerId: string;
+    mediaType: MediaType;
+    title: string;
+    posterUrl?: string;
+    overview?: string;
+    releaseDate?: string;
+    addedAt: string;
+}

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { SearchResult } from '@media-watchlist/shared';
+import type { SearchResponse } from '@media-watchlist/shared';
 import { apiClient } from '@/lib/api-client';
 
 export const searchKeys = {
@@ -16,7 +16,7 @@ export function useSearch(query: string, enabled = true) {
                     searchParams: { query },
                     signal,
                 })
-                .json<SearchResult[]>(),
+                .json<SearchResponse>(),
         enabled,
     });
 }

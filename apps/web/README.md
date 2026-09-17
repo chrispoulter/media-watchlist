@@ -30,8 +30,8 @@ Copy the env file and point it at your API:
 cp apps/web/.env.example apps/web/.env
 ```
 
-| Variable | Description |
-| --- | --- |
+| Variable       | Description                                           |
+| -------------- | ----------------------------------------------------- |
 | `VITE_API_URL` | Base URL of the API (default `http://localhost:3000`) |
 
 ## Development

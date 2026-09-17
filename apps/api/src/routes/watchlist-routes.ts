@@ -2,9 +2,10 @@ import { Router } from 'express';
 import { and, eq } from 'drizzle-orm';
 import { z } from 'zod';
 import {
+    type ErrorResponse,
+    type AddWatchlistItemResponse,
+    type WatchlistResponse,
     addWatchlistItemSchema,
-    type ApiErrorResponse,
-    type WatchlistItem,
 } from '@media-watchlist/shared';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
@@ -23,7 +24,7 @@ router.get('/', async (req, res) => {
         .where(eq(watchlistItem.userId, req.user!.id));
 
     res.json(
-        data.map((item): WatchlistItem => ({
+        data.map((item) => ({
             id: item.id,
             providerId: item.providerId,
             mediaType: item.mediaType,
@@ -32,7 +33,7 @@ router.get('/', async (req, res) => {
             overview: item.overview ?? undefined,
             releaseDate: item.releaseDate ?? undefined,
             addedAt: item.addedAt.toISOString(),
-        }))
+        })) satisfies WatchlistResponse
     );
 });
 
@@ -43,7 +44,7 @@ router.post('/', async (req, res) => {
         res.status(400).json({
             error: 'Invalid request body',
             details: result.error.issues,
-        } satisfies ApiErrorResponse);
+        } satisfies ErrorResponse);
         return;
     }
 
@@ -57,7 +58,7 @@ router.post('/', async (req, res) => {
     if (count >= WATCHLIST_ITEM_LIMIT) {
         res.status(429).json({
             error: `Watchlist limit of ${WATCHLIST_ITEM_LIMIT} items reached`,
-        } satisfies ApiErrorResponse);
+        } satisfies ErrorResponse);
         return;
     }
 
@@ -70,7 +71,7 @@ router.post('/', async (req, res) => {
         if (!created) {
             res.status(500).json({
                 error: 'Failed to add item to watchlist',
-            } satisfies ApiErrorResponse);
+            } satisfies ErrorResponse);
             return;
         }
 
@@ -83,7 +84,7 @@ router.post('/', async (req, res) => {
             overview: created.overview ?? undefined,
             releaseDate: created.releaseDate ?? undefined,
             addedAt: created.addedAt.toISOString(),
-        } satisfies WatchlistItem);
+        } satisfies AddWatchlistItemResponse);
 
         req.log.info(
             {
@@ -108,7 +109,7 @@ router.post('/', async (req, res) => {
 
             res.status(409).json({
                 error: 'Item already exists in watchlist',
-            } satisfies ApiErrorResponse);
+            } satisfies ErrorResponse);
             return;
         }
 
@@ -127,7 +128,7 @@ router.delete('/:id', async (req, res) => {
         res.status(400).json({
             error: 'Invalid request parameters',
             details: result.error.issues,
-        } satisfies ApiErrorResponse);
+        } satisfies ErrorResponse);
         return;
     }
 
@@ -143,7 +144,7 @@ router.delete('/:id', async (req, res) => {
         req.log.warn({ itemId: id }, 'Watchlist item not found');
         res.status(404).json({
             error: 'Item not found in watchlist',
-        } satisfies ApiErrorResponse);
+        } satisfies ErrorResponse);
         return;
     }
 

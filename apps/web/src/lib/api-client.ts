@@ -1,5 +1,5 @@
 import ky, { HTTPError } from 'ky';
-import type { ApiErrorResponse } from '@media-watchlist/shared';
+import type { ErrorResponse } from '@media-watchlist/shared';
 import { authClient } from '@/lib/auth-client';
 import { queryClient } from '@/lib/query-client';
 import { config } from '@/lib/config';
@@ -22,7 +22,7 @@ export const apiClient = ky.create({
         beforeError: [
             ({ error }) => {
                 if (error instanceof HTTPError) {
-                    const body = error.data as ApiErrorResponse;
+                    const body = error.data as ErrorResponse;
                     error.message = body?.error || error.message;
                 }
                 return error;

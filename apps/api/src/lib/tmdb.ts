@@ -1,5 +1,5 @@
-import type { SearchResult } from '@media-watchlist/shared';
-import type { HealthStatus } from '../types/health.js';
+import type { MediaType } from '@media-watchlist/shared';
+import { HealthStatus } from '../types/index.js';
 import { config } from './config.js';
 import { logger } from './logger.js';
 
@@ -44,20 +44,15 @@ export const check = async (): Promise<HealthStatus> => {
     }
 };
 
-export const search = async (query: string): Promise<SearchResult[]> => {
+export const search = async (query: string) => {
     const normalizedQuery = query.trim().toLowerCase();
     const params = new URLSearchParams({ query: normalizedQuery });
 
     try {
-        const response = await fetch(
-            `${API_URL}/search/multi?${params.toString()}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${config.TMDB_API_READ_TOKEN}`,
-                },
-                signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-            }
-        );
+        const response = await fetch(`${API_URL}/search/multi?${params}`, {
+            headers: { Authorization: `Bearer ${config.TMDB_API_READ_TOKEN}` },
+            signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+        });
 
         if (!response.ok) {
             logger.error(
@@ -80,16 +75,17 @@ export const search = async (query: string): Promise<SearchResult[]> => {
                 (item) =>
                     item.media_type === 'movie' || item.media_type === 'tv'
             )
-            .map((item): SearchResult => ({
+            .map((item) => ({
                 providerId: `tmdb:${item.id}`,
-                mediaType: item.media_type == 'movie' ? 'movie' : 'tv-show',
+                mediaType: (item.media_type == 'movie'
+                    ? 'movie'
+                    : 'tv-show') as MediaType,
                 title: item.title || item.name,
                 posterUrl: item.poster_path
                     ? `${IMAGE_URL}${item.poster_path}`
-                    : undefined,
-                overview: item.overview ?? undefined,
-                releaseDate:
-                    item.release_date || item.first_air_date || undefined,
+                    : null,
+                overview: item.overview,
+                releaseDate: item.release_date || item.first_air_date || null,
             }));
 
         return results;

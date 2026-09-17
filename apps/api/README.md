@@ -33,17 +33,17 @@ Copy the env file and fill in the values:
 cp apps/api/.env.example apps/api/.env
 ```
 
-| Variable | Description |
-| --- | --- |
-| `PORT` | Port to listen on (default `3000`) |
-| `DATABASE_URL` | PostgreSQL connection string |
-| `BETTER_AUTH_SECRET` | Random string, at least 32 characters |
-| `BETTER_AUTH_URL` | Public URL of this API (default `http://localhost:3000`) |
-| `CLIENT_ORIGIN` | Allowed CORS origin(s) for the web app, comma-separated |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google OAuth credentials (optional) |
-| `TMDB_API_READ_TOKEN` | TMDB API read access token |
-| `SMTP_HOST` / `SMTP_PORT` / `SMTP_SECURE` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM` | SMTP settings for outgoing email |
-| `LOG_LEVEL` | Pino log level (default `info`) |
+| Variable                                                                            | Description                                              |
+| ----------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| `PORT`                                                                              | Port to listen on (default `3000`)                       |
+| `DATABASE_URL`                                                                      | PostgreSQL connection string                             |
+| `BETTER_AUTH_SECRET`                                                                | Random string, at least 32 characters                    |
+| `BETTER_AUTH_URL`                                                                   | Public URL of this API (default `http://localhost:3000`) |
+| `CLIENT_ORIGIN`                                                                     | Allowed CORS origin(s) for the web app, comma-separated  |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`                                         | Google OAuth credentials (optional)                      |
+| `TMDB_API_READ_TOKEN`                                                               | TMDB API read access token                               |
+| `SMTP_HOST` / `SMTP_PORT` / `SMTP_SECURE` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM` | SMTP settings for outgoing email                         |
+| `LOG_LEVEL`                                                                         | Pino log level (default `info`)                          |
 
 Run database migrations:
 
