@@ -1,4 +1,4 @@
-import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
+import { OpenAPIHono } from '@hono/zod-openapi';
 import type { ErrorResponse } from '@media-watchlist/shared';
 import { Scalar } from '@scalar/hono-api-reference';
 import { cors } from 'hono/cors';
@@ -30,21 +30,6 @@ app.route('/api/search', searchRoutes);
 app.route('/api/watchlist', watchlistRoutes);
 app.route('/', healthRoutes);
 
-const helloRoute = createRoute({
-    method: 'get',
-    path: '/',
-    responses: {
-        200: {
-            description: 'Greeting message.',
-            content: {
-                'text/plain': { schema: z.string().openapi({ example: 'Hello Hono!' }) },
-            },
-        },
-    },
-});
-
-app.openapi(helloRoute, (c) => c.text('Hello Hono!'));
-
 app.doc('/openapi.json', {
     openapi: '3.0.3',
     info: {
@@ -65,5 +50,7 @@ app.get(
         ],
     })
 );
+
+app.get('/', (c) => c.redirect('/reference'));
 
 export default app;
