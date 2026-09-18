@@ -1,6 +1,7 @@
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
 import {
     addWatchlistItemSchema,
+    errorResponseSchema,
     mediaTypeSchema,
 } from '@media-watchlist/shared';
 import { and, eq } from 'drizzle-orm';
@@ -10,11 +11,6 @@ import { requireAuth, type AuthEnv } from '../middleware/require-auth.js';
 import { validationHook } from '../lib/validation.js';
 
 const WATCHLIST_ITEM_LIMIT = 100;
-
-const errorResponseSchema = z.object({
-    error: z.string(),
-    details: z.array(z.record(z.string(), z.unknown())).optional(),
-});
 
 const watchlistItemSchema = z.object({
     id: z.number(),

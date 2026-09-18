@@ -1,16 +1,11 @@
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
-import { mediaTypeSchema } from '@media-watchlist/shared';
+import { errorResponseSchema, mediaTypeSchema } from '@media-watchlist/shared';
 import { and, eq, inArray } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
 import { requireAuth, type AuthEnv } from '../middleware/require-auth.js';
 import { search } from '../lib/tmdb.js';
 import { validationHook } from '../lib/validation.js';
-
-const errorResponseSchema = z.object({
-    error: z.string(),
-    details: z.array(z.record(z.string(), z.unknown())).optional(),
-});
 
 const searchResponseSchema = z.array(
     z.object({
