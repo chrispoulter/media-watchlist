@@ -1,0 +1,84 @@
+# @media-watchlist/api
+
+Hono API for Media Watchlist: authentication, TMDB search, and the user's watchlist.
+
+## Stack
+
+- Hono, TypeScript
+- [Better Auth](https://www.better-auth.com/) — email/password, Google OAuth, TOTP 2FA
+- Drizzle ORM + PostgreSQL
+- Zod for env/config validation
+- [Scalar](https://scalar.com/) for API reference docs (OpenAPI)
+- Nodemailer + React Email for transactional email
+
+## Prerequisites
+
+- Node.js >= 20.19.0
+- A PostgreSQL database
+- A [TMDB](https://www.themoviedb.org/) API read access token
+- An SMTP server for outgoing email (use [Mailpit](https://mailpit.axllent.org/) locally, started via the root `docker-compose.yml`)
+
+## Setup
+
+From the repo root, install dependencies (this is an npm workspace, so run installs from the root, not here):
+
+```bash
+npm install
+```
+
+Copy the env file and fill in the values:
+
+```bash
+cp apps/api/.env.example apps/api/.env
+```
+
+| Variable                                                                            | Description                                              |
+| ----------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| `PORT`                                                                              | Port to listen on (default `3000`)                       |
+| `DATABASE_URL`                                                                      | PostgreSQL connection string                             |
+| `BETTER_AUTH_SECRET`                                                                | Random string, at least 32 characters                    |
+| `BETTER_AUTH_URL`                                                                   | Public URL of this API (default `http://localhost:3000`) |
+| `CLIENT_ORIGIN`                                                                     | Allowed CORS origin(s) for the web app, comma-separated  |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`                                         | Google OAuth credentials (optional)                      |
+| `TMDB_API_READ_TOKEN`                                                               | TMDB API read access token                               |
+| `SMTP_HOST` / `SMTP_PORT` / `SMTP_SECURE` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM` | SMTP settings for outgoing email                         |
+| `LOG_LEVEL`                                                                         | Pino log level (default `info`)                          |
+
+Run database migrations:
+
+```bash
+npm run db:migrate
+```
+
+## Development
+
+```bash
+npm run dev
+```
+
+The API runs at http://localhost:3000. API reference docs are served at `/reference`, health checks at `/health` and `/alive`.
+
+## Scripts
+
+- `npm run dev` — run with hot reload (tsx watch)
+- `npm run build` — compile TypeScript to `dist/`
+- `npm run start` — run the compiled build
+- `npm run typecheck` — `tsc --noEmit`
+- `npm run lint` / `npm run lint:fix`
+- `npm run db:generate` — generate a Drizzle migration from schema changes
+- `npm run db:migrate` — apply migrations
+- `npm run db:studio` — open Drizzle Studio
+- `npm run email:dev` — preview email templates (`src/emails`) at http://localhost:3001
+
+## Project structure
+
+```
+src/
+  app.ts              # Hono app: middleware and route wiring
+  index.ts            # server entry point
+  db/                 # Drizzle client, schema, migration runner
+  emails/             # React Email templates
+  lib/                # auth, config, logger, mailer, TMDB client
+  middleware/         # error handling, auth guard
+  routes/             # search, watchlist, health, docs routes
+```
