@@ -1,6 +1,5 @@
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
 import { mediaTypeSchema } from '@media-watchlist/shared';
-import type { SearchResponse } from '@media-watchlist/shared';
 import { and, eq, inArray } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
@@ -94,7 +93,7 @@ searchRoutes.openapi(searchRoute, async (c) => {
             watchlistItemId:
                 watchlistMap.get(`${item.providerId}-${item.mediaType}`) ??
                 undefined,
-        })) satisfies SearchResponse,
+        })),
         200
     );
 });

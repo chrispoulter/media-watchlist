@@ -3,11 +3,6 @@ import {
     addWatchlistItemSchema,
     mediaTypeSchema,
 } from '@media-watchlist/shared';
-import type {
-    AddWatchlistItemResponse,
-    ErrorResponse,
-    WatchlistResponse,
-} from '@media-watchlist/shared';
 import { and, eq } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
@@ -80,7 +75,7 @@ watchlistRoutes.openapi(listRoute, async (c) => {
             overview: item.overview ?? undefined,
             releaseDate: item.releaseDate ?? undefined,
             addedAt: item.addedAt.toISOString(),
-        })) satisfies WatchlistResponse,
+        })),
         200
     );
 });
@@ -138,7 +133,7 @@ watchlistRoutes.openapi(addRoute, async (c) => {
         return c.json(
             {
                 error: `Watchlist limit of ${WATCHLIST_ITEM_LIMIT} items reached`,
-            } satisfies ErrorResponse,
+            },
             429
         );
     }
@@ -155,7 +150,7 @@ watchlistRoutes.openapi(addRoute, async (c) => {
             return c.json(
                 {
                     error: 'Failed to add item to watchlist',
-                } satisfies ErrorResponse,
+                },
                 500
             );
         }
@@ -177,7 +172,7 @@ watchlistRoutes.openapi(addRoute, async (c) => {
                 overview: created.overview ?? undefined,
                 releaseDate: created.releaseDate ?? undefined,
                 addedAt: created.addedAt.toISOString(),
-            } satisfies AddWatchlistItemResponse,
+            },
             201
         );
     } catch (err: unknown) {
@@ -197,7 +192,7 @@ watchlistRoutes.openapi(addRoute, async (c) => {
             return c.json(
                 {
                     error: 'Item already exists in watchlist',
-                } satisfies ErrorResponse,
+                },
                 409
             );
         }
@@ -251,10 +246,7 @@ watchlistRoutes.openapi(deleteRoute, async (c) => {
     // WHERE clause matched nothing (not owned / doesn't exist), which is the real 404 case.
     if (!deleted) {
         console.warn('Watchlist item not found', { itemId: id });
-        return c.json(
-            { error: 'Item not found in watchlist' } satisfies ErrorResponse,
-            404
-        );
+        return c.json({ error: 'Item not found in watchlist' }, 404);
     }
 
     console.log('Watchlist item removed', { itemId: deleted.id });
