@@ -7,11 +7,11 @@ export const validationHook: Hook<any, any, any, any> = (result, c) => {
         return;
     }
 
-    return c.json(
+    return c.json<ErrorResponse>(
         {
             error: 'Validation failed',
             details: result.error.issues,
-        } satisfies ErrorResponse,
+        },
         400
     );
 };

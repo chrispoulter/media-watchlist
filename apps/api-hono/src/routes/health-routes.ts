@@ -1,9 +1,9 @@
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
 import { check as checkDatabase } from '../db/index.js';
+import { validationHook } from '../middleware/validation-hook.js';
 import { version } from '../lib/config.js';
 import { check as checkMailer } from '../lib/mailer.js';
 import { check as checkTmdb } from '../lib/tmdb.js';
-import { validationHook } from '../lib/validation.js';
 
 const serviceStatusSchema = z.object({
     name: z.string(),

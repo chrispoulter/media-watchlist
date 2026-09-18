@@ -1,9 +1,9 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { cors } from 'hono/cors';
 import { errorHandler } from './middleware/error-handler.js';
+import { validationHook } from './middleware/validation-hook.js';
 import { config } from './lib/config.js';
 import { auth } from './lib/auth.js';
-import { validationHook } from './lib/validation.js';
 
 import { registerDocRoutes } from './routes/doc-routes.js';
 import healthRoutes from './routes/health-routes.js';

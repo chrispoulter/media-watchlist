@@ -8,7 +8,7 @@ import { and, eq } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
 import { requireAuth, type AuthEnv } from '../middleware/require-auth.js';
-import { validationHook } from '../lib/validation.js';
+import { validationHook } from '../middleware/validation-hook.js';
 
 const WATCHLIST_ITEM_LIMIT = 100;
 
