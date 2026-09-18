@@ -2,7 +2,6 @@
     "$schema": "https://v2-10-13.turborepo.dev/schema.json",
     "globalPassThroughEnv": [
         "NODE_ENV",
-
         "PORT",
         "DATABASE_URL",
         "BETTER_AUTH_SECRET",
@@ -23,22 +22,20 @@
     ],
     "tasks": {
         "build": {
+            "env": ["VITE_API_URL", "GIT_COMMIT_SHA", "npm_package_version"],
             "dependsOn": ["^build"],
             "inputs": ["$TURBO_DEFAULT$", ".env*"],
-            "outputs": ["dist/**"],
-            "env": ["VITE_API_URL", "GIT_COMMIT_SHA", "npm_package_version"]
+            "outputs": ["dist/**"]
         },
-        "dev": {
-            "dependsOn": ["^build"],
-            "cache": false,
-            "persistent": true
-        },
-        "typecheck": {
-            "dependsOn": ["^build"]
-        },
+        "typecheck": {},
         "lint": {},
         "lint:fix": {
             "cache": false
+        },
+        "dev": {
+            "cache": false,
+            "persistent": true,
+            "dependsOn": ["^build"]
         }
     }
 }
