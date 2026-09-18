@@ -11,10 +11,8 @@ import type {
 import { and, eq } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
+import { requireAuth, type AuthEnv } from '../middleware/require-auth.js';
 import { authSecurity } from '../lib/openapi-security.js';
-import { defaultHook } from '../lib/validation-hook.js';
-import { requireAuth } from '../middleware/require-auth.js';
-import type { AuthEnv } from '../middleware/require-auth.js';
 
 const WATCHLIST_ITEM_LIMIT = 100;
 
@@ -36,7 +34,7 @@ const watchlistItemSchema = z.object({
 
 const watchlistResponseSchema = z.array(watchlistItemSchema);
 
-const watchlistRoutes = new OpenAPIHono<AuthEnv>({ defaultHook });
+const watchlistRoutes = new OpenAPIHono<AuthEnv>();
 
 watchlistRoutes.use('*', requireAuth);
 

@@ -3,7 +3,6 @@ import { check as checkDatabase } from '../db/index.js';
 import { version } from '../lib/config.js';
 import { check as checkMailer } from '../lib/mailer.js';
 import { check as checkTmdb } from '../lib/tmdb.js';
-import { defaultHook } from '../lib/validation-hook.js';
 
 const serviceStatusSchema = z.object({
     name: z.string(),
@@ -23,7 +22,7 @@ const aliveResponseSchema = z.object({
     uptime: z.number(),
 });
 
-const healthRoutes = new OpenAPIHono({ defaultHook });
+const healthRoutes = new OpenAPIHono();
 
 const healthRoute = createRoute({
     method: 'get',

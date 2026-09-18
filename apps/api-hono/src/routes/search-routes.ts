@@ -4,11 +4,9 @@ import type { SearchResponse } from '@media-watchlist/shared';
 import { and, eq, inArray } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
+import { requireAuth, type AuthEnv } from '../middleware/require-auth.js';
 import { authSecurity } from '../lib/openapi-security.js';
 import { search } from '../lib/tmdb.js';
-import { defaultHook } from '../lib/validation-hook.js';
-import { requireAuth } from '../middleware/require-auth.js';
-import type { AuthEnv } from '../middleware/require-auth.js';
 
 const errorResponseSchema = z.object({
     error: z.string(),
@@ -27,7 +25,7 @@ const searchResponseSchema = z.array(
     })
 );
 
-const searchRoutes = new OpenAPIHono<AuthEnv>({ defaultHook });
+const searchRoutes = new OpenAPIHono<AuthEnv>();
 
 searchRoutes.use('*', requireAuth);
 
