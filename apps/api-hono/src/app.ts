@@ -37,6 +37,8 @@ app.route('/', healthRoutes);
 app.openAPIRegistry.registerComponent('securitySchemes', 'bearerAuth', {
     type: 'http',
     scheme: 'bearer',
+    description:
+        'Pass the session token from the sign-in response body as `Authorization: Bearer <token>`.',
 });
 
 app.doc('/openapi.json', {
@@ -61,6 +63,5 @@ app.get(
         ],
     })
 );
-
 
 export default app;
