@@ -1,8 +1,8 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { cors } from 'hono/cors';
-import type { ErrorResponse } from '@media-watchlist/shared';
-import { auth } from './lib/auth.js';
+import { errorHandler } from './middleware/error-handler.js';
 import { config } from './lib/config.js';
+import { auth } from './lib/auth.js';
 import { validationHook } from './lib/validation.js';
 
 import { registerDocRoutes } from './routes/doc-routes.js';
@@ -12,14 +12,7 @@ import watchlistRoutes from './routes/watchlist-routes.js';
 
 const app = new OpenAPIHono({ defaultHook: validationHook });
 
-app.onError((err, c) => {
-    console.error('Unhandled error', err);
-
-    return c.json(
-        { error: 'Internal Server Error' } satisfies ErrorResponse,
-        500
-    );
-});
+app.onError(errorHandler);
 
 app.use(
     '*',
