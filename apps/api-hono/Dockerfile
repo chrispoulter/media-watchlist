@@ -29,5 +29,7 @@ COPY --from=prod-deps /app/package.json ./package.json
 COPY --from=builder /app/apps/api-hono/package.json ./apps/api-hono/package.json
 COPY --from=builder /app/apps/api-hono/dist ./apps/api-hono/dist
 COPY --from=builder /app/apps/api-hono/drizzle ./apps/api-hono/drizzle
+COPY --from=builder /app/packages/shared/package.json ./packages/shared/package.json
+COPY --from=builder /app/packages/shared/dist ./packages/shared/dist
 EXPOSE 3001
 CMD ["node", "apps/api-hono/dist/index.js"]
