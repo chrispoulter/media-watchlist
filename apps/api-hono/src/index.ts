@@ -1,40 +1,55 @@
 import { serve } from '@hono/node-server';
-import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
-import { Scalar } from '@scalar/hono-api-reference';
+import app from './app.js';
+import { shutdown as shutdownDb } from './db/index.js';
+import { config } from './lib/config.js';
+import { shutdown as shutdownMailer } from './lib/mailer.js';
 
-const app = new OpenAPIHono();
+const SHUTDOWN_TIMEOUT_MS = 10_000;
 
-const helloRoute = createRoute({
-    method: 'get',
-    path: '/',
-    responses: {
-        200: {
-            description: 'Greeting message.',
-            content: {
-                'text/plain': { schema: z.string().openapi({ example: 'Hello Hono!' }) },
-            },
-        },
-    },
+const server = serve({ fetch: app.fetch, port: config.PORT }, (info) => {
+    console.log(`Server is running on http://localhost:${info.port}`);
 });
 
-app.openapi(helloRoute, (c) => c.text('Hello Hono!'));
+const closeServer = () =>
+    new Promise<void>((resolve, reject) => {
+        server.close((err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
 
-app.doc('/openapi.json', {
-    openapi: '3.0.3',
-    info: {
-        title: 'Media Watchlist API',
-        version: '1.0.0',
-    },
-});
+const shutdown = (signal: string) => {
+    console.log(`Shutdown signal received: ${signal}`);
 
-app.get('/reference', Scalar({ url: '/openapi.json', pageTitle: 'Media Watchlist API' }));
+    void (async () => {
+        try {
+            await closeServer();
+            await shutdownDb();
+            shutdownMailer();
+            console.log('Shutdown complete');
+            process.exit(0);
+        } catch (err) {
+            console.error('Error during shutdown', err);
+            process.exit(1);
+        }
+    })();
 
-serve(
-    {
-        fetch: app.fetch,
-        port: 3001,
-    },
-    (info) => {
-        console.log(`Server is running on http://localhost:${info.port}`);
+    if ('closeIdleConnections' in server) {
+        server.closeIdleConnections();
     }
-);
+
+    setTimeout(() => {
+        console.error('Shutdown timeout exceeded, forcing exit');
+        process.exit(1);
+    }, SHUTDOWN_TIMEOUT_MS).unref();
+};
+
+process.on('SIGTERM', () => {
+    shutdown('SIGTERM');
+});
+process.on('SIGINT', () => {
+    shutdown('SIGINT');
+});

@@ -17,7 +17,9 @@ export const config = defineConfig(globalIgnores(['dist']), {
     languageOptions: {
         globals: globals.node,
         parserOptions: {
-            projectService: true,
+            projectService: {
+                allowDefaultProject: ['*.config.ts'],
+            },
         },
     },
     rules: {
@@ -25,5 +27,6 @@ export const config = defineConfig(globalIgnores(['dist']), {
             'error',
             { argsIgnorePattern: '^_' },
         ],
+        'n/no-process-exit': 'off',
     },
 });

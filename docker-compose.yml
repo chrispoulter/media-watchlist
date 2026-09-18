@@ -60,6 +60,69 @@ services:
                 condition: service_healthy
         restart: 'no'
 
+    api-hono:
+        image: media-watchlist-api-hono:latest
+        build:
+            context: .
+            dockerfile: apps/api-hono/Dockerfile
+        environment:
+            PORT: 3001
+            DATABASE_URL: postgresql://postgres:password@postgres-hono:5432/media_watchlist_hono
+            BETTER_AUTH_URL: http://localhost:3001
+            BETTER_AUTH_SECRET: change-me-to-a-secret-that-is-at-least-32-chars
+            CLIENT_ORIGIN: http://localhost:5173
+            GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+            GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+            SMTP_HOST: mailpit
+            SMTP_PORT: 1025
+            SMTP_FROM: noreply@example.com
+        ports:
+            - 3001:3001
+        healthcheck:
+            test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:3001/']
+            interval: 30s
+            timeout: 5s
+            retries: 3
+            start_period: 10s
+        depends_on:
+            migrate-hono:
+                condition: service_completed_successfully
+            postgres-hono:
+                condition: service_healthy
+            mailpit:
+                condition: service_started
+
+    migrate-hono:
+        image: media-watchlist-api-hono:latest
+        build:
+            context: .
+            dockerfile: apps/api-hono/Dockerfile
+        command: node apps/api-hono/dist/db/migrate.js
+        environment:
+            DATABASE_URL: postgresql://postgres:password@postgres-hono:5432/media_watchlist_hono
+        depends_on:
+            postgres-hono:
+                condition: service_healthy
+        restart: 'no'
+
+    postgres-hono:
+        image: postgres:18.3
+        user: postgres
+        environment:
+            POSTGRES_DB: media_watchlist_hono
+            POSTGRES_PASSWORD: password
+        ports:
+            - 5433:5432
+        volumes:
+            - postgres_hono_data:/var/lib/postgresql
+        restart: always
+        healthcheck:
+            test: ['CMD', 'pg_isready']
+            interval: 30s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
+
     postgres:
         image: postgres:18.3
         user: postgres
@@ -91,4 +154,5 @@ services:
 
 volumes:
     postgres_data:
+    postgres_hono_data:
     mailpit_data:
