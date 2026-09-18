@@ -16,7 +16,7 @@ export const requireAuth = createMiddleware<AuthEnv>(async (c, next) => {
     });
 
     if (!sessionData) {
-        return c.json({ error: 'Unauthorized' } satisfies ErrorResponse, 401);
+        return c.json<ErrorResponse>({ error: 'Unauthorized' }, 401);
     }
 
     c.set('user', sessionData.user);
