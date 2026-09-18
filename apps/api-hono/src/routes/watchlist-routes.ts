@@ -12,7 +12,6 @@ import { and, eq } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
 import { requireAuth, type AuthEnv } from '../middleware/require-auth.js';
-import { authSecurity } from '../lib/openapi-security.js';
 
 const WATCHLIST_ITEM_LIMIT = 100;
 
@@ -43,7 +42,7 @@ const listRoute = createRoute({
     path: '/',
     tags: ['Watchlist'],
     summary: 'Get all watchlist items for the current user',
-    security: authSecurity,
+    security: [{ bearerAuth: [] }],
     responses: {
         200: {
             description: 'List of watchlist items.',
@@ -88,7 +87,7 @@ const addRoute = createRoute({
     path: '/',
     tags: ['Watchlist'],
     summary: 'Add an item to the watchlist',
-    security: authSecurity,
+    security: [{ bearerAuth: [] }],
     request: {
         body: {
             required: true,
@@ -209,7 +208,7 @@ const deleteRoute = createRoute({
     path: '/{id}',
     tags: ['Watchlist'],
     summary: 'Remove an item from the watchlist',
-    security: authSecurity,
+    security: [{ bearerAuth: [] }],
     request: {
         params: z.object({
             id: z.coerce.number().int().positive(),

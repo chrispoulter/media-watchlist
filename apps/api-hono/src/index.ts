@@ -1,8 +1,8 @@
 import { serve } from '@hono/node-server';
 import app from './app.js';
 import { shutdown as shutdownDb } from './db/index.js';
-import { config } from './lib/config.js';
 import { shutdown as shutdownMailer } from './lib/mailer.js';
+import { config } from './lib/config.js';
 
 const SHUTDOWN_TIMEOUT_MS = 10_000;
 

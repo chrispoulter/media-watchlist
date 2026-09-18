@@ -1,7 +1,7 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
-import type { ErrorResponse } from '@media-watchlist/shared';
-import { Scalar } from '@scalar/hono-api-reference';
+// import type { ErrorResponse } from '@media-watchlist/shared';
 import { cors } from 'hono/cors';
+import { Scalar } from '@scalar/hono-api-reference';
 import { auth } from './lib/auth.js';
 import { config } from './lib/config.js';
 
@@ -20,19 +20,24 @@ app.use(
     })
 );
 
-app.onError((err, c) => {
-    console.error('Unhandled error', err);
-    return c.json(
-        { error: 'Internal Server Error' } satisfies ErrorResponse,
-        500
-    );
-});
+// app.onError((err, c) => {
+//     console.error('Unhandled error', err);
+//     return c.json(
+//         { error: 'Internal Server Error' } satisfies ErrorResponse,
+//         500
+//     );
+// });
 
 app.on(['GET', 'POST'], '/api/auth/*', (c) => auth.handler(c.req.raw));
 
 app.route('/api/search', searchRoutes);
 app.route('/api/watchlist', watchlistRoutes);
 app.route('/', healthRoutes);
+
+app.openAPIRegistry.registerComponent('securitySchemes', 'bearerAuth', {
+    type: 'http',
+    scheme: 'bearer',
+});
 
 app.doc('/openapi.json', {
     openapi: '3.0.3',
@@ -57,6 +62,5 @@ app.get(
     })
 );
 
-app.get('/', (c) => c.redirect('/reference'));
 
 export default app;

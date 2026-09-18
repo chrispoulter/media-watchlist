@@ -5,7 +5,6 @@ import { and, eq, inArray } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
 import { requireAuth, type AuthEnv } from '../middleware/require-auth.js';
-import { authSecurity } from '../lib/openapi-security.js';
 import { search } from '../lib/tmdb.js';
 
 const errorResponseSchema = z.object({
@@ -34,7 +33,7 @@ const searchRoute = createRoute({
     path: '/',
     tags: ['Search'],
     summary: 'Search for movies and TV shows',
-    security: authSecurity,
+    security: [{ bearerAuth: [] }],
     request: {
         query: z.object({
             query: z.string().min(1),
