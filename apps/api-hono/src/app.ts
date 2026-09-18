@@ -1,8 +1,10 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { cors } from 'hono/cors';
+import { honoLogger } from '@logtape/hono';
 import { errorHandler } from './middleware/error-handler.js';
 import { validationHook } from './middleware/validation-hook.js';
 import { config } from './lib/config.js';
+import './lib/logger.js';
 import { auth } from './lib/auth.js';
 
 import { registerDocRoutes } from './routes/doc-routes.js';
@@ -20,6 +22,15 @@ app.use(
         origin: config.CLIENT_ORIGIN.split(','),
         allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         credentials: true,
+    })
+);
+
+app.use(
+    '*',
+    honoLogger({
+        category: ['hono'],
+        skip: (c) => c.req.path === '/health' || c.req.path === '/alive',
+        context: true,
     })
 );
 

@@ -1,6 +1,9 @@
 import type { MediaType } from '@media-watchlist/shared';
+import { getLogger } from '@logtape/logtape';
 import type { HealthStatus } from '../types/index.js';
 import { config } from './config.js';
+
+const logger = getLogger(['api-hono', 'tmdb']);
 
 const API_URL = 'https://api.themoviedb.org/3';
 const IMAGE_URL = 'https://image.tmdb.org/t/p/w300';
@@ -37,7 +40,7 @@ export const check = async (): Promise<HealthStatus> => {
 
         return { name: 'tmdb', status: 'ok' };
     } catch (err) {
-        console.error('TMDB health check failed', err);
+        logger.error('TMDB health check failed {*}', { err });
         return { name: 'tmdb', status: 'unhealthy' };
     }
 };
@@ -58,7 +61,7 @@ export const search = async (query: string) => {
         );
 
         if (!response.ok) {
-            console.error('TMDB API error', {
+            logger.error('TMDB API error {*}', {
                 query: normalizedQuery,
                 status: response.status,
                 statusText: response.statusText,
@@ -89,7 +92,7 @@ export const search = async (query: string) => {
             }));
     } catch (err) {
         if (err instanceof Error && err.name === 'TimeoutError') {
-            console.error('TMDB request timed out', {
+            logger.error('TMDB request timed out {*}', {
                 query: normalizedQuery,
                 timeoutMs: FETCH_TIMEOUT_MS,
             });

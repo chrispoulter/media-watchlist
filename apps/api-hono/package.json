@@ -19,6 +19,9 @@
     "dependencies": {
         "@hono/node-server": "^2.1.1",
         "@hono/zod-openapi": "^1.6.3",
+        "@logtape/hono": "^2.2.8",
+        "@logtape/logtape": "^2.3.5",
+        "@logtape/redaction": "^2.2.8",
         "@media-watchlist/shared": "*",
         "@scalar/hono-api-reference": "^0.12.2",
         "better-auth": "^1.6.23",

@@ -1,8 +1,11 @@
 import nodemailer from 'nodemailer';
 import type { ReactElement } from 'react';
 import { render } from 'react-email';
+import { getLogger } from '@logtape/logtape';
 import type { HealthStatus } from '../types/index.js';
 import { config } from './config.js';
+
+const logger = getLogger(['api-hono', 'mailer']);
 
 const mailer = nodemailer.createTransport({
     host: config.SMTP_HOST,
@@ -23,7 +26,7 @@ export const check = async (): Promise<HealthStatus> => {
         await mailer.verify();
         return { name: 'mailer', status: 'ok' };
     } catch (err) {
-        console.error('Mailer health check failed', err);
+        logger.error('Mailer health check failed {*}', { err });
         return { name: 'mailer', status: 'unhealthy' };
     }
 };
@@ -45,6 +48,6 @@ export const sendMail = async ({ to, subject, template }: MailMessage) => {
             html,
         });
     } catch (err) {
-        console.error('Mail sending failed', err);
+        logger.error('Mail sending failed {*}', { err });
     }
 };

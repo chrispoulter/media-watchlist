@@ -5,12 +5,15 @@ import {
     mediaTypeSchema,
 } from '@media-watchlist/shared';
 import { and, eq } from 'drizzle-orm';
+import { getLogger } from '@logtape/logtape';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
 import { requireAuth, type AuthEnv } from '../middleware/require-auth.js';
 import { validationHook } from '../middleware/validation-hook.js';
 
 const WATCHLIST_ITEM_LIMIT = 100;
+
+const logger = getLogger(['api-hono', 'watchlist']);
 
 const watchlistItemSchema = z.object({
     id: z.number(),
@@ -151,7 +154,7 @@ watchlistRoutes.openapi(addRoute, async (c) => {
             );
         }
 
-        console.log('Watchlist item added', {
+        logger.info('Watchlist item added {*}', {
             itemId: created.id,
             providerId: created.providerId,
             mediaType: created.mediaType,
@@ -180,7 +183,7 @@ watchlistRoutes.openapi(addRoute, async (c) => {
                 : '';
 
         if (message.includes('watchlist_user_provider_idx')) {
-            console.warn('Duplicate watchlist item', {
+            logger.warning('Duplicate watchlist item {*}', {
                 providerId: body.providerId,
                 mediaType: body.mediaType,
             });
@@ -241,11 +244,11 @@ watchlistRoutes.openapi(deleteRoute, async (c) => {
     // drizzle-orm types `.returning()` as always non-empty; an empty array here means the
     // WHERE clause matched nothing (not owned / doesn't exist), which is the real 404 case.
     if (!deleted) {
-        console.warn('Watchlist item not found', { itemId: id });
+        logger.warning('Watchlist item not found {*}', { itemId: id });
         return c.json({ error: 'Item not found in watchlist' }, 404);
     }
 
-    console.log('Watchlist item removed', { itemId: deleted.id });
+    logger.info('Watchlist item removed {*}', { itemId: deleted.id });
 
     return c.body(null, 204);
 });

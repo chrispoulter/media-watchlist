@@ -29,6 +29,9 @@ const configSchema = z.object({
     SMTP_USER: z.string().optional(),
     SMTP_PASS: z.string().optional(),
     SMTP_FROM: z.email(),
+    LOG_LEVEL: z
+        .enum(['trace', 'debug', 'info', 'warning', 'error', 'fatal'])
+        .default('info'),
 });
 
 export const config = configSchema.parse(process.env);

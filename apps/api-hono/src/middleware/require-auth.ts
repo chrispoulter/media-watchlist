@@ -1,5 +1,6 @@
 import type { ErrorResponse } from '@media-watchlist/shared';
 import { createMiddleware } from 'hono/factory';
+import { withContext } from '@logtape/logtape';
 import { auth } from '../lib/auth.js';
 import type { Session, User } from '../lib/auth.js';
 
@@ -22,5 +23,5 @@ export const requireAuth = createMiddleware<AuthEnv>(async (c, next) => {
     c.set('user', sessionData.user);
     c.set('session', sessionData.session);
 
-    await next();
+    await withContext({ userId: sessionData.user.id }, next);
 });

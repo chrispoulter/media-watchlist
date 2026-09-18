@@ -8,6 +8,7 @@ Hono API for Media Watchlist: authentication, TMDB search, and the user's watchl
 - [Better Auth](https://www.better-auth.com/) — email/password, Google OAuth, TOTP 2FA
 - Drizzle ORM + PostgreSQL
 - Zod for env/config validation
+- LogTape for logging
 - [Scalar](https://scalar.com/) for API reference docs (OpenAPI)
 - Nodemailer + React Email for transactional email
 
@@ -42,7 +43,7 @@ cp apps/api/.env.example apps/api/.env
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`                                         | Google OAuth credentials (optional)                      |
 | `TMDB_API_READ_TOKEN`                                                               | TMDB API read access token                               |
 | `SMTP_HOST` / `SMTP_PORT` / `SMTP_SECURE` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM` | SMTP settings for outgoing email                         |
-| `LOG_LEVEL`                                                                         | Pino log level (default `info`)                          |
+| `LOG_LEVEL`                                                                         | LogTape log level (default `info`)                       |
 
 Run database migrations:
 
