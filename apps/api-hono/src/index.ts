@@ -1,11 +1,33 @@
 import { serve } from '@hono/node-server';
-import { Hono } from 'hono';
+import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
+import { Scalar } from '@scalar/hono-api-reference';
 
-const app = new Hono();
+const app = new OpenAPIHono();
 
-app.get('/', (c) => {
-    return c.text('Hello Hono!');
+const helloRoute = createRoute({
+    method: 'get',
+    path: '/',
+    responses: {
+        200: {
+            description: 'Greeting message.',
+            content: {
+                'text/plain': { schema: z.string().openapi({ example: 'Hello Hono!' }) },
+            },
+        },
+    },
 });
+
+app.openapi(helloRoute, (c) => c.text('Hello Hono!'));
+
+app.doc('/openapi.json', {
+    openapi: '3.0.3',
+    info: {
+        title: 'Media Watchlist API',
+        version: '1.0.0',
+    },
+});
+
+app.get('/reference', Scalar({ url: '/openapi.json', pageTitle: 'Media Watchlist API' }));
 
 serve(
     {
