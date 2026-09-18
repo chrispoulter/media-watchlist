@@ -28,6 +28,8 @@ const shutdown = (signal: string) => {
         }
     });
 
+    server.closeIdleConnections();
+
     setTimeout(() => {
         logger.error('Shutdown timeout exceeded, forcing exit');
         process.exit(1);
