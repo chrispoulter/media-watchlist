@@ -19,7 +19,8 @@ interface TmdbSearchResponse {
     }[];
 }
 
-const toMediaType = (type: 'movie' | 'tv'): MediaType => (type === 'movie' ? 'movie' : 'tv-show');
+const toMediaType = (type: 'movie' | 'tv'): MediaType =>
+    type === 'movie' ? 'movie' : 'tv-show';
 
 export const check = async (): Promise<HealthStatus> => {
     try {
@@ -29,7 +30,9 @@ export const check = async (): Promise<HealthStatus> => {
         });
 
         if (!response.ok) {
-            throw new Error(`TMDB API error: ${response.status} ${response.statusText}`);
+            throw new Error(
+                `TMDB API error: ${response.status} ${response.statusText}`
+            );
         }
 
         return { name: 'tmdb', status: 'ok' };
@@ -44,10 +47,15 @@ export const search = async (query: string) => {
     const params = new URLSearchParams({ query: normalizedQuery });
 
     try {
-        const response = await fetch(`${API_URL}/search/multi?${params.toString()}`, {
-            headers: { Authorization: `Bearer ${config.TMDB_API_READ_TOKEN}` },
-            signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-        });
+        const response = await fetch(
+            `${API_URL}/search/multi?${params.toString()}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${config.TMDB_API_READ_TOKEN}`,
+                },
+                signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+            }
+        );
 
         if (!response.ok) {
             console.error('TMDB API error', {
@@ -55,24 +63,29 @@ export const search = async (query: string) => {
                 status: response.status,
                 statusText: response.statusText,
             });
-            throw new Error(`TMDB API error: ${response.status} ${response.statusText}`);
+            throw new Error(
+                `TMDB API error: ${response.status} ${response.statusText}`
+            );
         }
 
         const data = (await response.json()) as TmdbSearchResponse;
 
         return data.results
-            .filter((item) => item.media_type === 'movie' || item.media_type === 'tv')
+            .filter(
+                (item) =>
+                    item.media_type === 'movie' || item.media_type === 'tv'
+            )
             .map((item) => ({
                 providerId: `tmdb:${item.id}`,
                 mediaType: toMediaType(item.media_type as 'movie' | 'tv'),
                 // TMDB returns '' (not undefined) for the field that doesn't apply to a movie/tv result,
                 // so `||` (not `??`) is required to fall back correctly.
-                /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
                 title: item.title || item.name,
-                posterUrl: item.poster_path ? `${IMAGE_URL}${item.poster_path}` : null,
+                posterUrl: item.poster_path
+                    ? `${IMAGE_URL}${item.poster_path}`
+                    : null,
                 overview: item.overview,
                 releaseDate: item.release_date || item.first_air_date || null,
-                /* eslint-enable @typescript-eslint/prefer-nullish-coalescing */
             }));
     } catch (err) {
         if (err instanceof Error && err.name === 'TimeoutError') {

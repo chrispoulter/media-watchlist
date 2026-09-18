@@ -1,14 +1,14 @@
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
-import { mediaTypeSchema  } from '@media-watchlist/shared';
-import type {SearchResponse} from '@media-watchlist/shared';
+import { mediaTypeSchema } from '@media-watchlist/shared';
+import type { SearchResponse } from '@media-watchlist/shared';
 import { and, eq, inArray } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
 import { authSecurity } from '../lib/openapi-security.js';
 import { search } from '../lib/tmdb.js';
 import { defaultHook } from '../lib/validation-hook.js';
-import { requireAuth  } from '../middleware/require-auth.js';
-import type {AuthEnv} from '../middleware/require-auth.js';
+import { requireAuth } from '../middleware/require-auth.js';
+import type { AuthEnv } from '../middleware/require-auth.js';
 
 const errorResponseSchema = z.object({
     error: z.string(),
@@ -91,7 +91,9 @@ searchRoutes.openapi(searchRoute, async (c) => {
             posterUrl: item.posterUrl ?? undefined,
             overview: item.overview ?? undefined,
             releaseDate: item.releaseDate ?? undefined,
-            watchlistItemId: watchlistMap.get(`${item.providerId}-${item.mediaType}`) ?? undefined,
+            watchlistItemId:
+                watchlistMap.get(`${item.providerId}-${item.mediaType}`) ??
+                undefined,
         })) satisfies SearchResponse,
         200
     );

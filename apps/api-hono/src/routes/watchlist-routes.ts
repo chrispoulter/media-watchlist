@@ -1,19 +1,20 @@
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
 import {
     addWatchlistItemSchema,
-    mediaTypeSchema
-    
-    
-    
+    mediaTypeSchema,
 } from '@media-watchlist/shared';
-import type {AddWatchlistItemResponse, ErrorResponse, WatchlistResponse} from '@media-watchlist/shared';
+import type {
+    AddWatchlistItemResponse,
+    ErrorResponse,
+    WatchlistResponse,
+} from '@media-watchlist/shared';
 import { and, eq } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
 import { authSecurity } from '../lib/openapi-security.js';
 import { defaultHook } from '../lib/validation-hook.js';
-import { requireAuth  } from '../middleware/require-auth.js';
-import type {AuthEnv} from '../middleware/require-auth.js';
+import { requireAuth } from '../middleware/require-auth.js';
+import type { AuthEnv } from '../middleware/require-auth.js';
 
 const WATCHLIST_ITEM_LIMIT = 100;
 
@@ -48,7 +49,9 @@ const listRoute = createRoute({
     responses: {
         200: {
             description: 'List of watchlist items.',
-            content: { 'application/json': { schema: watchlistResponseSchema } },
+            content: {
+                'application/json': { schema: watchlistResponseSchema },
+            },
         },
         401: {
             description: 'Unauthorized.',
@@ -126,7 +129,10 @@ watchlistRoutes.openapi(addRoute, async (c) => {
     const body = c.req.valid('json');
     const userId = c.get('user').id;
 
-    const count = await db.$count(watchlistItem, eq(watchlistItem.userId, userId));
+    const count = await db.$count(
+        watchlistItem,
+        eq(watchlistItem.userId, userId)
+    );
 
     if (count >= WATCHLIST_ITEM_LIMIT) {
         return c.json(
@@ -145,10 +151,11 @@ watchlistRoutes.openapi(addRoute, async (c) => {
 
         // drizzle-orm types `.returning()` as always non-empty, but an empty array is a real
         // possibility at runtime (e.g. driver-level insert failures), so this check is not dead code.
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (!created) {
             return c.json(
-                { error: 'Failed to add item to watchlist' } satisfies ErrorResponse,
+                {
+                    error: 'Failed to add item to watchlist',
+                } satisfies ErrorResponse,
                 500
             );
         }
@@ -188,7 +195,9 @@ watchlistRoutes.openapi(addRoute, async (c) => {
             });
 
             return c.json(
-                { error: 'Item already exists in watchlist' } satisfies ErrorResponse,
+                {
+                    error: 'Item already exists in watchlist',
+                } satisfies ErrorResponse,
                 409
             );
         }
@@ -240,7 +249,6 @@ watchlistRoutes.openapi(deleteRoute, async (c) => {
 
     // drizzle-orm types `.returning()` as always non-empty; an empty array here means the
     // WHERE clause matched nothing (not owned / doesn't exist), which is the real 404 case.
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!deleted) {
         console.warn('Watchlist item not found', { itemId: id });
         return c.json(

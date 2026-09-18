@@ -30,7 +30,10 @@ export const auth = betterAuth({
             await sendMail({
                 to: user.email,
                 subject: 'Reset your password | Media Watchlist',
-                template: createElement(ResetPasswordEmail, { username: user.name, url }),
+                template: createElement(ResetPasswordEmail, {
+                    username: user.name,
+                    url,
+                }),
             });
         },
     },
@@ -39,7 +42,10 @@ export const auth = betterAuth({
             await sendMail({
                 to: user.email,
                 subject: 'Verify your email address | Media Watchlist',
-                template: createElement(VerificationEmail, { username: user.name, url }),
+                template: createElement(VerificationEmail, {
+                    username: user.name,
+                    url,
+                }),
             });
         },
     },

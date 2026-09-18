@@ -21,7 +21,10 @@ app.use(
 
 app.onError((err, c) => {
     console.error('Unhandled error', err);
-    return c.json({ error: 'Internal Server Error' } satisfies ErrorResponse, 500);
+    return c.json(
+        { error: 'Internal Server Error' } satisfies ErrorResponse,
+        500
+    );
 });
 
 app.on(['GET', 'POST'], '/api/auth/*', (c) => auth.handler(c.req.raw));
@@ -38,7 +41,9 @@ app.doc('/openapi.json', {
     },
 });
 
-app.get('/auth-openapi.json', async (c) => c.json(await auth.api.generateOpenAPISchema()));
+app.get('/auth-openapi.json', async (c) =>
+    c.json(await auth.api.generateOpenAPISchema())
+);
 
 app.get(
     '/reference',

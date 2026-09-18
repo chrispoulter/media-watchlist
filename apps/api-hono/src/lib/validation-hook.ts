@@ -12,7 +12,10 @@ export const defaultHook: Hook<any, any, any, any> = (result, c) => {
                   : 'Invalid request body';
 
         return c.json(
-            { error: message, details: result.error.issues } satisfies ErrorResponse,
+            {
+                error: message,
+                details: result.error.issues,
+            } satisfies ErrorResponse,
             400
         );
     }

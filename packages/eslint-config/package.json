@@ -4,13 +4,11 @@
     "private": true,
     "type": "module",
     "files": [
-        "hono.js",
         "server.js",
         "vite.js"
     ],
     "dependencies": {
         "@eslint/js": "^10.0.1",
-        "@hono/eslint-config": "^2.1.1",
         "eslint-config-prettier": "^10.1.8",
         "eslint-config-turbo": "^2.10.13",
         "typescript-eslint": "^8.70.0"

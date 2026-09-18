@@ -9,7 +9,9 @@ if (!databaseUrl) {
 }
 
 const db = drizzle(databaseUrl);
-const migrationsFolder = fileURLToPath(new URL('../../drizzle', import.meta.url));
+const migrationsFolder = fileURLToPath(
+    new URL('../../drizzle', import.meta.url)
+);
 
 try {
     await migrate(db, { migrationsFolder });

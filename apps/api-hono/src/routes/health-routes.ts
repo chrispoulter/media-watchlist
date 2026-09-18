@@ -43,7 +43,11 @@ const healthRoute = createRoute({
 });
 
 healthRoutes.openapi(healthRoute, async (c) => {
-    const services = await Promise.all([checkDatabase(), checkMailer(), checkTmdb()]);
+    const services = await Promise.all([
+        checkDatabase(),
+        checkMailer(),
+        checkTmdb(),
+    ]);
 
     const failing = services.some((s) => s.status !== 'ok');
 
