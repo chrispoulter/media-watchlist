@@ -13,7 +13,7 @@ Hono API for Media Watchlist: authentication, TMDB search, and the user's watchl
 
 ## Prerequisites
 
-- Node.js >= 20.19.0
+- Node.js >= 24.0.0
 - A PostgreSQL database
 - A [TMDB](https://www.themoviedb.org/) API read access token
 - An SMTP server for outgoing email (use [Mailpit](https://mailpit.axllent.org/) locally, started via the root `docker-compose.yml`)
