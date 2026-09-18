@@ -4,7 +4,6 @@
     "private": true,
     "type": "module",
     "files": [
-        "library.js",
         "server.js",
         "vite.js"
     ],
