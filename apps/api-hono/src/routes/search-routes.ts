@@ -6,6 +6,7 @@ import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
 import { requireAuth, type AuthEnv } from '../middleware/require-auth.js';
 import { search } from '../lib/tmdb.js';
+import { validationHook } from '../lib/validation.js';
 
 const errorResponseSchema = z.object({
     error: z.string(),
@@ -24,7 +25,9 @@ const searchResponseSchema = z.array(
     })
 );
 
-const searchRoutes = new OpenAPIHono<AuthEnv>();
+const searchRoutes = new OpenAPIHono<AuthEnv>({
+    defaultHook: validationHook,
+});
 
 searchRoutes.use('*', requireAuth);
 
