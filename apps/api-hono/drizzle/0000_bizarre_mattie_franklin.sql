@@ -31,9 +31,7 @@ CREATE TABLE "two_factor" (
 	"secret" text NOT NULL,
 	"backup_codes" text NOT NULL,
 	"user_id" text NOT NULL,
-	"verified" boolean DEFAULT true,
-	"failed_verification_count" integer DEFAULT 0,
-	"locked_until" timestamp
+	"verified" boolean DEFAULT true
 );
 --> statement-breakpoint
 CREATE TABLE "user" (
@@ -57,11 +55,26 @@ CREATE TABLE "verification" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "watchlist_item" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"user_id" text NOT NULL,
+	"provider_id" text NOT NULL,
+	"media_type" text NOT NULL,
+	"title" text NOT NULL,
+	"poster_url" text,
+	"overview" text,
+	"release_date" text,
+	"added_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 ALTER TABLE "account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "two_factor" ADD CONSTRAINT "two_factor_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "watchlist_item" ADD CONSTRAINT "watchlist_item_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "account_userId_idx" ON "account" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "session_userId_idx" ON "session" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "twoFactor_secret_idx" ON "two_factor" USING btree ("secret");--> statement-breakpoint
 CREATE INDEX "twoFactor_userId_idx" ON "two_factor" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "verification_identifier_idx" ON "verification" USING btree ("identifier");
+CREATE INDEX "verification_identifier_idx" ON "verification" USING btree ("identifier");--> statement-breakpoint
+CREATE UNIQUE INDEX "watchlist_user_provider_idx" ON "watchlist_item" USING btree ("user_id","provider_id","media_type");--> statement-breakpoint
+CREATE INDEX "watchlist_user_idx" ON "watchlist_item" USING btree ("user_id");
