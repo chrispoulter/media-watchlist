@@ -1,10 +1,10 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 // import type { ErrorResponse } from '@media-watchlist/shared';
 import { cors } from 'hono/cors';
-import { Scalar } from '@scalar/hono-api-reference';
 import { auth } from './lib/auth.js';
 import { config } from './lib/config.js';
 
+import { registerDocRoutes } from './routes/doc-routes.js';
 import healthRoutes from './routes/health-routes.js';
 import searchRoutes from './routes/search-routes.js';
 import watchlistRoutes from './routes/watchlist-routes.js';
@@ -34,34 +34,8 @@ app.route('/api/search', searchRoutes);
 app.route('/api/watchlist', watchlistRoutes);
 app.route('/', healthRoutes);
 
-app.openAPIRegistry.registerComponent('securitySchemes', 'bearerAuth', {
-    type: 'http',
-    scheme: 'bearer',
-    description:
-        'Pass the session token from the sign-in response body as `Authorization: Bearer <token>`.',
-});
+registerDocRoutes(app);
 
-app.doc('/openapi.json', {
-    openapi: '3.0.3',
-    info: {
-        title: 'Media Watchlist API',
-        version: '1.0.0',
-    },
-});
-
-app.get('/auth-openapi.json', async (c) =>
-    c.json(await auth.api.generateOpenAPISchema())
-);
-
-app.get(
-    '/reference',
-    Scalar({
-        pageTitle: 'Media Watchlist API',
-        sources: [
-            { url: '/openapi.json', title: 'Media Watchlist API' },
-            { url: '/auth-openapi.json', title: 'Better Auth' },
-        ],
-    })
-);
+app.get('/', (c) => c.redirect('/reference'));
 
 export default app;
