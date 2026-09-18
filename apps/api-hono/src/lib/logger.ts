@@ -15,20 +15,37 @@ const isDev = process.env['NODE_ENV'] !== 'production';
 // console.log. A `TextFormatter` like getAnsiColorFormatter() only renders the
 // message template and silently drops properties not referenced by `{placeholder}`.
 const sink = redactByField(
-    getConsoleSink(
-        isDev ? {} : { formatter: getJsonLinesFormatter() }
-    ),
-    [/authorization/i, /cookie/i, /password/i, /token/i, /secret/i, /backupCodes/i]
+    getConsoleSink(isDev ? {} : { formatter: getJsonLinesFormatter() }),
+    [
+        /authorization/i,
+        /cookie/i,
+        /password/i,
+        /token/i,
+        /secret/i,
+        /backupCodes/i,
+    ]
 );
 
 await configure({
     sinks: { console: sink },
     loggers: [
-        { category: ['api-hono'], sinks: ['console'], lowestLevel: config.LOG_LEVEL },
-        { category: ['hono'], sinks: ['console'], lowestLevel: config.LOG_LEVEL },
-        { category: ['logtape', 'meta'], sinks: ['console'], lowestLevel: 'warning' },
+        {
+            category: ['api'],
+            sinks: ['console'],
+            lowestLevel: config.LOG_LEVEL,
+        },
+        {
+            category: ['hono'],
+            sinks: ['console'],
+            lowestLevel: config.LOG_LEVEL,
+        },
+        {
+            category: ['logtape', 'meta'],
+            sinks: ['console'],
+            lowestLevel: 'warning',
+        },
     ],
     contextLocalStorage: new AsyncLocalStorage(),
 });
 
-export const logger = getLogger(['api-hono']);
+export const logger = getLogger(['api']);

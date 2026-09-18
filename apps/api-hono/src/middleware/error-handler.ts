@@ -2,7 +2,7 @@ import type { Env, ErrorHandler } from 'hono';
 import type { ErrorResponse } from '@media-watchlist/shared';
 import { getLogger } from '@logtape/logtape';
 
-const logger = getLogger(['api-hono', 'error-handler']);
+const logger = getLogger(['api', 'error-handler']);
 
 export const errorHandler: ErrorHandler<Env> = (err, c) => {
     logger.error('Unhandled error {*}', { err });

@@ -5,7 +5,7 @@ import { getLogger } from '@logtape/logtape';
 import { config } from '../lib/config.js';
 import type { HealthStatus } from '../types/index.js';
 
-const logger = getLogger(['api-hono', 'db']);
+const logger = getLogger(['api', 'db']);
 
 export const db = drizzle(config.DATABASE_URL);
 

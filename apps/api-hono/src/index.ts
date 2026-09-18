@@ -7,7 +7,7 @@ import { config } from './lib/config.js';
 
 const SHUTDOWN_TIMEOUT_MS = 10_000;
 
-const logger = getLogger(['api-hono', 'server']);
+const logger = getLogger(['api', 'server']);
 
 const server = serve({ fetch: app.fetch, port: config.PORT }, (info) => {
     logger.info('Server is running on http://localhost:{port}', {

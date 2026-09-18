@@ -3,7 +3,7 @@ import { getLogger } from '@logtape/logtape';
 import type { HealthStatus } from '../types/index.js';
 import { config } from './config.js';
 
-const logger = getLogger(['api-hono', 'tmdb']);
+const logger = getLogger(['api', 'tmdb']);
 
 const API_URL = 'https://api.themoviedb.org/3';
 const IMAGE_URL = 'https://image.tmdb.org/t/p/w300';

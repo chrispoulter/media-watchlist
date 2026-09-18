@@ -5,7 +5,7 @@ import { getLogger } from '@logtape/logtape';
 import type { HealthStatus } from '../types/index.js';
 import { config } from './config.js';
 
-const logger = getLogger(['api-hono', 'mailer']);
+const logger = getLogger(['api', 'mailer']);
 
 const mailer = nodemailer.createTransport({
     host: config.SMTP_HOST,

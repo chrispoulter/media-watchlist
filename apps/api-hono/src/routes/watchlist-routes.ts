@@ -13,7 +13,7 @@ import { validationHook } from '../middleware/validation-hook.js';
 
 const WATCHLIST_ITEM_LIMIT = 100;
 
-const logger = getLogger(['api-hono', 'watchlist']);
+const logger = getLogger(['api', 'watchlist']);
 
 const watchlistItemSchema = z.object({
     id: z.number(),
