@@ -73,6 +73,7 @@ services:
             CLIENT_ORIGIN: http://localhost:5173
             GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
             GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+            TMDB_API_READ_TOKEN: ${TMDB_API_READ_TOKEN:-your-tmdb-api-read-token}
             SMTP_HOST: mailpit
             SMTP_PORT: 1025
             SMTP_FROM: noreply@example.com

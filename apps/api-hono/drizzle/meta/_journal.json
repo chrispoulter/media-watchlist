@@ -8,6 +8,13 @@
       "when": 1789725026685,
       "tag": "0000_flaky_screwball",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789726854098,
+      "tag": "0001_material_omega_sentinel",
+      "breakpoints": true
     }
   ]
 }

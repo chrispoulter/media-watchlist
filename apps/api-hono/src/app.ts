@@ -1,20 +1,32 @@
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
+import type { ErrorResponse } from '@media-watchlist/shared';
 import { Scalar } from '@scalar/hono-api-reference';
 import { cors } from 'hono/cors';
 import { auth } from './lib/auth.js';
 import { config } from './lib/config.js';
+import searchRoutes from './routes/search-routes.js';
+import watchlistRoutes from './routes/watchlist-routes.js';
 
 const app = new OpenAPIHono();
 
 app.use(
-    '/api/auth/*',
+    '*',
     cors({
         origin: config.CLIENT_ORIGIN.split(','),
+        allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         credentials: true,
     })
 );
 
+app.onError((err, c) => {
+    console.error('Unhandled error', err);
+    return c.json({ error: 'Internal Server Error' } satisfies ErrorResponse, 500);
+});
+
 app.on(['GET', 'POST'], '/api/auth/*', (c) => auth.handler(c.req.raw));
+
+app.route('/api/search', searchRoutes);
+app.route('/api/watchlist', watchlistRoutes);
 
 const helloRoute = createRoute({
     method: 'get',
