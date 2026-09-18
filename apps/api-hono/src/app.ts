@@ -1,5 +1,4 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
-// import type { ErrorResponse } from '@media-watchlist/shared';
 import { cors } from 'hono/cors';
 import { auth } from './lib/auth.js';
 import { config } from './lib/config.js';
@@ -19,14 +18,6 @@ app.use(
         credentials: true,
     })
 );
-
-// app.onError((err, c) => {
-//     console.error('Unhandled error', err);
-//     return c.json(
-//         { error: 'Internal Server Error' } satisfies ErrorResponse,
-//         500
-//     );
-// });
 
 app.on(['GET', 'POST'], '/api/auth/*', (c) => auth.handler(c.req.raw));
 
