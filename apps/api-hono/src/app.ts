@@ -4,6 +4,7 @@ import { Scalar } from '@scalar/hono-api-reference';
 import { cors } from 'hono/cors';
 import { auth } from './lib/auth.js';
 import { config } from './lib/config.js';
+import healthRoutes from './routes/health-routes.js';
 import searchRoutes from './routes/search-routes.js';
 import watchlistRoutes from './routes/watchlist-routes.js';
 
@@ -27,6 +28,7 @@ app.on(['GET', 'POST'], '/api/auth/*', (c) => auth.handler(c.req.raw));
 
 app.route('/api/search', searchRoutes);
 app.route('/api/watchlist', watchlistRoutes);
+app.route('/', healthRoutes);
 
 const helloRoute = createRoute({
     method: 'get',

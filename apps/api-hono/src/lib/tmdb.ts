@@ -1,4 +1,5 @@
 import type { MediaType } from '@media-watchlist/shared';
+import type { HealthStatus } from '../types/index.js';
 import { config } from './config.js';
 
 const API_URL = 'https://api.themoviedb.org/3';
@@ -19,6 +20,24 @@ interface TmdbSearchResponse {
 }
 
 const toMediaType = (type: 'movie' | 'tv'): MediaType => (type === 'movie' ? 'movie' : 'tv-show');
+
+export const check = async (): Promise<HealthStatus> => {
+    try {
+        const response = await fetch(`${API_URL}/configuration`, {
+            headers: { Authorization: `Bearer ${config.TMDB_API_READ_TOKEN}` },
+            signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+        });
+
+        if (!response.ok) {
+            throw new Error(`TMDB API error: ${response.status} ${response.statusText}`);
+        }
+
+        return { name: 'tmdb', status: 'ok' };
+    } catch (err) {
+        console.error('TMDB health check failed', err);
+        return { name: 'tmdb', status: 'unhealthy' };
+    }
+};
 
 export const search = async (query: string) => {
     const normalizedQuery = query.trim().toLowerCase();

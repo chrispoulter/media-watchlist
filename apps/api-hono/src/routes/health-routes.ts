@@ -1,0 +1,87 @@
+import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
+import { check as checkDatabase } from '../db/index.js';
+import { version } from '../lib/config.js';
+import { check as checkMailer } from '../lib/mailer.js';
+import { check as checkTmdb } from '../lib/tmdb.js';
+import { defaultHook } from '../lib/validation-hook.js';
+
+const serviceStatusSchema = z.object({
+    name: z.string(),
+    status: z.enum(['ok', 'unhealthy']),
+});
+
+const healthResponseSchema = z.object({
+    status: z.enum(['ok', 'unhealthy']),
+    version: z.string().openapi({ example: '1.0.0' }),
+    uptime: z.number(),
+    services: z.array(serviceStatusSchema),
+});
+
+const aliveResponseSchema = z.object({
+    status: z.literal('ok'),
+    version: z.string().openapi({ example: '1.0.0' }),
+    uptime: z.number(),
+});
+
+const healthRoutes = new OpenAPIHono({ defaultHook });
+
+const healthRoute = createRoute({
+    method: 'get',
+    path: '/health',
+    tags: ['Health'],
+    summary: 'Health check',
+    responses: {
+        200: {
+            description: 'All services are healthy.',
+            content: { 'application/json': { schema: healthResponseSchema } },
+        },
+        503: {
+            description: 'One or more services are unhealthy.',
+            content: { 'application/json': { schema: healthResponseSchema } },
+        },
+    },
+});
+
+healthRoutes.openapi(healthRoute, async (c) => {
+    const services = await Promise.all([checkDatabase(), checkMailer(), checkTmdb()]);
+
+    const failing = services.some((s) => s.status !== 'ok');
+
+    return c.json(
+        {
+            status: failing ? 'unhealthy' : 'ok',
+            version,
+            uptime: process.uptime(),
+            services,
+        },
+        failing ? 503 : 200
+    );
+});
+
+const aliveRoute = createRoute({
+    method: 'get',
+    path: '/alive',
+    tags: ['Health'],
+    summary: 'Liveness probe',
+    description:
+        'Lightweight liveness check — always returns 200 without checking downstream services.',
+    responses: {
+        200: {
+            description: 'Service is alive.',
+            content: { 'application/json': { schema: aliveResponseSchema } },
+        },
+    },
+});
+
+healthRoutes.openapi(aliveRoute, (c) => {
+    return c.json(
+        {
+            status: 'ok' as const,
+            version,
+            uptime: process.uptime(),
+        },
+        200
+    );
+});
+
+export default healthRoutes;
