@@ -1,5 +1,5 @@
-import { sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
+import { type Logger, sql } from 'drizzle-orm';
 import { Pool } from 'pg';
 import { getLogger } from '@logtape/logtape';
 import { config } from '../lib/config.js';
@@ -7,7 +7,15 @@ import type { HealthStatus } from '../types/index.js';
 
 const logger = getLogger(['api', 'db']);
 
-export const db = drizzle(config.DATABASE_URL);
+class DrizzleQueryLogger implements Logger {
+    logQuery(query: string, params: unknown[]): void {
+        logger.debug('{query} {params}', { query, params });
+    }
+}
+
+export const db = drizzle(config.DATABASE_URL, {
+    logger: new DrizzleQueryLogger(),
+});
 
 export const shutdown = async () => {
     const client = db.$client;
