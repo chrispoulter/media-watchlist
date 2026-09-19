@@ -17,7 +17,6 @@ const app = new OpenAPIHono({ defaultHook: validationHook });
 app.onError(errorHandler);
 
 app.use(
-    '*',
     cors({
         origin: config.CLIENT_ORIGIN.split(','),
         allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -26,7 +25,6 @@ app.use(
 );
 
 app.use(
-    '*',
     honoLogger({
         category: ['hono'],
         skip: (c) => c.req.path === '/health' || c.req.path === '/alive',
