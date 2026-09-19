@@ -22,9 +22,6 @@ interface TmdbSearchResponse {
     }[];
 }
 
-const toMediaType = (type: 'movie' | 'tv'): MediaType =>
-    type === 'movie' ? 'movie' : 'tv-show';
-
 export const check = async (): Promise<HealthStatus> => {
     try {
         const response = await fetch(`${API_URL}/configuration`, {
@@ -80,9 +77,9 @@ export const search = async (query: string) => {
             )
             .map((item) => ({
                 providerId: `tmdb:${item.id}`,
-                mediaType: toMediaType(item.media_type as 'movie' | 'tv'),
-                // TMDB returns '' (not undefined) for the field that doesn't apply to a movie/tv result,
-                // so `||` (not `??`) is required to fall back correctly.
+                mediaType: (item.media_type == 'movie'
+                    ? 'movie'
+                    : 'tv-show') as MediaType,
                 title: item.title || item.name,
                 posterUrl: item.poster_path
                     ? `${IMAGE_URL}${item.poster_path}`

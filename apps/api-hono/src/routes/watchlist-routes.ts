@@ -143,8 +143,6 @@ watchlistRoutes.openapi(addRoute, async (c) => {
             .values({ ...body, userId })
             .returning();
 
-        // drizzle-orm types `.returning()` as always non-empty, but an empty array is a real
-        // possibility at runtime (e.g. driver-level insert failures), so this check is not dead code.
         if (!created) {
             return c.json(
                 {
@@ -175,8 +173,6 @@ watchlistRoutes.openapi(addRoute, async (c) => {
             201
         );
     } catch (err: unknown) {
-        // drizzle-orm wraps the underlying pg driver error (which names the violated
-        // constraint) in `.cause`, not in the outer error's own `.message`.
         const message =
             err instanceof Error
                 ? `${err.message} ${err.cause instanceof Error ? err.cause.message : ''}`
@@ -241,8 +237,6 @@ watchlistRoutes.openapi(deleteRoute, async (c) => {
         .where(and(eq(watchlistItem.id, id), eq(watchlistItem.userId, userId)))
         .returning();
 
-    // drizzle-orm types `.returning()` as always non-empty; an empty array here means the
-    // WHERE clause matched nothing (not owned / doesn't exist), which is the real 404 case.
     if (!deleted) {
         logger.warning('Watchlist item not found {*}', { itemId: id });
         return c.json({ error: 'Item not found in watchlist' }, 404);

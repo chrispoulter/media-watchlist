@@ -5,16 +5,16 @@ import { version } from '../lib/config.js';
 import { check as checkMailer } from '../lib/mailer.js';
 import { check as checkTmdb } from '../lib/tmdb.js';
 
-const serviceStatusSchema = z.object({
-    name: z.string(),
-    status: z.enum(['ok', 'unhealthy']),
-});
-
 const healthResponseSchema = z.object({
     status: z.enum(['ok', 'unhealthy']),
     version: z.string().openapi({ example: '1.0.0' }),
     uptime: z.number(),
-    services: z.array(serviceStatusSchema),
+    services: z.array(
+        z.object({
+            name: z.string(),
+            status: z.enum(['ok', 'unhealthy']),
+        })
+    ),
 });
 
 const aliveResponseSchema = z.object({
