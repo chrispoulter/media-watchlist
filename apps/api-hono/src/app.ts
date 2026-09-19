@@ -4,8 +4,8 @@ import { honoLogger } from '@logtape/hono';
 import { errorHandler } from './middleware/error-handler.js';
 import { validationHook } from './middleware/validation-hook.js';
 import { config } from './lib/config.js';
-import './lib/logger.js';
 import { auth } from './lib/auth.js';
+import './lib/logger.js';
 
 import { registerDocRoutes } from './routes/doc-routes.js';
 import healthRoutes from './routes/health-routes.js';
@@ -26,7 +26,6 @@ app.use(
 
 app.use(
     honoLogger({
-        category: ['hono'],
         skip: (c) => c.req.path === '/health' || c.req.path === '/alive',
         context: true,
     })

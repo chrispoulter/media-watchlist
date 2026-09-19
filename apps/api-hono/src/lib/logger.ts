@@ -2,40 +2,44 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import {
     configure,
     getConsoleSink,
-    getJsonLinesFormatter,
-    getLogger,
+    ansiColorFormatter,
+    jsonLinesFormatter,
 } from '@logtape/logtape';
-import { redactByField } from '@logtape/redaction';
+import {
+    redactByPattern,
+    redactByField,
+    EMAIL_ADDRESS_PATTERN,
+    JWT_PATTERN,
+} from '@logtape/redaction';
 import { config } from './config.js';
 
 const isDev = process.env['NODE_ENV'] !== 'production';
+const formatter = isDev ? ansiColorFormatter : jsonLinesFormatter;
 
-// In dev, omit `formatter` so getConsoleSink() uses its default `ConsoleFormatter`,
-// which prints structured properties as an inspectable object via multi-arg
-// console.log. A `TextFormatter` like getAnsiColorFormatter() only renders the
-// message template and silently drops properties not referenced by `{placeholder}`.
-const sink = redactByField(
-    getConsoleSink(isDev ? {} : { formatter: getJsonLinesFormatter() }),
-    [
-        /authorization/i,
-        /cookie/i,
-        /password/i,
-        /token/i,
-        /secret/i,
-        /backupCodes/i,
-    ]
+const consoleSink = redactByField(
+    getConsoleSink({
+        formatter: redactByPattern(formatter, [
+            EMAIL_ADDRESS_PATTERN,
+            JWT_PATTERN,
+        ]),
+    })
 );
 
 await configure({
-    sinks: { console: sink },
+    sinks: { console: consoleSink },
     loggers: [
+        {
+            category: ['hono'],
+            sinks: ['console'],
+            lowestLevel: config.LOG_LEVEL,
+        },
         {
             category: ['api'],
             sinks: ['console'],
             lowestLevel: config.LOG_LEVEL,
         },
         {
-            category: ['hono'],
+            category: ['drizzle-orm'],
             sinks: ['console'],
             lowestLevel: config.LOG_LEVEL,
         },
@@ -47,5 +51,3 @@ await configure({
     ],
     contextLocalStorage: new AsyncLocalStorage(),
 });
-
-export const logger = getLogger(['api']);
