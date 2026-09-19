@@ -3,18 +3,16 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { fileURLToPath } from 'node:url';
 
-const databaseUrl = process.env.DATABASE_URL;
-if (!databaseUrl) {
-    throw new Error('DATABASE_URL is required');
-}
+console.log('Migrating database...');
 
-const db = drizzle(databaseUrl);
+const db = drizzle(process.env.DATABASE_URL!);
 const migrationsFolder = fileURLToPath(
     new URL('../../drizzle', import.meta.url)
 );
 
 try {
     await migrate(db, { migrationsFolder });
+    console.log('Database migrated successfully');
 } finally {
     await db.$client.end();
 }
