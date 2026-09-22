@@ -1,4 +1,4 @@
-import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
+import { createRoute, z } from '@hono/zod-openapi';
 import {
     addWatchlistItemSchema,
     errorResponseSchema,
@@ -9,17 +9,15 @@ import { getLogger } from '@logtape/logtape';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
 import { requireAuth, type AuthEnv } from '../middleware/require-auth.js';
-import { validationHook } from '../middleware/validation-hook.js';
+import { createRouter } from '../lib/create-router.js';
 
 const WATCHLIST_ITEM_LIMIT = 100;
 
 const logger = getLogger(['api', 'watchlist']);
 
-const router = new OpenAPIHono<AuthEnv>({
-    defaultHook: validationHook,
-});
+const router = createRouter<AuthEnv>();
 
-router.use('*', requireAuth);
+router.use(requireAuth);
 
 const watchlistItemSchema = z.object({
     id: z.number(),

@@ -1,17 +1,15 @@
-import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
+import { createRoute, z } from '@hono/zod-openapi';
 import { errorResponseSchema, mediaTypeSchema } from '@media-watchlist/shared';
 import { and, eq, inArray } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
 import { requireAuth, type AuthEnv } from '../middleware/require-auth.js';
-import { validationHook } from '../middleware/validation-hook.js';
+import { createRouter } from '../lib/create-router.js';
 import { search } from '../lib/tmdb.js';
 
-const router = new OpenAPIHono<AuthEnv>({
-    defaultHook: validationHook,
-});
+const router = createRouter<AuthEnv>();
 
-router.use('*', requireAuth);
+router.use(requireAuth);
 
 const searchResponseSchema = z.array(
     z.object({
