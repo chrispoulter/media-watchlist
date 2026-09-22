@@ -3,8 +3,8 @@ import { sql } from 'drizzle-orm';
 import { Pool } from 'pg';
 import { getLogger } from '@logtape/logtape';
 import { getLogger as getDrizzleLogger } from '@logtape/drizzle-orm';
+import type { HealthStatus } from '../lib/health.js';
 import { config } from '../lib/config.js';
-import type { HealthStatus } from '../types/index.js';
 
 const logger = getLogger(['api', 'db']);
 

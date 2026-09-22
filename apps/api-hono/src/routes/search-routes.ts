@@ -7,6 +7,12 @@ import { requireAuth, type AuthEnv } from '../middleware/require-auth.js';
 import { validationHook } from '../middleware/validation-hook.js';
 import { search } from '../lib/tmdb.js';
 
+const hono = new OpenAPIHono<AuthEnv>({
+    defaultHook: validationHook,
+});
+
+hono.use('*', requireAuth);
+
 const searchResponseSchema = z.array(
     z.object({
         providerId: z.string(),
@@ -18,12 +24,6 @@ const searchResponseSchema = z.array(
         watchlistItemId: z.number().optional(),
     })
 );
-
-const searchRoutes = new OpenAPIHono<AuthEnv>({
-    defaultHook: validationHook,
-});
-
-searchRoutes.use('*', requireAuth);
 
 const searchRoute = createRoute({
     method: 'get',
@@ -56,7 +56,7 @@ const searchRoute = createRoute({
     },
 });
 
-searchRoutes.openapi(searchRoute, async (c) => {
+hono.openapi(searchRoute, async (c) => {
     const { query } = c.req.valid('query');
 
     const data = await search(query);
@@ -93,4 +93,4 @@ searchRoutes.openapi(searchRoute, async (c) => {
     );
 });
 
-export default searchRoutes;
+export default hono;

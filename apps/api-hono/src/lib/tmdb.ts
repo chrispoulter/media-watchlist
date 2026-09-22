@@ -1,6 +1,6 @@
 import type { MediaType } from '@media-watchlist/shared';
 import { getLogger } from '@logtape/logtape';
-import type { HealthStatus } from '../types/index.js';
+import type { HealthStatus } from './health.js';
 import { config } from './config.js';
 
 const logger = getLogger(['api', 'tmdb']);

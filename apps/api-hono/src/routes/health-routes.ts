@@ -2,8 +2,11 @@ import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
 import { check as checkDatabase } from '../db/index.js';
 import { validationHook } from '../middleware/validation-hook.js';
 import { version } from '../lib/config.js';
+
 import { check as checkMailer } from '../lib/mailer.js';
 import { check as checkTmdb } from '../lib/tmdb.js';
+
+const hono = new OpenAPIHono({ defaultHook: validationHook });
 
 const healthResponseSchema = z.object({
     status: z.enum(['ok', 'unhealthy']),
@@ -16,14 +19,6 @@ const healthResponseSchema = z.object({
         })
     ),
 });
-
-const aliveResponseSchema = z.object({
-    status: z.literal('ok'),
-    version: z.string().openapi({ example: '1.0.0' }),
-    uptime: z.number(),
-});
-
-const healthRoutes = new OpenAPIHono({ defaultHook: validationHook });
 
 const healthRoute = createRoute({
     method: 'get',
@@ -42,7 +37,7 @@ const healthRoute = createRoute({
     },
 });
 
-healthRoutes.openapi(healthRoute, async (c) => {
+hono.openapi(healthRoute, async (c) => {
     const services = await Promise.all([
         checkDatabase(),
         checkMailer(),
@@ -62,6 +57,12 @@ healthRoutes.openapi(healthRoute, async (c) => {
     );
 });
 
+const aliveResponseSchema = z.object({
+    status: z.literal('ok'),
+    version: z.string().openapi({ example: '1.0.0' }),
+    uptime: z.number(),
+});
+
 const aliveRoute = createRoute({
     method: 'get',
     path: '/alive',
@@ -77,7 +78,7 @@ const aliveRoute = createRoute({
     },
 });
 
-healthRoutes.openapi(aliveRoute, (c) => {
+hono.openapi(aliveRoute, (c) => {
     return c.json(
         {
             status: 'ok' as const,
@@ -88,4 +89,4 @@ healthRoutes.openapi(aliveRoute, (c) => {
     );
 });
 
-export default healthRoutes;
+export default hono;
