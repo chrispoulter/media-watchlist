@@ -7,11 +7,11 @@ import { requireAuth, type AuthEnv } from '../middleware/require-auth.js';
 import { validationHook } from '../middleware/validation-hook.js';
 import { search } from '../lib/tmdb.js';
 
-const hono = new OpenAPIHono<AuthEnv>({
+const router = new OpenAPIHono<AuthEnv>({
     defaultHook: validationHook,
 });
 
-hono.use('*', requireAuth);
+router.use('*', requireAuth);
 
 const searchResponseSchema = z.array(
     z.object({
@@ -56,7 +56,7 @@ const searchRoute = createRoute({
     },
 });
 
-hono.openapi(searchRoute, async (c) => {
+router.openapi(searchRoute, async (c) => {
     const { query } = c.req.valid('query');
 
     const data = await search(query);
@@ -93,4 +93,4 @@ hono.openapi(searchRoute, async (c) => {
     );
 });
 
-export default hono;
+export default router;

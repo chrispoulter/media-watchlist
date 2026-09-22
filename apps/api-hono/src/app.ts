@@ -4,10 +4,10 @@ import { honoLogger } from '@logtape/hono';
 import { errorHandler } from './middleware/error-handler.js';
 import { validationHook } from './middleware/validation-hook.js';
 import { config } from './lib/config.js';
-import { auth } from './lib/auth.js';
 import './lib/logger.js';
 
 import { registerDocRoutes } from './routes/doc-routes.js';
+import authRoutes from './routes/auth-routes.js';
 import healthRoutes from './routes/health-routes.js';
 import searchRoutes from './routes/search-routes.js';
 import watchlistRoutes from './routes/watchlist-routes.js';
@@ -31,8 +31,7 @@ app.use(
     })
 );
 
-app.on(['GET', 'POST'], '/api/auth/*', (c) => auth.handler(c.req.raw));
-
+app.route('/api/auth', authRoutes);
 app.route('/api/search', searchRoutes);
 app.route('/api/watchlist', watchlistRoutes);
 app.route('/', healthRoutes);

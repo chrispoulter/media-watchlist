@@ -15,11 +15,11 @@ const WATCHLIST_ITEM_LIMIT = 100;
 
 const logger = getLogger(['api', 'watchlist']);
 
-const hono = new OpenAPIHono<AuthEnv>({
+const router = new OpenAPIHono<AuthEnv>({
     defaultHook: validationHook,
 });
 
-hono.use('*', requireAuth);
+router.use('*', requireAuth);
 
 const watchlistItemSchema = z.object({
     id: z.number(),
@@ -58,7 +58,7 @@ const listRoute = createRoute({
     },
 });
 
-hono.openapi(listRoute, async (c) => {
+router.openapi(listRoute, async (c) => {
     const data = await db
         .select()
         .from(watchlistItem)
@@ -119,7 +119,7 @@ const addRoute = createRoute({
     },
 });
 
-hono.openapi(addRoute, async (c) => {
+router.openapi(addRoute, async (c) => {
     const body = c.req.valid('json');
     const userId = c.get('user').id;
 
@@ -228,7 +228,7 @@ const deleteRoute = createRoute({
     },
 });
 
-hono.openapi(deleteRoute, async (c) => {
+router.openapi(deleteRoute, async (c) => {
     const { id } = c.req.valid('param');
     const userId = c.get('user').id;
 
@@ -247,4 +247,4 @@ hono.openapi(deleteRoute, async (c) => {
     return c.body(null, 204);
 });
 
-export default hono;
+export default router;

@@ -6,7 +6,7 @@ import { version } from '../lib/config.js';
 import { check as checkMailer } from '../lib/mailer.js';
 import { check as checkTmdb } from '../lib/tmdb.js';
 
-const hono = new OpenAPIHono({ defaultHook: validationHook });
+const router = new OpenAPIHono({ defaultHook: validationHook });
 
 const healthResponseSchema = z.object({
     status: z.enum(['ok', 'unhealthy']),
@@ -37,7 +37,7 @@ const healthRoute = createRoute({
     },
 });
 
-hono.openapi(healthRoute, async (c) => {
+router.openapi(healthRoute, async (c) => {
     const services = await Promise.all([
         checkDatabase(),
         checkMailer(),
@@ -78,7 +78,7 @@ const aliveRoute = createRoute({
     },
 });
 
-hono.openapi(aliveRoute, (c) => {
+router.openapi(aliveRoute, (c) => {
     return c.json(
         {
             status: 'ok' as const,
@@ -89,4 +89,4 @@ hono.openapi(aliveRoute, (c) => {
     );
 });
 
-export default hono;
+export default router;
