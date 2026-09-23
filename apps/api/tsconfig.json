@@ -1,6 +1,9 @@
 {
     "extends": "@media-watchlist/typescript-config/base.json",
     "compilerOptions": {
+        // Vercel's builder reads this file without resolving "extends"; if "module"
+        // is missing here it forces "strict": false, which breaks zod-openapi types.
+        "module": "NodeNext",
         "strict": true,
         "rootDir": "./src",
         "outDir": "./dist"
