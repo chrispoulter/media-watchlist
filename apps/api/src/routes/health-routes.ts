@@ -1,8 +1,8 @@
 import { createRoute, z } from '@hono/zod-openapi';
-import { check as checkDatabase } from '../db/index.js';
 import { createRouter } from '../lib/create-router.js';
 import { version } from '../lib/config.js';
 
+import { check as checkDatabase } from '../db/index.js';
 import { check as checkMailer } from '../lib/mailer.js';
 import { check as checkTmdb } from '../lib/tmdb.js';
 
