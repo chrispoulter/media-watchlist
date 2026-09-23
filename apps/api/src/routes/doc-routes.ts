@@ -1,6 +1,7 @@
 import type { OpenAPIHono } from '@hono/zod-openapi';
 import { Scalar } from '@scalar/hono-api-reference';
 import { auth } from '../lib/auth.js';
+import { version } from '../lib/config.js';
 
 export function registerDocRoutes(app: OpenAPIHono) {
     app.openAPIRegistry.registerComponent('securitySchemes', 'bearerAuth', {
@@ -14,7 +15,7 @@ export function registerDocRoutes(app: OpenAPIHono) {
         openapi: '3.0.3',
         info: {
             title: 'Media Watchlist API',
-            version: '1.0.0',
+            version,
         },
     });
 
