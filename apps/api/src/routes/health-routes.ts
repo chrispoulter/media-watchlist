@@ -1,3 +1,4 @@
+import type { Env, Hono } from 'hono';
 import { createRoute, z } from '@hono/zod-openapi';
 import { check as checkDatabase } from '../db/index.js';
 import { createRouter } from '../lib/create-router.js';
@@ -89,4 +90,4 @@ router.openapi(aliveRoute, (c) => {
     );
 });
 
-export default router;
+export default router satisfies Hono<Env>;;

@@ -1,7 +1,6 @@
 {
     "extends": "@media-watchlist/typescript-config/hono.json",
     "compilerOptions": {
-        "strict": true,
         "outDir": "./dist",
         "rootDir": "./src"
     },
