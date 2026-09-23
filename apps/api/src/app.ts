@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Hono } from 'hono';
+import { OpenAPIHono } from '@hono/zod-openapi';
 import { cors } from 'hono/cors';
 import { honoLogger } from '@logtape/hono';
 import { errorHandler } from './middleware/error-handler.js';
-import { createRouter } from './lib/create-router.js';
 import { config } from './lib/config.js';
 import './lib/logger.js';
 
@@ -13,7 +13,7 @@ import healthRoutes from './routes/health-routes.js';
 import searchRoutes from './routes/search-routes.js';
 import watchlistRoutes from './routes/watchlist-routes.js';
 
-const app = createRouter();
+const app = new OpenAPIHono()
 
 app.onError(errorHandler);
 
