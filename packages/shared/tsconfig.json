@@ -1,9 +1,13 @@
 {
-    "extends": "@media-watchlist/typescript-config/base.json",
     "compilerOptions": {
-        "outDir": "./dist",
+        "target": "ESNext",
+        "module": "NodeNext",
+        "strict": true,
+        "skipLibCheck": true,
+        "declaration": true,
+        "types": ["node"],
         "rootDir": "./src",
-        "declaration": true
+        "outDir": "./dist"
     },
     "include": ["src"]
 }

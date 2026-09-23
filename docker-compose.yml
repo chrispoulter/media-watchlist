@@ -29,7 +29,6 @@ services:
             SMTP_HOST: mailpit
             SMTP_PORT: 1025
             SMTP_FROM: noreply@example.com
-            LOG_LEVEL: info
         ports:
             - 3000:3000
         healthcheck:
@@ -40,7 +39,7 @@ services:
             retries: 3
             start_period: 10s
         depends_on:
-            migrate:
+            migrate-hono:
                 condition: service_completed_successfully
             postgres:
                 condition: service_healthy

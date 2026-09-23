@@ -1,9 +1,11 @@
 import { z } from 'zod';
 
-export interface ErrorResponse {
-    error: string;
-    details?: object[];
-}
+export const errorResponseSchema = z.object({
+    error: z.string(),
+    details: z.array(z.any()).optional(),
+});
+
+export type ErrorResponse = z.infer<typeof errorResponseSchema>;
 
 export const mediaTypeSchema = z.enum(['movie', 'tv-show']);
 

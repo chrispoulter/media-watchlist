@@ -1,7 +1,10 @@
-import type { Request, Response } from 'express';
+import type { NotFoundHandler } from 'hono';
 import type { ErrorResponse } from '@media-watchlist/shared';
+import { getLogger } from '@logtape/logtape';
 
-export const notFoundHandler = (req: Request, res: Response) => {
-    req.log.warn({ path: req.path }, 'Request to unknown endpoint');
-    res.status(404).json({ error: 'Not Found' } satisfies ErrorResponse);
+const logger = getLogger(['api', 'not-found-handler']);
+
+export const notFoundHandler: NotFoundHandler = (c) => {
+    logger.warn('Request to unknown endpoint {path}', { path: c.req.path });
+    return c.json<ErrorResponse>({ error: 'Not Found' }, 404);
 };

@@ -95,7 +95,7 @@ export default function ResetPasswordEmail({
                     React.createElement(
                         Text,
                         { style: footerText },
-                        '\u00a9 Chris Poulter ',
+                        '© Chris Poulter ',
                         new Date().getFullYear()
                     )
                 )
