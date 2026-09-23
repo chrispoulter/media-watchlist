@@ -31,9 +31,7 @@ const shutdown = (signal: string) => {
 
     void (async () => {
         try {
-            await closeServer();
-            await shutdownDb();
-            shutdownMailer();
+            await Promise.all([closeServer(), shutdownDb(), shutdownMailer()]);
             logger.info('Shutdown complete');
             process.exit(0);
         } catch (err) {
