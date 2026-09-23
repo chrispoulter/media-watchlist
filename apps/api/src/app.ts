@@ -1,3 +1,4 @@
+import type { Env, Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { honoLogger } from '@logtape/hono';
 import { errorHandler } from './middleware/error-handler.js';
@@ -39,4 +40,4 @@ registerDocRoutes(app);
 
 app.get('/', (c) => c.redirect('/reference'));
 
-export default app;
+export default app satisfies Hono<Env>;
