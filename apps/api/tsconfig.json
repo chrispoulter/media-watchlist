@@ -1,12 +1,6 @@
 {
+    "extends": "@media-watchlist/typescript-config/base.json",
     "compilerOptions": {
-        "target": "ESNext",
-        "module": "NodeNext",
-        "strict": true,
-        "skipLibCheck": true,
-        "types": ["node"],
-        "jsx": "react-jsx",
-        "jsxImportSource": "hono/jsx",
         "rootDir": "./src",
         "outDir": "./dist"
     },
