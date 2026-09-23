@@ -4,7 +4,9 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import { cors } from 'hono/cors';
 import { honoLogger } from '@logtape/hono';
 import { errorHandler } from './middleware/error-handler.js';
+import { notFoundHandler } from './middleware/not-found-handler.js';
 import { config } from './lib/config.js';
+
 import './lib/logger.js';
 
 import { registerDocRoutes } from './routes/doc-routes.js';
@@ -16,6 +18,8 @@ import watchlistRoutes from './routes/watchlist-routes.js';
 const app = new OpenAPIHono();
 
 app.onError(errorHandler);
+
+app.notFound(notFoundHandler);
 
 app.use(
     cors({

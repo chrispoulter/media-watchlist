@@ -69,7 +69,7 @@ The API runs at http://localhost:3000. API reference docs are served at `/refere
 - `npm run db:generate` — generate a Drizzle migration from schema changes
 - `npm run db:migrate` — apply migrations
 - `npm run db:studio` — open Drizzle Studio
-- `npm run email:dev` — preview email templates (`src/emails`) at http://localhost:3000
+- `npm run email:dev` — preview email templates (`src/emails`) at http://localhost:3001
 
 ## Project structure
 
