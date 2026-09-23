@@ -1,6 +1,6 @@
 # Media Watchlist
 
-A full-stack app for searching movies and TV shows (via TMDB) and keeping a personal watchlist. Turborepo monorepo with an Hono API and a React SPA.
+A full-stack app for searching movies and TV shows (via TMDB) and keeping a personal watchlist. Turborepo monorepo with a Hono API and a React SPA.
 
 ## Apps & packages
 
