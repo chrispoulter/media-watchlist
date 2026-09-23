@@ -1,6 +1,7 @@
 {
     "extends": "@media-watchlist/typescript-config/base.json",
     "compilerOptions": {
+        "strict": true,
         "rootDir": "./src",
         "outDir": "./dist"
     },
