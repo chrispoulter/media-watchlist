@@ -65,5 +65,9 @@ export const auth = betterAuth({
     },
 });
 
-export type Session = typeof auth.$Infer.Session.session;
-export type User = typeof auth.$Infer.Session.user;
+export interface AuthEnv {
+    Variables: {
+        user: typeof auth.$Infer.Session.user;
+        session: typeof auth.$Infer.Session.session;
+    };
+}
