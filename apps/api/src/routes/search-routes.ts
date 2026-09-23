@@ -1,4 +1,3 @@
-import type { Env, Hono } from 'hono';
 import { createRoute, z } from '@hono/zod-openapi';
 import { errorResponseSchema, mediaTypeSchema } from '@media-watchlist/shared';
 import { and, eq, inArray } from 'drizzle-orm';
@@ -92,4 +91,4 @@ router.openapi(searchRoute, async (c) => {
     );
 });
 
-export default router satisfies Hono<Env>;;
+export default router;

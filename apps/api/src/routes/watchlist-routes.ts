@@ -1,4 +1,3 @@
-import type { Env, Hono } from 'hono';
 import { createRoute, z } from '@hono/zod-openapi';
 import {
     addWatchlistItemSchema,
@@ -246,4 +245,4 @@ router.openapi(deleteRoute, async (c) => {
     return c.body(null, 204);
 });
 
-export default router satisfies Hono<Env>;;
+export default router;
