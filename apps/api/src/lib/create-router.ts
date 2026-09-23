@@ -1,7 +1,6 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
-import type { Env } from 'hono';
+import type { AuthEnv } from '../middleware/require-auth.js';
 import { validationHook } from './validation-hook.js';
 
-export function createRouter<E extends Env = Env>() {
-    return new OpenAPIHono<E>({ defaultHook: validationHook });
-}
+export const createRouter = () =>
+    new OpenAPIHono<AuthEnv>({ defaultHook: validationHook });
