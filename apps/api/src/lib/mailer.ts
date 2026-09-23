@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 import type { ReactElement } from 'react';
 import { render } from 'react-email';
 import { getLogger } from '@logtape/logtape';
-import type { HealthStatus } from './health.js';
+import type { HealthStatus } from '../types/index.js';
 import { config } from './config.js';
 
 const logger = getLogger(['api', 'mailer']);
