@@ -1,20 +1,20 @@
 # @media-watchlist/api
 
-Express API for Media Watchlist: authentication, TMDB search, and the user's watchlist.
+Hono API for Media Watchlist: authentication, TMDB search, and the user's watchlist.
 
 ## Stack
 
-- Express 5, TypeScript
+- Hono, TypeScript
 - [Better Auth](https://www.better-auth.com/) — email/password, Google OAuth, TOTP 2FA
 - Drizzle ORM + PostgreSQL
 - Zod for env/config validation
-- Pino for logging
+- LogTape for logging
 - [Scalar](https://scalar.com/) for API reference docs (OpenAPI)
 - Nodemailer + React Email for transactional email
 
 ## Prerequisites
 
-- Node.js >= 20.19.0
+- Node.js >= 24.0.0
 - A PostgreSQL database
 - A [TMDB](https://www.themoviedb.org/) API read access token
 - An SMTP server for outgoing email (use [Mailpit](https://mailpit.axllent.org/) locally, started via the root `docker-compose.yml`)
@@ -43,7 +43,7 @@ cp apps/api/.env.example apps/api/.env
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`                                         | Google OAuth credentials (optional)                      |
 | `TMDB_API_READ_TOKEN`                                                               | TMDB API read access token                               |
 | `SMTP_HOST` / `SMTP_PORT` / `SMTP_SECURE` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM` | SMTP settings for outgoing email                         |
-| `LOG_LEVEL`                                                                         | Pino log level (default `info`)                          |
+| `LOG_LEVEL`                                                                         | LogTape log level (default `info`)                       |
 
 Run database migrations:
 
@@ -69,18 +69,17 @@ The API runs at http://localhost:3000. API reference docs are served at `/refere
 - `npm run db:generate` — generate a Drizzle migration from schema changes
 - `npm run db:migrate` — apply migrations
 - `npm run db:studio` — open Drizzle Studio
-- `npm run email:dev` — preview email templates (`src/emails`) at http://localhost:3001
+- `npm run email:dev` — preview email templates (`src/emails`) at http://localhost:3000
 
 ## Project structure
 
 ```
 src/
-  app.ts              # Express app: middleware and route wiring
+  app.ts              # Hono app: middleware and route wiring
   index.ts            # server entry point
   db/                 # Drizzle client, schema, migration runner
-  docs/               # OpenAPI spec
   emails/             # React Email templates
   lib/                # auth, config, logger, mailer, TMDB client
-  middleware/         # error handling, request logging, auth guard
+  middleware/         # error handling, auth guard
   routes/             # search, watchlist, health, docs routes
 ```

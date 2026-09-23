@@ -1,45 +1,42 @@
-import express from 'express';
-import cors from 'cors';
-import { toNodeHandler } from 'better-auth/node';
-import { requestLogger } from './middleware/request-logger.js';
-import { notFoundHandler } from './middleware/not-found-handler.js';
+import { cors } from 'hono/cors';
+import { honoLogger } from '@logtape/hono';
 import { errorHandler } from './middleware/error-handler.js';
+import { createRouter } from './lib/create-router.js';
+import { config } from './lib/config.js';
+import './lib/logger.js';
+
+import { registerDocRoutes } from './routes/doc-routes.js';
+import authRoutes from './routes/auth-routes.js';
+import healthRoutes from './routes/health-routes.js';
 import searchRoutes from './routes/search-routes.js';
 import watchlistRoutes from './routes/watchlist-routes.js';
-import healthRoutes from './routes/health-routes.js';
-import docsRoutes from './routes/docs-routes.js';
-import { auth } from './lib/auth.js';
-import { config } from './lib/config.js';
 
-const app = express();
+const app = createRouter();
 
-// app.use(async (_req, _res, next) => {
-//   await new Promise((resolve) => setTimeout(resolve, 1000 * 3));
-//   next();
-// });
+app.onError(errorHandler);
 
 app.use(
     cors({
         origin: config.CLIENT_ORIGIN.split(','),
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         credentials: true,
     })
 );
 
-app.use(requestLogger);
+app.use(
+    honoLogger({
+        skip: (c) => c.req.path === '/health' || c.req.path === '/alive',
+        context: true,
+    })
+);
 
-app.all('/api/auth/*splat', toNodeHandler(auth));
+app.route('/api/auth', authRoutes);
+app.route('/api/search', searchRoutes);
+app.route('/api/watchlist', watchlistRoutes);
+app.route('/', healthRoutes);
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
+registerDocRoutes(app);
 
-app.use('/api/search', searchRoutes);
-app.use('/api/watchlist', watchlistRoutes);
-
-app.use(healthRoutes);
-app.use(docsRoutes);
-
-app.use(notFoundHandler);
-app.use(errorHandler);
+app.get('/', (c) => c.redirect('/reference'));
 
 export default app;

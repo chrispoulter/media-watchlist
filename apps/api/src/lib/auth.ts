@@ -4,11 +4,10 @@ import { twoFactor, openAPI } from 'better-auth/plugins';
 import { createElement } from 'react';
 import { db } from '../db/index.js';
 import * as schema from '../db/schema.js';
-import { config } from './config.js';
-import { sendMail } from './mailer.js';
-
 import ResetPasswordEmail from '../emails/reset-password-email.js';
 import VerificationEmail from '../emails/verification-email.js';
+import { config } from './config.js';
+import { sendMail } from './mailer.js';
 
 export const auth = betterAuth({
     baseURL: config.BETTER_AUTH_URL,
@@ -19,17 +18,11 @@ export const auth = betterAuth({
         schema,
     }),
     user: {
-        changeEmail: {
-            enabled: true,
-        },
-        deleteUser: {
-            enabled: true,
-        },
+        changeEmail: { enabled: true },
+        deleteUser: { enabled: true },
     },
     account: {
-        accountLinking: {
-            allowDifferentEmails: true,
-        },
+        accountLinking: { allowDifferentEmails: true },
     },
     emailAndPassword: {
         enabled: true,
@@ -64,18 +57,11 @@ export const auth = betterAuth({
         },
     },
     plugins: [
-        twoFactor({
-            issuer: 'Media Watchlist',
-        }),
-        openAPI({
-            disableDefaultReference: true,
-        }),
+        twoFactor({ issuer: 'Media Watchlist' }),
+        openAPI({ disableDefaultReference: true }),
     ],
     advanced: {
-        defaultCookieAttributes: {
-            sameSite: 'none',
-            secure: true,
-        },
+        defaultCookieAttributes: { sameSite: 'none', secure: true },
     },
 });
 

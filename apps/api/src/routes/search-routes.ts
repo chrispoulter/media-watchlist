@@ -1,32 +1,63 @@
-import { Router } from 'express';
+import { createRoute, z } from '@hono/zod-openapi';
+import { errorResponseSchema, mediaTypeSchema } from '@media-watchlist/shared';
 import { and, eq, inArray } from 'drizzle-orm';
-import { z } from 'zod';
-import type { ErrorResponse, SearchResponse } from '@media-watchlist/shared';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
-import { requireAuth } from '../middleware/require-auth.js';
+import { requireAuth, type AuthEnv } from '../middleware/require-auth.js';
+import { createRouter } from '../lib/create-router.js';
 import { search } from '../lib/tmdb.js';
 
-const router = Router();
+const router = createRouter<AuthEnv>();
 
 router.use(requireAuth);
 
-const searchSchema = z.object({
-    query: z.string().min(1),
+const searchResponseSchema = z.array(
+    z.object({
+        providerId: z.string(),
+        mediaType: mediaTypeSchema,
+        title: z.string(),
+        posterUrl: z.string().optional(),
+        overview: z.string().optional(),
+        releaseDate: z.string().optional(),
+        watchlistItemId: z.number().optional(),
+    })
+);
+
+const searchRoute = createRoute({
+    method: 'get',
+    path: '/',
+    tags: ['Search'],
+    summary: 'Search for movies and TV shows',
+    security: [{ bearerAuth: [] }],
+    request: {
+        query: z.object({
+            query: z.string().min(1),
+        }),
+    },
+    responses: {
+        200: {
+            description: 'Search results.',
+            content: { 'application/json': { schema: searchResponseSchema } },
+        },
+        400: {
+            description: 'Invalid request query.',
+            content: { 'application/json': { schema: errorResponseSchema } },
+        },
+        401: {
+            description: 'Unauthorized.',
+            content: { 'application/json': { schema: errorResponseSchema } },
+        },
+        500: {
+            description: 'Internal Server Error.',
+            content: { 'application/json': { schema: errorResponseSchema } },
+        },
+    },
 });
 
-router.get('/', async (req, res) => {
-    const result = searchSchema.safeParse(req.query);
+router.openapi(searchRoute, async (c) => {
+    const { query } = c.req.valid('query');
 
-    if (!result.success) {
-        res.status(400).json({
-            error: 'Invalid request query',
-            details: result.error.issues,
-        } satisfies ErrorResponse);
-        return;
-    }
-
-    const data = await search(result.data.query);
+    const data = await search(query);
 
     const providerIds = data.map((item) => item.providerId);
 
@@ -35,7 +66,7 @@ router.get('/', async (req, res) => {
         .from(watchlistItem)
         .where(
             and(
-                eq(watchlistItem.userId, req.user!.id),
+                eq(watchlistItem.userId, c.get('user').id),
                 inArray(watchlistItem.providerId, providerIds)
             )
         );
@@ -44,7 +75,7 @@ router.get('/', async (req, res) => {
         watchlistItems.map((w) => [`${w.providerId}-${w.mediaType}`, w.id])
     );
 
-    res.json(
+    return c.json(
         data.map((item) => ({
             providerId: item.providerId,
             mediaType: item.mediaType,
@@ -55,7 +86,8 @@ router.get('/', async (req, res) => {
             watchlistItemId:
                 watchlistMap.get(`${item.providerId}-${item.mediaType}`) ??
                 undefined,
-        })) satisfies SearchResponse
+        })),
+        200
     );
 });
 

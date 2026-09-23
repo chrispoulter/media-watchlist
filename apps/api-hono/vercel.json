@@ -1,5 +1,0 @@
-{
-    "$schema": "https://openapi.vercel.sh/vercel.json",
-    "installCommand": "npm install --workspace=@media-watchlist/api-hono",
-    "buildCommand": "(cd ../.. && npx turbo run build --filter=@media-watchlist/shared) && npx tsx src/db/migrate.ts"
-}

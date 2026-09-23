@@ -1,10 +1,10 @@
 # Media Watchlist
 
-A full-stack app for searching movies and TV shows (via TMDB) and keeping a personal watchlist. Turborepo monorepo with an Express API and a React SPA.
+A full-stack app for searching movies and TV shows (via TMDB) and keeping a personal watchlist. Turborepo monorepo with an Hono API and a React SPA.
 
 ## Apps & packages
 
-- [apps/api](apps/api/README.md) — Express API: auth (Better Auth), TMDB search, watchlist, Drizzle/PostgreSQL
+- [apps/api](apps/api/README.md) — Hono API: auth (Better Auth), TMDB search, watchlist, Drizzle/PostgreSQL
 - [apps/web](apps/web/README.md) — React (Vite) SPA frontend
 - `packages/shared` — Zod schemas and types shared between api and web
 - `packages/eslint-config` — Shared ESLint config

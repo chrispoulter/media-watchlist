@@ -6,12 +6,13 @@ import { join } from 'node:path';
 const require = createRequire(join(process.cwd(), 'package.json'));
 
 const gitCommitSha =
-    process.env.VERCEL_GIT_COMMIT_SHA ||
-    process.env.GIT_COMMIT_SHA ||
+    process.env.VERCEL_GIT_COMMIT_SHA ??
+    process.env.GIT_COMMIT_SHA ??
     undefined;
 
 export const version =
-    gitCommitSha?.slice(0, 7) ?? require('./package.json').version;
+    gitCommitSha?.slice(0, 7) ??
+    (require('./package.json') as { version: string }).version;
 
 const configSchema = z.object({
     PORT: z.coerce.number().default(3000),
@@ -29,7 +30,7 @@ const configSchema = z.object({
     SMTP_PASS: z.string().optional(),
     SMTP_FROM: z.email(),
     LOG_LEVEL: z
-        .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace'])
+        .enum(['trace', 'debug', 'info', 'warning', 'error', 'fatal'])
         .default('info'),
 });
 
