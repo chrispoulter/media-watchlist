@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { honoLogger } from '@logtape/hono';
 import { errorHandler } from './middleware/error-handler.js';
