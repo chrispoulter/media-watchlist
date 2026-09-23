@@ -1,10 +1,12 @@
 {
-    "extends": "@media-watchlist/typescript-config/base.json",
     "compilerOptions": {
-        // Vercel's builder reads this file without resolving "extends"; if "module"
-        // is missing here it forces "strict": false, which breaks zod-openapi types.
+        "target": "ESNext",
         "module": "NodeNext",
         "strict": true,
+        "skipLibCheck": true,
+        "types": ["node"],
+        "jsx": "react-jsx",
+        "jsxImportSource": "hono/jsx",
         "rootDir": "./src",
         "outDir": "./dist"
     },

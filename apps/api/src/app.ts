@@ -13,7 +13,7 @@ import healthRoutes from './routes/health-routes.js';
 import searchRoutes from './routes/search-routes.js';
 import watchlistRoutes from './routes/watchlist-routes.js';
 
-const app = new OpenAPIHono()
+const app = new OpenAPIHono();
 
 app.onError(errorHandler);
 

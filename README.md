@@ -7,8 +7,6 @@ A full-stack app for searching movies and TV shows (via TMDB) and keeping a pers
 - [apps/api](apps/api/README.md) — Hono API: auth (Better Auth), TMDB search, watchlist, Drizzle/PostgreSQL
 - [apps/web](apps/web/README.md) — React (Vite) SPA frontend
 - `packages/shared` — Zod schemas and types shared between api and web
-- `packages/eslint-config` — Shared ESLint config
-- `packages/typescript-config` — Shared tsconfig bases
 
 ## Prerequisites
 
