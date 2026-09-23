@@ -46,7 +46,7 @@ services:
             mailpit:
                 condition: service_started
 
-    migrate-hono:
+    migrate:
         image: media-watchlist-api:latest
         build:
             context: .
