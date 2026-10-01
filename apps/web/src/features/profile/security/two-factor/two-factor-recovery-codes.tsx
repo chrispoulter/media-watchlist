@@ -2,16 +2,16 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 
 interface TwoFactorRecoveryCodesProps {
-    backupCodes: string[];
+    recoveryCodes: string[];
     onDone: () => void;
 }
 
 export function TwoFactorRecoveryCodes({
-    backupCodes,
+    recoveryCodes,
     onDone,
 }: TwoFactorRecoveryCodesProps) {
     const handleCopyAllCodes = () => {
-        navigator.clipboard.writeText(backupCodes.join('\n'));
+        navigator.clipboard.writeText(recoveryCodes.join('\n'));
         toast.success('Recovery codes copied to clipboard');
     };
 
@@ -21,7 +21,7 @@ export function TwoFactorRecoveryCodes({
                 Save your recovery codes. Each code can only be used once.
             </p>
             <div className="grid grid-cols-2 gap-2 rounded-md border p-4">
-                {backupCodes.map((code) => (
+                {recoveryCodes.map((code) => (
                     <code key={code} className="font-mono text-sm select-all">
                         {code}
                     </code>

@@ -5,33 +5,33 @@ import { toast } from 'sonner';
 import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { useGenerateBackupCodes } from '../../profile-queries';
+import { useGenerateRecoveryCodes } from '../../profile-queries';
 
-const generateBackupCodesSchema = z.object({
+const generateRecoveryCodesSchema = z.object({
     password: z.string().min(1, 'Password is required'),
 });
 
-type GenerateBackupCodesFormValues = z.infer<typeof generateBackupCodesSchema>;
+type GenerateRecoveryCodesFormValues = z.infer<typeof generateRecoveryCodesSchema>;
 
-interface TwoFactorConfirmBackupCodesProps {
+interface TwoFactorConfirmRecoveryCodesProps {
     onRegenerated: (newCodes: string[]) => void;
     onCancel: () => void;
 }
 
-export function TwoFactorConfirmBackupCodes({
+export function TwoFactorConfirmRecoveryCodes({
     onRegenerated,
     onCancel,
-}: TwoFactorConfirmBackupCodesProps) {
-    const { mutateAsync: generateBackupCodes, isPending } =
-        useGenerateBackupCodes();
+}: TwoFactorConfirmRecoveryCodesProps) {
+    const { mutateAsync: generateRecoveryCodes, isPending } =
+        useGenerateRecoveryCodes();
 
-    const form = useForm<GenerateBackupCodesFormValues>({
-        resolver: zodResolver(generateBackupCodesSchema),
+    const form = useForm<GenerateRecoveryCodesFormValues>({
+        resolver: zodResolver(generateRecoveryCodesSchema),
         defaultValues: { password: '' },
     });
 
-    const onSubmit = async (values: GenerateBackupCodesFormValues) => {
-        const result = await generateBackupCodes(values.password);
+    const onSubmit = async (values: GenerateRecoveryCodesFormValues) => {
+        const result = await generateRecoveryCodes(values.password);
 
         if (result.error) {
             toast.error(

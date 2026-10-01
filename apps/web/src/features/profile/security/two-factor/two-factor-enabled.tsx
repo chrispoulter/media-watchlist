@@ -2,19 +2,19 @@ import { Button } from '@/components/ui/button';
 
 interface TwoFactorEnabledProps {
     onDisable: () => void;
-    onGenerateBackupCodes: () => void;
+    onGenerateRecoveryCodes: () => void;
 }
 
 export function TwoFactorEnabled({
     onDisable,
-    onGenerateBackupCodes,
+    onGenerateRecoveryCodes,
 }: TwoFactorEnabledProps) {
     return (
         <div className="flex flex-col-reverse gap-2 sm:flex-row">
             <Button variant="destructive" onClick={onDisable}>
                 Disable 2FA
             </Button>
-            <Button variant="outline" onClick={onGenerateBackupCodes}>
+            <Button variant="outline" onClick={onGenerateRecoveryCodes}>
                 Regenerate Recovery Codes
             </Button>
         </div>

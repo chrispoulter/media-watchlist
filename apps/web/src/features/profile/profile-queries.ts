@@ -122,7 +122,7 @@ export function useVerifyTotpSetup() {
     });
 }
 
-export function useGenerateBackupCodes() {
+export function useGenerateRecoveryCodes() {
     return useMutation({
         mutationFn: (password: string) =>
             authClient.twoFactor.generateBackupCodes({ password }),
