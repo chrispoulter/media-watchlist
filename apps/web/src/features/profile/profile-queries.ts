@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { authClient } from '@/lib/auth-client';
+import { authClient, fetchOptions } from '@/lib/auth-client';
 
 const profileKeys = {
     all: ['profile'] as const,
@@ -9,7 +9,9 @@ export function useAccounts() {
     return useQuery({
         queryKey: profileKeys.all,
         queryFn: async () => {
-            const { data, error } = await authClient.listAccounts();
+            const { data, error } = await authClient.listAccounts({
+                fetchOptions,
+            });
 
             if (error) {
                 throw new Error(error.message ?? 'Failed to load accounts');
@@ -22,7 +24,11 @@ export function useAccounts() {
 
 export function useUpdateUser() {
     return useMutation({
-        mutationFn: (values: { name: string }) => authClient.updateUser(values),
+        mutationFn: (values: { name: string }) =>
+            authClient.updateUser({
+                ...values,
+                fetchOptions,
+            }),
     });
 }
 
@@ -32,6 +38,7 @@ export function useChangeEmail() {
             authClient.changeEmail({
                 newEmail,
                 callbackURL: `${window.location.origin}/profile`,
+                fetchOptions,
             }),
     });
 }
@@ -51,6 +58,7 @@ export function useChangePassword() {
                 currentPassword,
                 newPassword,
                 revokeOtherSessions: true,
+                fetchOptions,
             }),
     });
 }
@@ -67,7 +75,7 @@ export function useSetPasswordReset() {
 
 export function useDeleteUser() {
     return useMutation({
-        mutationFn: () => authClient.deleteUser(),
+        mutationFn: () => authClient.deleteUser({ fetchOptions }),
     });
 }
 
@@ -79,6 +87,7 @@ export function useLinkSocial() {
                 provider,
                 callbackURL: window.location.href,
                 errorCallbackURL: `${window.location.origin}/auth/error`,
+                fetchOptions,
             }),
         // NOTE: linkSocial redirects for OAuth; onSuccess only fires on error paths.
         // Successful link re-fetches naturally when callbackURL remounts the page.
@@ -96,7 +105,10 @@ export function useUnlinkAccount() {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: ({ accountId }: UnlinkAccountVariables) =>
-            authClient.unlinkAccount({ accountId }),
+            authClient.unlinkAccount({
+                accountId,
+                fetchOptions,
+            }),
         onSuccess: () =>
             queryClient.invalidateQueries({ queryKey: profileKeys.all }),
     });
@@ -105,26 +117,39 @@ export function useUnlinkAccount() {
 export function useEnableTwoFactor() {
     return useMutation({
         mutationFn: (password: string) =>
-            authClient.twoFactor.enable({ password }),
+            authClient.twoFactor.enable({
+                password,
+                fetchOptions,
+            }),
     });
 }
 
 export function useDisableTwoFactor() {
     return useMutation({
         mutationFn: (password: string) =>
-            authClient.twoFactor.disable({ password }),
+            authClient.twoFactor.disable({
+                password,
+                fetchOptions,
+            }),
     });
 }
 
 export function useVerifyTotpSetup() {
     return useMutation({
-        mutationFn: (code: string) => authClient.twoFactor.verifyTotp({ code }),
+        mutationFn: (code: string) =>
+            authClient.twoFactor.verifyTotp({
+                code,
+                fetchOptions,
+            }),
     });
 }
 
 export function useGenerateRecoveryCodes() {
     return useMutation({
         mutationFn: (password: string) =>
-            authClient.twoFactor.generateBackupCodes({ password }),
+            authClient.twoFactor.generateBackupCodes({
+                password,
+                fetchOptions,
+            }),
     });
 }

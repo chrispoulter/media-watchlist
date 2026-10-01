@@ -1,6 +1,6 @@
 import ky, { HTTPError } from 'ky';
-import { authClient } from '@/lib/auth-client';
-import { queryClient } from '@/lib/query-client';
+import { authClient } from './auth-client';
+import { queryClient } from './query-client';
 
 interface ErrorResponse {
     error?: string;

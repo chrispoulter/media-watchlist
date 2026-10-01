@@ -11,7 +11,9 @@ const generateRecoveryCodesSchema = z.object({
     password: z.string().min(1, 'Password is required'),
 });
 
-type GenerateRecoveryCodesFormValues = z.infer<typeof generateRecoveryCodesSchema>;
+type GenerateRecoveryCodesFormValues = z.infer<
+    typeof generateRecoveryCodesSchema
+>;
 
 interface TwoFactorConfirmRecoveryCodesProps {
     onRegenerated: (newCodes: string[]) => void;

@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -20,7 +20,10 @@ interface RecoveryCodeFormProps {
 
 export function RecoveryCodeForm({ onBack }: RecoveryCodeFormProps) {
     const navigate = useNavigate();
-    const { mutateAsync: verifyRecoveryCode, isPending } = useVerifyRecoveryCode();
+    const location = useLocation();
+
+    const { mutateAsync: verifyRecoveryCode, isPending } =
+        useVerifyRecoveryCode();
 
     const form = useForm<RecoveryCodeFormValues>({
         resolver: zodResolver(recoveryCodeSchema),
@@ -35,7 +38,7 @@ export function RecoveryCodeForm({ onBack }: RecoveryCodeFormProps) {
             return;
         }
 
-        await navigate('/');
+        await navigate(location.state?.from ?? '/', { replace: true });
     };
 
     return (

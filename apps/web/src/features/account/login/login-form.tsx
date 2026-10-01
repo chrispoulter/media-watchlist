@@ -22,7 +22,7 @@ export function LoginForm() {
     const location = useLocation();
     const { mutateAsync: signIn, isPending } = useSignIn();
 
-    const from = location.state?.from?.pathname ?? '/';
+    const from = location.state?.from ?? '/';
 
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
@@ -30,10 +30,15 @@ export function LoginForm() {
     });
 
     const onSubmit = async (values: LoginFormValues) => {
-        const { error } = await signIn(values);
+        const { data, error } = await signIn(values);
 
         if (error) {
             toast.error(error.message ?? 'Sign in failed');
+            return;
+        }
+
+        if (data && 'twoFactorRedirect' in data && data.twoFactorRedirect) {
+            await navigate('/two-factor', { state: { from } });
             return;
         }
 

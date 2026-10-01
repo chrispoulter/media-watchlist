@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -20,6 +20,8 @@ interface TwoFactorFormProps {
 
 export function TwoFactorForm({ onBack }: TwoFactorFormProps) {
     const navigate = useNavigate();
+    const location = useLocation();
+
     const { mutateAsync: verifyTotp, isPending } = useVerifyTotpLogin();
 
     const form = useForm<TwoFactorFormValues>({
@@ -37,7 +39,7 @@ export function TwoFactorForm({ onBack }: TwoFactorFormProps) {
             return;
         }
 
-        await navigate('/');
+        await navigate(location.state?.from ?? '/', { replace: true });
     };
 
     return (
