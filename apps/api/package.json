@@ -1,5 +1,6 @@
 {
-    "name": "media-watchlist-api",
+    "name": "@media-watchlist/api",
+    "private": true,
     "version": "1.0.0",
     "type": "module",
     "scripts": {
@@ -21,6 +22,7 @@
         "@logtape/hono": "^2.2.8",
         "@logtape/logtape": "^2.3.5",
         "@logtape/redaction": "^2.3.6",
+        "@media-watchlist/shared": "*",
         "@scalar/hono-api-reference": "^0.12.2",
         "better-auth": "^1.6.23",
         "dotenv": "^17.4.2",
