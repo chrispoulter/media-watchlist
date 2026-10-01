@@ -7,8 +7,8 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { SocialSignInButtons } from '@/components/social-sign-in-buttons';
 import { Metadata } from '@/components/metadata';
+import { SocialLoginButtons } from '../social-login-buttons';
 import { LoginForm } from './login-form';
 
 export function LoginPage() {
@@ -27,7 +27,7 @@ export function LoginPage() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <SocialSignInButtons />
+                            <SocialLoginButtons />
 
                             <div className="relative">
                                 <Separator />

@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { useSocialSignIn } from '@/features/account/account-queries';
 import { authProviders } from '@/lib/auth-providers';
 
-export function SocialSignInButtons() {
+export function SocialLoginButtons() {
     const { mutate: signIn, isPending, variables } = useSocialSignIn();
 
     return (

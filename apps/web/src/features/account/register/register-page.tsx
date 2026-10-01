@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Metadata } from '@/components/metadata';
-import { SocialSignInButtons } from '@/components/social-sign-in-buttons';
+import { SocialLoginButtons } from '../social-login-buttons';
 import { RegisterForm } from './register-form';
 
 export function RegisterPage() {
@@ -27,7 +27,7 @@ export function RegisterPage() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <SocialSignInButtons />
+                            <SocialLoginButtons />
 
                             <div className="relative">
                                 <Separator />
