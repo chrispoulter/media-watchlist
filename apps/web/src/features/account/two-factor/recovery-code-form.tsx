@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { useVerifyRecoveryCode } from '../auth-queries';
+import { useVerifyRecoveryCode } from '../account-queries';
 
 const recoveryCodeSchema = z.object({
     code: z.string().min(1, 'Recovery code is required'),

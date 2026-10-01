@@ -30,7 +30,7 @@ const ERROR_MESSAGES: Record<string, string> = {
 const DEFAULT_MESSAGE =
     'An unexpected authentication error occurred. Please try again.';
 
-export function AuthErrorPage() {
+export function AccountErrorPage() {
     const [searchParams] = useSearchParams();
     const error = searchParams.get('error') ?? '';
     const message = ERROR_MESSAGES[error] ?? DEFAULT_MESSAGE;

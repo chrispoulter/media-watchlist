@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { FormOtpField } from '@/components/form/form-otp-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { useVerifyTotpLogin } from '../auth-queries';
+import { useVerifyTotpLogin } from '../account-queries';
 
 const twoFactorSchema = z.object({
     code: z.string().length(6, 'Code must be 6 digits'),

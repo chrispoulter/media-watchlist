@@ -9,7 +9,6 @@
         "typecheck": "tsc -b",
         "lint": "eslint --cache .",
         "lint:fix": "eslint --fix .",
-        "format": "prettier --write .",
         "preview": "vite preview",
         "generate-favicons": "node scripts/generate-favicons.js"
     },

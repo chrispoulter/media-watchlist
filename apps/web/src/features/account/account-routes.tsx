@@ -5,9 +5,9 @@ import { RegisterPage } from './register/register-page';
 import { ForgotPasswordPage } from './forgot-password/forgot-password-page';
 import { TwoFactorPage } from './two-factor/two-factor-page';
 import { ResetPasswordPage } from './reset-password/reset-password-page';
-import { AuthErrorPage } from './auth-error-page';
+import { AccountErrorPage } from './account-error-page';
 
-export const authRoutes = (
+export const accountRoutes = (
     <>
         <Route element={<RequireGuest />}>
             <Route path="/login" element={<LoginPage />} />
@@ -16,6 +16,6 @@ export const authRoutes = (
         </Route>
         <Route path="/two-factor" element={<TwoFactorPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
-        <Route path="/auth/error" element={<AuthErrorPage />} />
+        <Route path="/auth/error" element={<AccountErrorPage />} />
     </>
 );

@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { useSignUp } from '../auth-queries';
+import { useSignUp } from '../account-queries';
 
 const registerSchema = z
     .object({

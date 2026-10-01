@@ -7,7 +7,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { useResetPassword } from '../auth-queries';
+import { useResetPassword } from '../account-queries';
 
 const resetPasswordSchema = z
     .object({
