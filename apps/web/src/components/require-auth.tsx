@@ -1,9 +1,15 @@
 import { Navigate, Outlet, useLocation } from 'react-router';
 import { Spinner } from '@/components/ui/spinner';
 import { authClient } from '@/lib/auth-client';
+import { ErrorPage } from '@/pages/error-page';
 
 export function RequireAuth() {
-    const { data: session, isPending } = authClient.useSession();
+    const {
+        data: session,
+        isPending,
+        error,
+        refetch,
+    } = authClient.useSession();
     const location = useLocation();
 
     if (isPending) {
@@ -12,6 +18,10 @@ export function RequireAuth() {
                 <Spinner className="h-6 w-6 text-muted-foreground" />
             </div>
         );
+    }
+
+    if (!session && error && error.status !== 401) {
+        return <ErrorPage error={error} resetErrorBoundary={() => refetch()} />;
     }
 
     if (!session) {
