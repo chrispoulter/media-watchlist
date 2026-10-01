@@ -64,7 +64,7 @@ jobs:
               id: meta
               uses: docker/metadata-action@v6
               with:
-                  images: ghcr.io/${{ github.repository }}/${{ matrix.app }}
+                  images: ghcr.io/${{ github.repository }}-${{ matrix.app }}
                   tags: |
                       type=sha,prefix=,format=short
                       type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
