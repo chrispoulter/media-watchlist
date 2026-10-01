@@ -3,7 +3,6 @@
     "framework": "vite",
     "installCommand": "npm install --workspace=@media-watchlist/web",
     "buildCommand": "cd ../.. && npx turbo run build --filter=@media-watchlist/web",
-    "ignoreCommand": "npx turbo-ignore",
     "rewrites": [
         {
             "source": "/api/:path*",
