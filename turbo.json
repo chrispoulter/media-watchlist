@@ -17,6 +17,7 @@
         "SMTP_USER",
         "SMTP_PASS",
         "LOG_LEVEL",
+        "API_URL",
         "VERCEL_GIT_COMMIT_SHA",
         "GIT_COMMIT_SHA"
     ],
