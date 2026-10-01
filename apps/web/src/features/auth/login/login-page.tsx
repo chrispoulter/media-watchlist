@@ -14,7 +14,7 @@ import { LoginForm } from './login-form';
 export function LoginPage() {
     return (
         <>
-            <Metadata title="Login" />
+            <Metadata title="Sign In" />
             <div className="flex flex-1 items-center justify-center">
                 <div className="w-full max-w-md space-y-6">
                     <Card>

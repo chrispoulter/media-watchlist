@@ -10,13 +10,9 @@ export function TwoFactorBackupCodes({
     backupCodes,
     onDone,
 }: TwoFactorBackupCodesProps) {
-    const handleCopyAllCodes = async () => {
-        try {
-            await navigator.clipboard.writeText(backupCodes.join('\n'));
-            toast.success('Backup codes copied to clipboard');
-        } catch {
-            toast.error('Failed to copy backup codes');
-        }
+    const handleCopyAllCodes = () => {
+        navigator.clipboard.writeText(backupCodes.join('\n'));
+        toast.success('Backup codes copied to clipboard');
     };
 
     return (

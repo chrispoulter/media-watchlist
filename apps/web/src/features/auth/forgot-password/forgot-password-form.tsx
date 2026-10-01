@@ -1,17 +1,12 @@
 import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-} from '@/components/ui/field';
+import { FieldGroup } from '@/components/ui/field';
 import { useForgotPassword } from '../auth-queries';
 
 const forgotPasswordSchema = z.object({
@@ -57,27 +52,13 @@ export function ForgotPasswordForm() {
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
-                <Controller
+                <FormInputField
                     control={form.control}
                     name="email"
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="forgot-email">
-                                Email
-                            </FieldLabel>
-                            <Input
-                                id="forgot-email"
-                                type="email"
-                                placeholder="john@example.com"
-                                autoComplete="email"
-                                aria-invalid={fieldState.invalid}
-                                {...field}
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
-                        </Field>
-                    )}
+                    label="Email"
+                    type="email"
+                    placeholder="john@example.com"
+                    autoComplete="email"
                 />
 
                 <Button type="submit" disabled={isPending}>

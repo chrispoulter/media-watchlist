@@ -1,21 +1,11 @@
 import { useNavigate } from 'react-router';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { REGEXP_ONLY_DIGITS } from 'input-otp';
+import { FormOtpField } from '@/components/form/form-otp-field';
 import { Button } from '@/components/ui/button';
-import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-} from '@/components/ui/field';
-import {
-    InputOTP,
-    InputOTPGroup,
-    InputOTPSlot,
-} from '@/components/ui/input-otp';
+import { FieldGroup } from '@/components/ui/field';
 import { useVerifyTotpLogin } from '../auth-queries';
 
 const twoFactorSchema = z.object({
@@ -53,40 +43,12 @@ export function TwoFactorForm({ onBack }: TwoFactorFormProps) {
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
-                <Controller
+                <FormOtpField
                     control={form.control}
                     name="code"
-                    render={({ field, fieldState }) => (
-                        <Field
-                            data-invalid={fieldState.invalid}
-                            className="items-center *:w-auto"
-                        >
-                            <FieldLabel htmlFor="two-factor-code">
-                                Authentication code
-                            </FieldLabel>
-                            <InputOTP
-                                id="two-factor-code"
-                                maxLength={6}
-                                pattern={REGEXP_ONLY_DIGITS}
-                                autoComplete="one-time-code"
-                                autoFocus
-                                aria-invalid={fieldState.invalid}
-                                {...field}
-                            >
-                                <InputOTPGroup>
-                                    <InputOTPSlot index={0} />
-                                    <InputOTPSlot index={1} />
-                                    <InputOTPSlot index={2} />
-                                    <InputOTPSlot index={3} />
-                                    <InputOTPSlot index={4} />
-                                    <InputOTPSlot index={5} />
-                                </InputOTPGroup>
-                            </InputOTP>
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
-                        </Field>
-                    )}
+                    label="Authentication code"
+                    autoFocus
+                    className="items-center *:w-auto"
                 />
 
                 <Button type="submit" disabled={isPending}>

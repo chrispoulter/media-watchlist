@@ -1,18 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-} from '@/components/ui/field';
+import { FieldGroup } from '@/components/ui/field';
 import { authClient } from '@/lib/auth-client';
 import { useChangeEmail } from '../profile-queries';
 
@@ -109,27 +104,13 @@ export function UpdateEmailForm() {
             </p>
             <form onSubmit={form.handleSubmit(onSubmit)}>
                 <FieldGroup>
-                    <Controller
+                    <FormInputField
                         control={form.control}
                         name="newEmail"
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel htmlFor="email-newEmail">
-                                    New email address
-                                </FieldLabel>
-                                <Input
-                                    id="email-newEmail"
-                                    type="email"
-                                    placeholder="new@example.com"
-                                    autoComplete="email"
-                                    aria-invalid={fieldState.invalid}
-                                    {...field}
-                                />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
-                            </Field>
-                        )}
+                        label="New email address"
+                        type="email"
+                        placeholder="new@example.com"
+                        autoComplete="email"
                     />
 
                     <div className="flex flex-col-reverse gap-2 sm:flex-row">

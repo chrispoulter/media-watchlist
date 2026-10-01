@@ -1,5 +1,5 @@
-import { Badge } from '@/components/ui/badge';
 import type { MediaType } from '@media-watchlist/shared';
+import { Badge } from '@/components/ui/badge';
 
 interface MediaCardProps {
     title: string;

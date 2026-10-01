@@ -1,15 +1,10 @@
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-} from '@/components/ui/field';
+import { FieldGroup } from '@/components/ui/field';
 import { useEnableTwoFactor } from '../../profile-queries';
 
 const enableTwoFactorSchema = z.object({
@@ -50,27 +45,13 @@ export function TwoFactorConfirmEnable({
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
-                <Controller
+                <FormInputField
                     control={form.control}
                     name="password"
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="enable-2fa-password">
-                                Confirm with your password
-                            </FieldLabel>
-                            <Input
-                                id="enable-2fa-password"
-                                type="password"
-                                placeholder="••••••••"
-                                autoComplete="current-password"
-                                aria-invalid={fieldState.invalid}
-                                {...field}
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
-                        </Field>
-                    )}
+                    label="Confirm with your password"
+                    type="password"
+                    placeholder="••••••••"
+                    autoComplete="current-password"
                 />
 
                 <div className="flex flex-col-reverse gap-2 sm:flex-row">

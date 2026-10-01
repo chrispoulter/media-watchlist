@@ -1,17 +1,12 @@
-import { useNavigate, useLocation } from 'react-router';
-import { Controller, useForm } from 'react-hook-form';
+import { useNavigate, useLocation, Link } from 'react-router';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import { FormCheckboxField } from '@/components/form/form-checkbox-field';
+import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-} from '@/components/ui/field';
+import { FieldGroup } from '@/components/ui/field';
 import { useSignIn } from '../auth-queries';
 
 const loginSchema = z.object({
@@ -22,17 +17,12 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-interface LoginLocationState {
-    from?: { pathname: string };
-}
-
 export function LoginForm() {
     const navigate = useNavigate();
     const location = useLocation();
     const { mutateAsync: signIn, isPending } = useSignIn();
 
-    const state = location.state as LoginLocationState | null;
-    const from = state?.from?.pathname ?? '/';
+    const from = location.state?.from?.pathname ?? '/';
 
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
@@ -53,77 +43,36 @@ export function LoginForm() {
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
-                <Controller
+                <FormInputField
                     control={form.control}
                     name="email"
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="login-email">Email</FieldLabel>
-                            <Input
-                                id="login-email"
-                                type="email"
-                                placeholder="john@example.com"
-                                autoComplete="username"
-                                aria-invalid={fieldState.invalid}
-                                {...field}
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
-                        </Field>
-                    )}
+                    label="Email"
+                    type="email"
+                    placeholder="john@example.com"
+                    autoComplete="username"
                 />
 
-                <Controller
+                <FormInputField
                     control={form.control}
                     name="password"
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="login-password">
-                                Password
-                            </FieldLabel>
-                            <Input
-                                id="login-password"
-                                type="password"
-                                placeholder="••••••••"
-                                autoComplete="current-password"
-                                aria-invalid={fieldState.invalid}
-                                {...field}
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
-                        </Field>
-                    )}
+                    label="Password"
+                    type="password"
+                    placeholder="••••••••"
+                    autoComplete="current-password"
                 />
 
                 <div className="flex items-center justify-between">
-                    <Controller
+                    <FormCheckboxField
                         control={form.control}
                         name="rememberMe"
-                        render={({ field }) => (
-                            <Field orientation="horizontal">
-                                <Checkbox
-                                    id="login-remember-me"
-                                    name={field.name}
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                />
-                                <FieldLabel
-                                    htmlFor="login-remember-me"
-                                    className="font-normal"
-                                >
-                                    Remember me
-                                </FieldLabel>
-                            </Field>
-                        )}
+                        label="Remember me"
                     />
-                    <a
-                        href="/forgot-password"
+                    <Link
+                        to="/forgot-password"
                         className="text-sm whitespace-nowrap text-muted-foreground underline-offset-4 hover:underline"
                     >
                         Forgot password?
-                    </a>
+                    </Link>
                 </div>
 
                 <Button type="submit" disabled={isPending}>

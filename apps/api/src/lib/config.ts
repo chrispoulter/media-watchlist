@@ -6,20 +6,22 @@ import { join } from 'node:path';
 const require = createRequire(join(process.cwd(), 'package.json'));
 
 const gitCommitSha =
-    process.env.VERCEL_GIT_COMMIT_SHA ??
-    process.env.GIT_COMMIT_SHA ??
+    process.env.VERCEL_GIT_COMMIT_SHA ||
+    process.env.GIT_COMMIT_SHA ||
     undefined;
 
 export const version =
-    gitCommitSha?.slice(0, 7) ??
-    (require('./package.json') as { version: string }).version;
+    gitCommitSha?.slice(0, 7) ?? require('./package.json').version;
 
 const configSchema = z.object({
     PORT: z.coerce.number().default(3000),
     DATABASE_URL: z.url(),
     BETTER_AUTH_SECRET: z.string().min(32),
-    BETTER_AUTH_URL: z.url().default('http://localhost:3000'),
-    CLIENT_ORIGIN: z.string().default('http://localhost:5173'),
+    BETTER_AUTH_URL: z.url().default('http://localhost:5173'),
+    TRUSTED_ORIGINS: z
+        .string()
+        .optional()
+        .transform((value) => value?.split(',')),
     GOOGLE_CLIENT_ID: z.string().optional(),
     GOOGLE_CLIENT_SECRET: z.string().optional(),
     TMDB_API_READ_TOKEN: z.string(),
@@ -30,7 +32,7 @@ const configSchema = z.object({
     SMTP_PASS: z.string().optional(),
     SMTP_FROM: z.email(),
     LOG_LEVEL: z
-        .enum(['trace', 'debug', 'info', 'warning', 'error', 'fatal'])
+        .enum(['fatal', 'error', 'warning', 'info', 'debug', 'trace'])
         .default('info'),
 });
 

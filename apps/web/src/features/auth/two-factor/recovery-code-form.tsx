@@ -1,16 +1,11 @@
 import { useNavigate } from 'react-router';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-} from '@/components/ui/field';
+import { FieldGroup } from '@/components/ui/field';
 import { useVerifyBackupCode } from '../auth-queries';
 
 const recoveryCodeSchema = z.object({
@@ -46,27 +41,13 @@ export function RecoveryCodeForm({ onBack }: RecoveryCodeFormProps) {
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
-                <Controller
+                <FormInputField
                     control={form.control}
                     name="code"
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="recovery-code">
-                                Recovery code
-                            </FieldLabel>
-                            <Input
-                                id="recovery-code"
-                                placeholder="xxxxx-xxxxx"
-                                autoFocus
-                                autoComplete="off"
-                                aria-invalid={fieldState.invalid}
-                                {...field}
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
-                        </Field>
-                    )}
+                    label="Recovery code"
+                    placeholder="xxxxx-xxxxx"
+                    autoFocus
+                    autoComplete="off"
                 />
 
                 <Button type="submit" disabled={isPending}>

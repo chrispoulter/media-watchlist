@@ -1,85 +1,117 @@
-# @media-watchlist/api
+# Media Watchlist API
 
-Hono API for Media Watchlist: authentication, TMDB search, and the user's watchlist.
+A REST API for tracking movies and TV shows you want to watch. Built with Hono, TypeScript, and PostgreSQL.
 
-## Stack
+## Features
 
-- Hono, TypeScript
-- [Better Auth](https://www.better-auth.com/) — email/password, Google OAuth, TOTP 2FA
-- Drizzle ORM + PostgreSQL
-- Zod for env/config validation
-- LogTape for logging
-- [Scalar](https://scalar.com/) for API reference docs (OpenAPI)
-- Nodemailer + React Email for transactional email
+- Email/password authentication and social login (Google OAuth)
+- Email verification and password reset flows
+- Two-factor authentication (TOTP)
+- Search for movies and TV shows via The Movie Database (TMDB)
+- Personal watchlist management — add, remove, and reorder items
+- Transactional emails with React Email templates
+- Interactive API documentation (Scalar) at the root route
+- Docker Compose for local development
+
+## Tech Stack
+
+| Layer            | Technology                  |
+| ---------------- | --------------------------- |
+| Runtime          | Node.js 24, TypeScript      |
+| Framework        | Hono 4                      |
+| Database         | PostgreSQL 17 + Drizzle ORM |
+| Authentication   | Better Auth                 |
+| Media Search     | TMDB API                    |
+| Email            | Nodemailer + React Email    |
+| API Docs         | Scalar (OpenAPI)            |
+| Logging          | LogTape                     |
+| Containerisation | Docker, Docker Compose      |
 
 ## Prerequisites
 
-- Node.js >= 24.0.0
-- A PostgreSQL database
-- A [TMDB](https://www.themoviedb.org/) API read access token
-- An SMTP server for outgoing email (use [Mailpit](https://mailpit.axllent.org/) locally, started via the root `docker-compose.yml`)
+- [Node.js 24+](https://nodejs.org)
+- [Docker](https://www.docker.com) (for local dev via Docker Compose)
+- [TMDB API read token](https://developer.themoviedb.org/docs/getting-started) (for search)
+- Google OAuth credentials (optional — for social login)
 
-## Setup
+## Getting Started
 
-From the repo root, install dependencies (this is an npm workspace, so run installs from the root, not here):
+### Docker Compose
+
+Starts the API, a PostgreSQL database, and [Mailpit](https://mailpit.axllent.org) for local email testing:
+
+```bash
+cp .env.example .env
+# Fill in required values in .env (see Environment Variables below)
+docker-compose up
+```
+
+| Service | URL                   |
+| ------- | --------------------- |
+| API     | http://localhost:3000 |
+| Mailpit | http://localhost:8025 |
+
+### Manual Setup
 
 ```bash
 npm install
-```
+cp .env.example .env
+# Fill in required values in .env
 
-Copy the env file and fill in the values:
-
-```bash
-cp apps/api/.env.example apps/api/.env
-```
-
-| Variable                                                                            | Description                                              |
-| ----------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| `PORT`                                                                              | Port to listen on (default `3000`)                       |
-| `DATABASE_URL`                                                                      | PostgreSQL connection string                             |
-| `BETTER_AUTH_SECRET`                                                                | Random string, at least 32 characters                    |
-| `BETTER_AUTH_URL`                                                                   | Public URL of this API (default `http://localhost:3000`) |
-| `CLIENT_ORIGIN`                                                                     | Allowed CORS origin(s) for the web app, comma-separated  |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`                                         | Google OAuth credentials (optional)                      |
-| `TMDB_API_READ_TOKEN`                                                               | TMDB API read access token                               |
-| `SMTP_HOST` / `SMTP_PORT` / `SMTP_SECURE` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM` | SMTP settings for outgoing email                         |
-| `LOG_LEVEL`                                                                         | LogTape log level (default `info`)                       |
-
-Run database migrations:
-
-```bash
 npm run db:migrate
-```
-
-## Development
-
-```bash
 npm run dev
 ```
 
-The API runs at http://localhost:3000. API reference docs are served at `/reference`, health checks at `/health` and `/alive`.
+## Environment Variables
+
+| Variable               | Required | Default                 | Description                                                         |
+| ---------------------- | -------- | ----------------------- | ------------------------------------------------------------------- |
+| `PORT`                 | No       | `3000`                  | Port the server listens on                                          |
+| `DATABASE_URL`         | Yes      | —                       | PostgreSQL connection string                                        |
+| `BETTER_AUTH_SECRET`   | Yes      | —                       | Auth signing secret (min 32 chars)                                  |
+| `BETTER_AUTH_URL`      | No       | `http://localhost:5173` | Public URL of the web app, which proxies `/api/*` to this API       |
+| `TRUSTED_ORIGINS`      | No       | —                       | Extra trusted web origins, comma-separated                          |
+| `GOOGLE_CLIENT_ID`     | No       | —                       | Google OAuth client ID                                              |
+| `GOOGLE_CLIENT_SECRET` | No       | —                       | Google OAuth client secret                                          |
+| `TMDB_API_READ_TOKEN`  | Yes      | —                       | TMDB API read access token                                          |
+| `SMTP_HOST`            | No       | `localhost`             | SMTP server host                                                    |
+| `SMTP_PORT`            | No       | `587`                   | SMTP server port                                                    |
+| `SMTP_SECURE`          | No       | `false`                 | Use TLS/SSL for SMTP                                                |
+| `SMTP_FROM`            | Yes      | —                       | From address for outgoing emails                                    |
+| `SMTP_USER`            | No       | —                       | SMTP username                                                       |
+| `SMTP_PASS`            | No       | —                       | SMTP password                                                       |
+| `LOG_LEVEL`            | No       | `info`                  | Log level: `fatal`, `error`, `warning`, `info`, `debug`, or `trace` |
+
+## API Documentation
+
+Interactive documentation with a request explorer is served at [`/reference`](http://localhost:3000/reference).
+
+The raw OpenAPI specs are also available:
+
+| Path                 | Description                            |
+| -------------------- | -------------------------------------- |
+| `/openapi.json`      | App routes (health, search, watchlist) |
+| `/auth-openapi.json` | Authentication routes (Better Auth)    |
 
 ## Scripts
 
-- `npm run dev` — run with hot reload (tsx watch)
-- `npm run build` — compile TypeScript to `dist/`
-- `npm run start` — run the compiled build
-- `npm run typecheck` — `tsc --noEmit`
-- `npm run lint` / `npm run lint:fix`
-- `npm run db:generate` — generate a Drizzle migration from schema changes
-- `npm run db:migrate` — apply migrations
-- `npm run db:studio` — open Drizzle Studio
-- `npm run email:dev` — preview email templates (`src/emails`) at http://localhost:3001
+| Script                | Description                              |
+| --------------------- | ---------------------------------------- |
+| `npm run dev`         | Start development server with hot reload |
+| `npm run build`       | Compile TypeScript to `dist/`            |
+| `npm run start`       | Run the compiled server                  |
+| `npm run typecheck`   | Run TypeScript type checking             |
+| `npm run lint`        | Run ESLint                               |
+| `npm run format`      | Format code with Prettier                |
+| `npm run db:generate` | Generate a new Drizzle migration         |
+| `npm run db:migrate`  | Apply pending migrations                 |
+| `npm run db:studio`   | Open Drizzle Studio                      |
+| `npm run email:dev`   | Preview email templates (port 3001)      |
 
-## Project structure
+## CI/CD
 
-```
-src/
-  app.ts              # Hono app: middleware and route wiring
-  index.ts            # server entry point
-  db/                 # Drizzle client, schema, migration runner
-  emails/             # React Email templates
-  lib/                # auth, config, logger, mailer, TMDB client
-  middleware/         # error handling, auth guard
-  routes/             # search, watchlist, health, docs routes
-```
+A single CI workflow runs on every push and pull request to any branch. It type checks, lints, and builds the project using Node.js 24.
+
+## License
+
+[MIT](LICENSE)

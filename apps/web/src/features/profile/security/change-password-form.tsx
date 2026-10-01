@@ -1,15 +1,10 @@
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-} from '@/components/ui/field';
+import { FieldGroup } from '@/components/ui/field';
 import { useChangePassword } from '../profile-queries';
 
 const changePasswordSchema = z
@@ -57,73 +52,31 @@ export function ChangePasswordForm() {
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
-                <Controller
+                <FormInputField
                     control={form.control}
                     name="currentPassword"
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="change-currentPassword">
-                                Current password
-                            </FieldLabel>
-                            <Input
-                                id="change-currentPassword"
-                                type="password"
-                                placeholder="••••••••"
-                                autoComplete="current-password"
-                                aria-invalid={fieldState.invalid}
-                                {...field}
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
-                        </Field>
-                    )}
+                    label="Current password"
+                    type="password"
+                    placeholder="••••••••"
+                    autoComplete="current-password"
                 />
 
-                <Controller
+                <FormInputField
                     control={form.control}
                     name="newPassword"
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="change-newPassword">
-                                New password
-                            </FieldLabel>
-                            <Input
-                                id="change-newPassword"
-                                type="password"
-                                placeholder="••••••••"
-                                autoComplete="new-password"
-                                aria-invalid={fieldState.invalid}
-                                {...field}
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
-                        </Field>
-                    )}
+                    label="New password"
+                    type="password"
+                    placeholder="••••••••"
+                    autoComplete="new-password"
                 />
 
-                <Controller
+                <FormInputField
                     control={form.control}
                     name="confirmPassword"
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="change-confirmPassword">
-                                Confirm new password
-                            </FieldLabel>
-                            <Input
-                                id="change-confirmPassword"
-                                type="password"
-                                placeholder="••••••••"
-                                autoComplete="new-password"
-                                aria-invalid={fieldState.invalid}
-                                {...field}
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
-                        </Field>
-                    )}
+                    label="Confirm new password"
+                    type="password"
+                    placeholder="••••••••"
+                    autoComplete="new-password"
                 />
 
                 <div className="flex flex-col-reverse gap-2 sm:flex-row">

@@ -1,6 +1,6 @@
 import type { ErrorHandler } from 'hono';
-import type { ErrorResponse } from '@media-watchlist/shared';
 import { getLogger } from '@logtape/logtape';
+import type { ErrorResponse } from '../types/index.js';
 
 const logger = getLogger(['api', 'error-handler']);
 

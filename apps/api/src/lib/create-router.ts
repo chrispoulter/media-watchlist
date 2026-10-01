@@ -1,5 +1,5 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
-import type { AuthEnv } from './auth.js';
+import { AuthEnv } from '../middleware/require-auth.js';
 import { validationHook } from './validation-hook.js';
 
 export const createRouter = () =>

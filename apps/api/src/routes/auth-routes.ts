@@ -1,7 +1,7 @@
-import { Hono } from 'hono';
+import { createRouter } from '../lib/create-router.js';
 import { auth } from '../lib/auth.js';
 
-const router = new Hono();
+const router = createRouter();
 
 router.on(['GET', 'POST'], '/*', (c) => auth.handler(c.req.raw));
 

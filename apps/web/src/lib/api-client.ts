@@ -1,13 +1,23 @@
 import ky, { HTTPError } from 'ky';
-import type { ErrorResponse } from '@media-watchlist/shared';
 import { authClient } from '@/lib/auth-client';
 import { queryClient } from '@/lib/query-client';
-import { config } from '@/lib/config';
+
+interface ErrorResponse {
+    error?: string;
+}
 
 export const apiClient = ky.create({
-    prefix: config.VITE_API_URL,
-    credentials: 'include',
+    prefix: '/api',
     hooks: {
+        beforeError: [
+            async ({ error }) => {
+                if (error instanceof HTTPError) {
+                    const body = error.data as ErrorResponse;
+                    error.message = body?.error || error.message;
+                }
+                return error;
+            },
+        ],
         afterResponse: [
             async ({ response }) => {
                 switch (response.status) {
@@ -17,15 +27,6 @@ export const apiClient = ky.create({
                         break;
                 }
                 return response;
-            },
-        ],
-        beforeError: [
-            ({ error }) => {
-                if (error instanceof HTTPError) {
-                    const body = error.data as ErrorResponse;
-                    error.message = body?.error || error.message;
-                }
-                return error;
             },
         ],
     },

@@ -1,6 +1,6 @@
 import type { NotFoundHandler } from 'hono';
-import type { ErrorResponse } from '@media-watchlist/shared';
 import { getLogger } from '@logtape/logtape';
+import { ErrorResponse } from '../types/index.js';
 
 const logger = getLogger(['api', 'not-found-handler']);
 

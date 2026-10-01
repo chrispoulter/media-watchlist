@@ -1,9 +1,9 @@
 import { createRoute, z } from '@hono/zod-openapi';
-import { errorResponseSchema, mediaTypeSchema } from '@media-watchlist/shared';
 import { and, eq, inArray } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { watchlistItem } from '../db/schema.js';
 import { requireAuth } from '../middleware/require-auth.js';
+import { errorResponseSchema, mediaTypeSchema } from '../types/index.js';
 import { createRouter } from '../lib/create-router.js';
 import { search } from '../lib/tmdb.js';
 
@@ -28,7 +28,7 @@ const searchRoute = createRoute({
     path: '/',
     tags: ['Search'],
     summary: 'Search for movies and TV shows',
-    security: [{ bearerAuth: [] }],
+    security: [{ cookieAuth: [] }],
     request: {
         query: z.object({
             query: z.string().min(1),

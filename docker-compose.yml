@@ -1,18 +1,19 @@
 services:
-    web:
+    media-watchlist-web:
         image: media-watchlist-web:latest
         build:
             context: .
             dockerfile: apps/web/Dockerfile
         environment:
-            VITE_API_URL: http://localhost:3000
+            API_URL: http://media-watchlist-api:3000
+            # VITE_FEATURE_X: ${VITE_FEATURE_X:-}
         ports:
             - 5173:80
         depends_on:
-            api:
+            media-watchlist-api:
                 condition: service_healthy
 
-    api:
+    media-watchlist-api:
         image: media-watchlist-api:latest
         build:
             context: .
@@ -20,38 +21,37 @@ services:
         environment:
             PORT: 3000
             DATABASE_URL: postgresql://postgres:password@postgres:5432/media_watchlist
-            BETTER_AUTH_URL: http://localhost:3000
+            BETTER_AUTH_URL: http://localhost:5173
             BETTER_AUTH_SECRET: change-me-to-a-secret-that-is-at-least-32-chars
-            CLIENT_ORIGIN: http://localhost:5173
             GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
             GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
             TMDB_API_READ_TOKEN: ${TMDB_API_READ_TOKEN:-your-tmdb-api-read-token}
             SMTP_HOST: mailpit
             SMTP_PORT: 1025
             SMTP_FROM: noreply@example.com
+            LOG_LEVEL: info
         ports:
             - 3000:3000
         healthcheck:
-            test:
-                ['CMD', 'wget', '--spider', '-q', 'http://localhost:3000/alive']
+            test: [ 'CMD', 'wget', '--spider', '-q', 'http://localhost:3000/health' ]
             interval: 30s
             timeout: 5s
             retries: 3
             start_period: 10s
         depends_on:
-            migrate-hono:
+            media-watchlist-migrate:
                 condition: service_completed_successfully
             postgres:
                 condition: service_healthy
             mailpit:
                 condition: service_started
 
-    migrate:
+    media-watchlist-migrate:
         image: media-watchlist-api:latest
         build:
             context: .
             dockerfile: apps/api/Dockerfile
-        command: node apps/api/dist/db/migrate.js
+        command: node dist/db/migrate.js
         environment:
             DATABASE_URL: postgresql://postgres:password@postgres:5432/media_watchlist
         depends_on:
@@ -71,7 +71,7 @@ services:
             - postgres_data:/var/lib/postgresql
         restart: always
         healthcheck:
-            test: ['CMD', 'pg_isready']
+            test: [ 'CMD', 'pg_isready' ]
             interval: 30s
             timeout: 5s
             retries: 5

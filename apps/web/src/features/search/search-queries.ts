@@ -12,7 +12,7 @@ export function useSearch(query: string, enabled = true) {
         queryKey: searchKeys.results(query),
         queryFn: ({ signal }) =>
             apiClient
-                .get('/api/search', {
+                .get('/search', {
                     searchParams: { query },
                     signal,
                 })

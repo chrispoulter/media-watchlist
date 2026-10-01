@@ -1,68 +1,147 @@
-# @media-watchlist/web
+# Media Watchlist
 
-React single-page app for Media Watchlist — search TMDB for movies/TV shows, manage account/security settings, and maintain a personal watchlist.
+A React SPA for tracking movies and TV shows you want to watch. Search TMDB, build your list, manage your account — all in one place.
 
-## Stack
+Connects to [media-watchlist-api](https://github.com/chrispoulter/media-watchlist-api) for data and authentication.
 
-- React 19 + Vite, TypeScript
-- React Router (data routes)
-- TanStack Query for server state
-- [Better Auth](https://www.better-auth.com/) client — email/password, Google OAuth, TOTP 2FA
-- Tailwind CSS v4 + shadcn/ui (Radix primitives)
-- React Hook Form + Zod for forms/validation
+## Tech Stack
+
+- **[Vite 8](https://vite.dev/)** + **[React 19](https://react.dev/)** + **[TypeScript](https://www.typescriptlang.org/)**
+- **[Tailwind CSS v4](https://tailwindcss.com/)** for styling
+- **[shadcn/ui](https://ui.shadcn.com/)** component library (New York style, Radix UI primitives)
+- **[TanStack Query v5](https://tanstack.com/query/latest)** for server state
+- **[React Hook Form](https://react-hook-form.com/)** + **[Zod](https://zod.dev/)** for forms and validation
+- **[better-auth](https://better-auth.com/)** for authentication (cookie-based sessions)
+- **[React Router v7](https://reactrouter.com/)** for client-side routing
+- **[ky](https://github.com/sindresorhus/ky)** for API requests
+- **[Sonner](https://sonner.emilkowal.ski/)** for toast notifications
+
+## Features
+
+### Authentication
+
+- Register with email, password, first name, last name, and date of birth
+- Register / sign in with Google OAuth
+- Sign in with email and password (remember me option)
+- Two-factor authentication (TOTP) at sign-in
+- Forgot password / reset password via email link
+
+### Watchlist
+
+- Search TMDB for movies and TV shows with debounced input and type filter (All / Movies / TV)
+- Add titles to your watchlist directly from search results
+- View your full watchlist as a poster grid
+- Remove titles from your watchlist
+
+### Profile
+
+- Update name and date of birth
+- Change email address
+- Change password (revokes other sessions)
+- Enable / disable TOTP two-factor authentication with QR code setup flow
+- Delete account
 
 ## Prerequisites
 
-- Node.js >= 20.19.0
-- The [API](../api/README.md) running (locally or elsewhere)
+- **Node 24+**
+- **media-watchlist-api** running (see its README for setup)
 
-## Setup
-
-From the repo root, install dependencies (this is an npm workspace, so run installs from the root, not here):
+## Getting Started
 
 ```bash
+# 1. Copy environment file and set the API URL
+cp .env.example .env
+
+# 2. Install dependencies
 npm install
-```
 
-Copy the env file and point it at your API:
-
-```bash
-cp apps/web/.env.example apps/web/.env
-```
-
-| Variable       | Description                                           |
-| -------------- | ----------------------------------------------------- |
-| `VITE_API_URL` | Base URL of the API (default `http://localhost:3000`) |
-
-## Development
-
-```bash
+# 3. Start the dev server
 npm run dev
 ```
 
-The app runs at http://localhost:5173.
+The app will be available at `http://localhost:5173`. API requests are directed to `API_URL` during development.
 
-## Scripts
+## Environment Variables
 
-- `npm run dev` — start the Vite dev server
-- `npm run build` — typecheck and build for production
-- `npm run preview` — preview the production build locally
-- `npm run typecheck` — `tsc -b`
-- `npm run lint` / `npm run lint:fix`
-- `npm run generate-favicons` — regenerate favicon assets from the source image
+| Variable  | Description                         | Default                 |
+| --------- | ----------------------------------- | ----------------------- |
+| `API_URL` | Base URL of the media-watchlist-api | `http://localhost:3000` |
 
-## Project structure
+## Available Scripts
+
+| Script            | Description                          |
+| ----------------- | ------------------------------------ |
+| `npm run dev`     | Start Vite dev server with HMR       |
+| `npm run build`   | Type check and build for production  |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint`    | Run ESLint                           |
+| `npm run format`  | Format all files with Prettier       |
+
+## Docker
+
+### Development
+
+`docker compose up` starts the full stack:
+
+| Service  | URL                   |
+| -------- | --------------------- |
+| Frontend | http://localhost:5173 |
+| API      | http://localhost:3000 |
+| Mailpit  | http://localhost:8025 |
+
+Create a `.env` file in the project root with the required secrets before starting:
+
+```env
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+TMDB_API_READ_TOKEN=...
+```
+
+```bash
+docker compose up
+```
+
+`API_URL` is set automatically to the API service inside the compose network.
+
+### Production
+
+Build the image (nginx serves the static site):
+
+```bash
+docker build -t media-watchlist-web .
+```
+
+Run with the API URL supplied at runtime:
+
+```bash
+docker run -p 80:80 \
+  -e API_URL=https://your-api.example.com \
+  media-watchlist-web
+```
+
+At container startup, nginx substitutes `API_URL` into its config and proxies `/api/*` to it, so the same image runs in any environment without rebuilding. Any other runtime config (e.g. feature flags or public keys) can be added to `env.js` in `20-generate-env-config.sh`; the app reads it via `window.__ENV__`. nginx serves the SPA via `try_files $uri /index.html`.
+
+## CI/CD
+
+A single CI workflow runs on every push and pull request to any branch. It type checks, lints, and builds the project using Node.js 24.
+
+## Project Structure
 
 ```
 src/
-  app.tsx             # router/providers setup
-  main.tsx            # entry point
-  components/         # shared components, including shadcn/ui primitives in ui/
-  features/           # feature modules (auth, profile, search, watchlist), each with routes/queries/pages
-  lib/                # API client, auth client, app config, query client, utils
-  pages/              # top-level error/not-found pages
+├── lib/                    # API client, better-auth singleton, utilities
+├── types/                  # shared TypeScript types
+├── components/
+│   ├── ui/                 # shadcn/ui generated components
+│   └── ...                 # layout, route guards, header, shared UI
+├── pages/                  # error and not-found fallback pages
+└── features/
+    ├── auth/               # login, register, two-factor, forgot/reset password
+    ├── profile/            # profile info, security (2FA settings), danger zone
+    ├── watchlist/          # React Query hooks, grid, item cards
+    └── search/             # debounced search bar, result cards
 ```
 
-## Deployment
+## License
 
-Ships as static files. `vercel.json` configures SPA rewrites for Vercel; `Dockerfile` builds and serves the app via nginx (used by the root `docker-compose.yml`), reading runtime config through `20-generate-env-config.sh`.
+[MIT](LICENSE)

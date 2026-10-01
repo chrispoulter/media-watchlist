@@ -1,17 +1,12 @@
 import { useSearchParams, useNavigate } from 'react-router';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-} from '@/components/ui/field';
+import { FieldGroup } from '@/components/ui/field';
 import { useResetPassword } from '../auth-queries';
 
 const resetPasswordSchema = z
@@ -68,50 +63,22 @@ export function ResetPasswordForm() {
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
-                <Controller
+                <FormInputField
                     control={form.control}
                     name="newPassword"
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="reset-newPassword">
-                                New password
-                            </FieldLabel>
-                            <Input
-                                id="reset-newPassword"
-                                type="password"
-                                placeholder="••••••••"
-                                autoComplete="new-password"
-                                aria-invalid={fieldState.invalid}
-                                {...field}
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
-                        </Field>
-                    )}
+                    label="New password"
+                    type="password"
+                    placeholder="••••••••"
+                    autoComplete="new-password"
                 />
 
-                <Controller
+                <FormInputField
                     control={form.control}
                     name="confirmPassword"
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="reset-confirmPassword">
-                                Confirm new password
-                            </FieldLabel>
-                            <Input
-                                id="reset-confirmPassword"
-                                type="password"
-                                placeholder="••••••••"
-                                autoComplete="new-password"
-                                aria-invalid={fieldState.invalid}
-                                {...field}
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
-                        </Field>
-                    )}
+                    label="Confirm new password"
+                    type="password"
+                    placeholder="••••••••"
+                    autoComplete="new-password"
                 />
 
                 <Button type="submit" disabled={isPending}>

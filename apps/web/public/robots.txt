@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://media-watchlist.example.com/sitemap.xml
+Sitemap: https://media-watchlist.chrispoulter.com/sitemap.xml

@@ -1,9 +1,10 @@
 import { serve } from '@hono/node-server';
 import { getLogger } from '@logtape/logtape';
 import app from './app.js';
+import { config } from './lib/config.js';
+
 import { shutdown as shutdownDb } from './db/index.js';
 import { shutdown as shutdownMailer } from './lib/mailer.js';
-import { config } from './lib/config.js';
 
 const SHUTDOWN_TIMEOUT_MS = 10_000;
 

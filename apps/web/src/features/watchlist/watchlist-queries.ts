@@ -16,9 +16,7 @@ export function useWatchlist() {
     return useQuery({
         queryKey: watchlistKeys.all,
         queryFn: ({ signal }) =>
-            apiClient
-                .get('/api/watchlist', { signal })
-                .json<WatchlistResponse>(),
+            apiClient.get('/watchlist', { signal }).json<WatchlistResponse>(),
     });
 }
 
@@ -28,12 +26,12 @@ export function useAddToWatchlist() {
     return useMutation({
         mutationFn: (item: AddWatchlistItemRequest) =>
             apiClient
-                .post('/api/watchlist', { json: item })
+                .post('/watchlist', { json: item })
                 .json<AddWatchlistItemResponse>(),
         onSuccess: (data, variables) => {
             queryClient.setQueryData<WatchlistResponse>(
                 watchlistKeys.all,
-                (old) => (old ? [...old, data] : [data])
+                (old) => (old ? [...old, data] : old)
             );
 
             queryClient.setQueriesData<SearchResponse>(
@@ -50,11 +48,30 @@ export function useAddToWatchlist() {
     });
 }
 
+export function useReorderWatchlist() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        // Run reorders one at a time so the last drop is always the last write
+        scope: { id: 'watchlist-reorder' },
+        mutationFn: (items: WatchlistResponse) =>
+            apiClient.put('/watchlist/order', {
+                json: { ids: items.map((item) => item.id) },
+            }),
+        onMutate: (items) => {
+            queryClient.setQueryData<WatchlistResponse>(
+                watchlistKeys.all,
+                items
+            );
+        },
+    });
+}
+
 export function useRemoveFromWatchlist() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (id: number) => apiClient.delete(`/api/watchlist/${id}`),
+        mutationFn: (id: number) => apiClient.delete(`/watchlist/${id}`),
         onSuccess: (_, id) => {
             queryClient.setQueryData<WatchlistResponse>(
                 watchlistKeys.all,

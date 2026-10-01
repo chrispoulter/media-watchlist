@@ -1,9 +1,8 @@
 import { createAuthClient } from 'better-auth/react';
 import { twoFactorClient } from 'better-auth/client/plugins';
-import { config } from '@/lib/config';
 
 export const authClient = createAuthClient({
-    baseURL: config.VITE_API_URL,
+    baseURL: window.location.origin,
     plugins: [
         twoFactorClient({
             onTwoFactorRedirect() {
@@ -14,4 +13,6 @@ export const authClient = createAuthClient({
 });
 
 export type Session = typeof authClient.$Infer.Session;
-export type AppUser = typeof authClient.$Infer.Session.user;
+
+// Extended user type including additional fields from the API
+export type AppUser = Session['user'] & {};

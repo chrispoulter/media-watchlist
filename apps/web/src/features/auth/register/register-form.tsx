@@ -1,16 +1,11 @@
 import { useNavigate } from 'react-router';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-} from '@/components/ui/field';
+import { FieldGroup } from '@/components/ui/field';
 import { useSignUp } from '../auth-queries';
 
 const registerSchema = z
@@ -60,95 +55,39 @@ export function RegisterForm() {
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
-                <Controller
+                <FormInputField
                     control={form.control}
                     name="name"
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="register-name">
-                                Name
-                            </FieldLabel>
-                            <Input
-                                id="register-name"
-                                placeholder="John Smith"
-                                autoComplete="name"
-                                aria-invalid={fieldState.invalid}
-                                {...field}
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
-                        </Field>
-                    )}
+                    label="Name"
+                    placeholder="John Smith"
+                    autoComplete="name"
                 />
 
-                <Controller
+                <FormInputField
                     control={form.control}
                     name="email"
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="register-email">
-                                Email
-                            </FieldLabel>
-                            <Input
-                                id="register-email"
-                                type="email"
-                                placeholder="john@example.com"
-                                autoComplete="email"
-                                aria-invalid={fieldState.invalid}
-                                {...field}
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
-                        </Field>
-                    )}
+                    label="Email"
+                    type="email"
+                    placeholder="john@example.com"
+                    autoComplete="email"
                 />
 
-                <Controller
+                <FormInputField
                     control={form.control}
                     name="password"
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="register-password">
-                                Password
-                            </FieldLabel>
-                            <Input
-                                id="register-password"
-                                type="password"
-                                placeholder="••••••••"
-                                autoComplete="new-password"
-                                aria-invalid={fieldState.invalid}
-                                {...field}
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
-                        </Field>
-                    )}
+                    label="Password"
+                    type="password"
+                    placeholder="••••••••"
+                    autoComplete="new-password"
                 />
 
-                <Controller
+                <FormInputField
                     control={form.control}
                     name="confirmPassword"
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="register-confirmPassword">
-                                Confirm password
-                            </FieldLabel>
-                            <Input
-                                id="register-confirmPassword"
-                                type="password"
-                                placeholder="••••••••"
-                                autoComplete="new-password"
-                                aria-invalid={fieldState.invalid}
-                                {...field}
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
-                        </Field>
-                    )}
+                    label="Confirm password"
+                    type="password"
+                    placeholder="••••••••"
+                    autoComplete="new-password"
                 />
 
                 <Button type="submit" disabled={isPending}>

@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { ModeToggle } from '@/components/mode-toggle';
+import { ModeToggle } from './mode-toggle';
 import { MainMenu } from './main-menu';
 import { UserMenu } from './user-menu';
 

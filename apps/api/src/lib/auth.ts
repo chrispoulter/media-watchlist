@@ -4,15 +4,16 @@ import { twoFactor, openAPI } from 'better-auth/plugins';
 import { createElement } from 'react';
 import { db } from '../db/index.js';
 import * as schema from '../db/schema.js';
-import ResetPasswordEmail from '../emails/reset-password-email.js';
-import VerificationEmail from '../emails/verification-email.js';
 import { config } from './config.js';
 import { sendMail } from './mailer.js';
+
+import ResetPasswordEmail from '../emails/reset-password-email.js';
+import VerificationEmail from '../emails/verification-email.js';
 
 export const auth = betterAuth({
     baseURL: config.BETTER_AUTH_URL,
     secret: config.BETTER_AUTH_SECRET,
-    trustedOrigins: config.CLIENT_ORIGIN.split(','),
+    trustedOrigins: config.TRUSTED_ORIGINS,
     database: drizzleAdapter(db, {
         provider: 'pg',
         schema,
@@ -60,14 +61,7 @@ export const auth = betterAuth({
         twoFactor({ issuer: 'Media Watchlist' }),
         openAPI({ disableDefaultReference: true }),
     ],
-    advanced: {
-        defaultCookieAttributes: { sameSite: 'none', secure: true },
-    },
 });
 
-export interface AuthEnv {
-    Variables: {
-        user: typeof auth.$Infer.Session.user;
-        session: typeof auth.$Infer.Session.session;
-    };
-}
+export type User = typeof auth.$Infer.Session.user;
+export type Session = typeof auth.$Infer.Session.session;

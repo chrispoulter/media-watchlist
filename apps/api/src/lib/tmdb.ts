@@ -1,5 +1,5 @@
-import type { MediaType } from '@media-watchlist/shared';
 import { getLogger } from '@logtape/logtape';
+import type { MediaType } from '@media-watchlist/shared';
 import type { HealthStatus } from '../types/index.js';
 import { config } from './config.js';
 

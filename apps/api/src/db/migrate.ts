@@ -1,7 +1,7 @@
 import 'dotenv/config';
+import { fileURLToPath } from 'node:url';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
-import { fileURLToPath } from 'node:url';
 
 console.log('Migrating database...');
 
