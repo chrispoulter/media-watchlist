@@ -18,6 +18,9 @@ export default defineConfig([
             eslintConfigPrettier,
         ],
         languageOptions: {
+            parserOptions: {
+                tsconfigRootDir: import.meta.dirname,
+            },
             globals: globals.browser,
         },
     },

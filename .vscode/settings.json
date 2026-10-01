@@ -1,7 +1,9 @@
 {
     "files.exclude": {
         "**/node_modules": true,
-        "**/.turbo": true
+        "**/.turbo": true,
+        "**/dist": true,
+        "**/.eslintcache": true
     },
     "files.associations": {
         "*.css": "tailwindcss"
