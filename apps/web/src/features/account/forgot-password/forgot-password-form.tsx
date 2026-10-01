@@ -7,7 +7,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { useForgotPassword } from '../auth-queries';
+import { useForgotPassword } from '../account-queries';
 
 const forgotPasswordSchema = z.object({
     email: z.email('Invalid email address'),

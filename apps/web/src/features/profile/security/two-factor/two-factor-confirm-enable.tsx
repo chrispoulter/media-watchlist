@@ -14,7 +14,7 @@ const enableTwoFactorSchema = z.object({
 type EnableTwoFactorFormValues = z.infer<typeof enableTwoFactorSchema>;
 
 interface TwoFactorConfirmEnableProps {
-    onTotpSetup: (totpUri: string, backupCodes: string[]) => void;
+    onTotpSetup: (totpUri: string, recoveryCodes: string[]) => void;
     onCancel: () => void;
 }
 

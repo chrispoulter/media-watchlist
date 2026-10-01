@@ -7,7 +7,7 @@ import { FormCheckboxField } from '@/components/form/form-checkbox-field';
 import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { useSignIn } from '../auth-queries';
+import { useSignIn } from '../account-queries';
 
 const loginSchema = z.object({
     email: z.email('Invalid email address'),

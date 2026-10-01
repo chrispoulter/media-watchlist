@@ -8,7 +8,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { useSignOut } from '@/features/auth/auth-queries';
+import { useSignOut } from '@/features/account/account-queries';
 import { authClient, isAdmin } from '@/lib/auth-client';
 
 export function UserMenu() {

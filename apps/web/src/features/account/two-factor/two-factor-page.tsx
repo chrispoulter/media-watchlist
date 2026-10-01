@@ -30,7 +30,7 @@ export function TwoFactorPage() {
                                 {mode === 'totp' &&
                                     'Enter the 6-digit code from your authenticator app'}
                                 {mode === 'recovery' &&
-                                    'Enter one of your backup recovery codes'}
+                                    'Enter one of your recovery codes'}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>

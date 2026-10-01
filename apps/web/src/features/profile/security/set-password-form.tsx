@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { authClient } from '@/lib/auth-client';
 import { useSetPasswordReset } from '../profile-queries';
 
-export function SetPassword() {
+export function SetPasswordForm() {
     const [isSent, setIsSent] = useState(false);
     const { data: session } = authClient.useSession();
     const { mutateAsync: requestReset, isPending } = useSetPasswordReset();

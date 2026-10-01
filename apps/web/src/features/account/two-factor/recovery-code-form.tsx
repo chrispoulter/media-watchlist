@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { useVerifyBackupCode } from '../auth-queries';
+import { useVerifyRecoveryCode } from '../account-queries';
 
 const recoveryCodeSchema = z.object({
     code: z.string().min(1, 'Recovery code is required'),
@@ -20,7 +20,7 @@ interface RecoveryCodeFormProps {
 
 export function RecoveryCodeForm({ onBack }: RecoveryCodeFormProps) {
     const navigate = useNavigate();
-    const { mutateAsync: verifyBackupCode, isPending } = useVerifyBackupCode();
+    const { mutateAsync: verifyRecoveryCode, isPending } = useVerifyRecoveryCode();
 
     const form = useForm<RecoveryCodeFormValues>({
         resolver: zodResolver(recoveryCodeSchema),
@@ -28,7 +28,7 @@ export function RecoveryCodeForm({ onBack }: RecoveryCodeFormProps) {
     });
 
     const onSubmit = async (values: RecoveryCodeFormValues) => {
-        const { error } = await verifyBackupCode(values.code);
+        const { error } = await verifyRecoveryCode(values.code);
 
         if (error) {
             toast.error(error.message ?? 'Invalid code');

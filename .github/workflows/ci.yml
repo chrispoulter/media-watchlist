@@ -76,6 +76,7 @@ jobs:
                   context: .
                   file: ${{ matrix.dockerfile }}
                   push: true
+                  provenance: false
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
                   build-args: GIT_COMMIT_SHA=${{ github.sha }}

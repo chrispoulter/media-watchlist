@@ -52,7 +52,7 @@ export function useVerifyTotpLogin() {
     });
 }
 
-export function useVerifyBackupCode() {
+export function useVerifyRecoveryCode() {
     return useMutation({
         mutationFn: (code: string) =>
             authClient.twoFactor.verifyBackupCode({ code }),

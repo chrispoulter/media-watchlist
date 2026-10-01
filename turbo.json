@@ -23,7 +23,7 @@
     ],
     "tasks": {
         "build": {
-            "env": ["VITE_API_URL", "GIT_COMMIT_SHA", "npm_package_version"],
+            "env": ["GIT_COMMIT_SHA", "npm_package_version"],
             "dependsOn": ["^build"],
             "inputs": ["$TURBO_DEFAULT$", ".env*"],
             "outputs": ["dist/**"]
