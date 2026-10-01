@@ -1,19 +1,19 @@
 services:
-    media-watchlist-web:
+    web:
         image: media-watchlist-web:latest
         build:
             context: .
             dockerfile: apps/web/Dockerfile
         environment:
-            API_URL: http://media-watchlist-api:3000
+            API_URL: http://api:3000
             # VITE_FEATURE_X: ${VITE_FEATURE_X:-}
         ports:
             - 5173:80
         depends_on:
-            media-watchlist-api:
+            api:
                 condition: service_healthy
 
-    media-watchlist-api:
+    api:
         image: media-watchlist-api:latest
         build:
             context: .
@@ -46,14 +46,14 @@ services:
             retries: 3
             start_period: 10s
         depends_on:
-            media-watchlist-migrate:
+            migrate:
                 condition: service_completed_successfully
             postgres:
                 condition: service_healthy
             mailpit:
                 condition: service_started
 
-    media-watchlist-migrate:
+    migrate:
         image: media-watchlist-api:latest
         build:
             context: .
