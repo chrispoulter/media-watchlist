@@ -13,7 +13,7 @@ interface WatchlistCardProps {
     index: number;
 }
 
-export function WatchlistCardComponent({ item, index }: WatchlistCardProps) {
+function WatchlistCardComponent({ item, index }: WatchlistCardProps) {
     const [confirming, setConfirming] = useState(false);
     const { ref, handleRef, isDragging } = useSortable({ id: item.id, index });
     const { mutate: removeFromWatchlist, isPending: isRemoving } =

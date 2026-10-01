@@ -10,7 +10,7 @@ interface SearchBarProps {
     onSearch: (query: string) => void;
 }
 
-export function SearchBarComponent({ onSearch }: SearchBarProps) {
+function SearchBarComponent({ onSearch }: SearchBarProps) {
     const [query, setQuery] = useState('');
 
     useEffect(() => {

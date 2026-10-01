@@ -1,12 +1,12 @@
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '@/components/ui/button';
 
-interface TwoFactorQRCodeProps {
+interface TwoFactorQrCodeProps {
     totpUri: string;
     onDone: () => void;
 }
 
-export const TwoFactorQRCode = ({ totpUri, onDone }: TwoFactorQRCodeProps) => {
+export function TwoFactorQrCode({ totpUri, onDone }: TwoFactorQrCodeProps) {
     return (
         <div className="space-y-4">
             <p className="text-sm font-medium">
@@ -24,4 +24,4 @@ export const TwoFactorQRCode = ({ totpUri, onDone }: TwoFactorQRCodeProps) => {
             </Button>
         </div>
     );
-};
+}
