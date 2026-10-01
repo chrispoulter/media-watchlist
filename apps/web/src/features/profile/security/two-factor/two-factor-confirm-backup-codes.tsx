@@ -35,7 +35,7 @@ export function TwoFactorConfirmBackupCodes({
 
         if (result.error) {
             toast.error(
-                result.error.message ?? 'Failed to regenerate backup codes'
+                result.error.message ?? 'Failed to regenerate recovery codes'
             );
             return;
         }

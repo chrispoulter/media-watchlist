@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { authClient } from '@/lib/auth-client';
 import { TwoFactorEnabled } from './two-factor-enabled';
-import { TwoFactorBackupCodes } from './two-factor-backup-codes';
+import { TwoFactorRecoveryCodes } from './two-factor-recovery-codes';
 import { TwoFactorDisabled } from './two-factor-disabled';
 import { TwoFactorConfirmDisable } from './two-factor-confirm-disable';
 import { TwoFactorConfirmEnable } from './two-factor-confirm-enable';
@@ -49,7 +49,7 @@ export function TwoFactorSettings() {
                 )}
 
                 {step === 'backup-codes' && (
-                    <TwoFactorBackupCodes
+                    <TwoFactorRecoveryCodes
                         backupCodes={backupCodes}
                         onDone={() => setStep('idle')}
                     />
@@ -99,7 +99,7 @@ export function TwoFactorSettings() {
             )}
 
             {step === 'backup-codes' && (
-                <TwoFactorBackupCodes
+                <TwoFactorRecoveryCodes
                     backupCodes={backupCodes}
                     onDone={() => setStep('idle')}
                 />
