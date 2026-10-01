@@ -1,5 +1,5 @@
 import { createAuthClient } from 'better-auth/react';
-import { twoFactorClient } from 'better-auth/client/plugins';
+import { adminClient, twoFactorClient } from 'better-auth/client/plugins';
 
 export const authClient = createAuthClient({
     baseURL: window.location.origin,
@@ -9,6 +9,7 @@ export const authClient = createAuthClient({
                 window.location.href = '/two-factor';
             },
         }),
+        adminClient(),
     ],
 });
 
@@ -16,3 +17,9 @@ export type Session = typeof authClient.$Infer.Session;
 
 // Extended user type including additional fields from the API
 export type AppUser = Session['user'] & {};
+
+export const ADMIN_ROLE = 'admin';
+
+export function isAdmin(user?: { role?: string | null } | null) {
+    return user?.role === ADMIN_ROLE;
+}
