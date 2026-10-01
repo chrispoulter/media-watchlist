@@ -11,7 +11,6 @@ A REST API for tracking movies and TV shows you want to watch. Built with Hono, 
 - Personal watchlist management — add, remove, and reorder items
 - Transactional emails with React Email templates
 - Interactive API documentation (Scalar) at the root route
-- Docker Compose for local development
 
 ## Tech Stack
 
@@ -29,32 +28,20 @@ A REST API for tracking movies and TV shows you want to watch. Built with Hono, 
 
 ## Prerequisites
 
-- [Node.js 24+](https://nodejs.org)
-- [Docker](https://www.docker.com) (for local dev via Docker Compose)
+See the [root README](../../README.md#prerequisites) for repo-wide prerequisites. The API also needs:
+
 - [TMDB API read token](https://developer.themoviedb.org/docs/getting-started) (for search)
 - Google OAuth credentials (optional — for social login)
 
 ## Getting Started
 
-### Docker Compose
+To run the full stack in Docker, see the [root README](../../README.md#running-with-docker).
 
-Starts the API, a PostgreSQL database, and [Mailpit](https://mailpit.axllent.org) for local email testing:
-
-```bash
-cp .env.example .env
-# Fill in required values in .env (see Environment Variables below)
-docker-compose up
-```
-
-| Service | URL                   |
-| ------- | --------------------- |
-| API     | http://localhost:3000 |
-| Mailpit | http://localhost:8025 |
-
-### Manual Setup
+Install dependencies from the repo root, then run the remaining commands from `apps/api`:
 
 ```bash
 npm install
+cd apps/api
 cp .env.example .env
 # Fill in required values in .env
 
@@ -95,6 +82,8 @@ The raw OpenAPI specs are also available:
 
 ## Scripts
 
+Run from `apps/api`, or from the repo root with `-w @media-watchlist/api`.
+
 | Script                | Description                              |
 | --------------------- | ---------------------------------------- |
 | `npm run dev`         | Start development server with hot reload |
@@ -107,11 +96,3 @@ The raw OpenAPI specs are also available:
 | `npm run db:migrate`  | Apply pending migrations                 |
 | `npm run db:studio`   | Open Drizzle Studio                      |
 | `npm run email:dev`   | Preview email templates (port 3001)      |
-
-## CI/CD
-
-A single CI workflow runs on every push and pull request to any branch. It type checks, lints, and builds the project using Node.js 24.
-
-## License
-
-[MIT](LICENSE)

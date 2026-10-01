@@ -2,7 +2,7 @@
 
 A React SPA for tracking movies and TV shows you want to watch. Search TMDB, build your list, manage your account — all in one place.
 
-Connects to [media-watchlist-api](https://github.com/chrispoulter/media-watchlist-api) for data and authentication.
+Connects to the [API](../api/README.md) in this monorepo for data and authentication.
 
 ## Tech Stack
 
@@ -43,21 +43,24 @@ Connects to [media-watchlist-api](https://github.com/chrispoulter/media-watchlis
 
 ## Prerequisites
 
-- **Node 24+**
-- **media-watchlist-api** running (see its README for setup)
+- Repo-wide prerequisites from the [root README](../../README.md#prerequisites)
+- **API** running (see [apps/api](../api/README.md) for setup)
 
 ## Getting Started
 
 ```bash
-# 1. Copy environment file and set the API URL
-cp .env.example .env
-
-# 2. Install dependencies
+# 1. Install dependencies (from the repo root)
 npm install
+
+# 2. Copy environment file and set the API URL
+cd apps/web
+cp .env.example .env
 
 # 3. Start the dev server
 npm run dev
 ```
+
+Running `npm run dev` from the repo root starts the API and web app together.
 
 The app will be available at `http://localhost:5173`. API requests are directed to `API_URL` during development.
 
@@ -69,6 +72,8 @@ The app will be available at `http://localhost:5173`. API requests are directed 
 
 ## Available Scripts
 
+Run from `apps/web`, or from the repo root with `-w @media-watchlist/web`.
+
 | Script            | Description                          |
 | ----------------- | ------------------------------------ |
 | `npm run dev`     | Start Vite dev server with HMR       |
@@ -79,36 +84,12 @@ The app will be available at `http://localhost:5173`. API requests are directed 
 
 ## Docker
 
-### Development
+To run the full stack locally with Docker Compose, see the [root README](../../README.md#running-with-docker).
 
-`docker compose up` starts the full stack:
-
-| Service  | URL                   |
-| -------- | --------------------- |
-| Frontend | http://localhost:5173 |
-| API      | http://localhost:3000 |
-| Mailpit  | http://localhost:8025 |
-
-Create a `.env` file in the project root with the required secrets before starting:
-
-```env
-GOOGLE_CLIENT_ID=...
-GOOGLE_CLIENT_SECRET=...
-TMDB_API_READ_TOKEN=...
-```
+Build the image from the repo root (nginx serves the static site):
 
 ```bash
-docker compose up
-```
-
-`API_URL` is set automatically to the API service inside the compose network.
-
-### Production
-
-Build the image (nginx serves the static site):
-
-```bash
-docker build -t media-watchlist-web .
+docker build -f apps/web/Dockerfile -t media-watchlist-web .
 ```
 
 Run with the API URL supplied at runtime:
@@ -121,16 +102,11 @@ docker run -p 80:80 \
 
 At container startup, nginx substitutes `API_URL` into its config and proxies `/api/*` to it, so the same image runs in any environment without rebuilding. Any other runtime config (e.g. feature flags or public keys) can be added to `env.js` in `20-generate-env-config.sh`; the app reads it via `window.__ENV__`. nginx serves the SPA via `try_files $uri /index.html`.
 
-## CI/CD
-
-A single CI workflow runs on every push and pull request to any branch. It type checks, lints, and builds the project using Node.js 24.
-
 ## Project Structure
 
 ```
 src/
 ├── lib/                    # API client, better-auth singleton, utilities
-├── types/                  # shared TypeScript types
 ├── components/
 │   ├── ui/                 # shadcn/ui generated components
 │   └── ...                 # layout, route guards, header, shared UI
@@ -142,6 +118,4 @@ src/
     └── search/             # debounced search bar, result cards
 ```
 
-## License
-
-[MIT](LICENSE)
+Types shared with the API live in [`packages/shared`](../../packages/shared).
