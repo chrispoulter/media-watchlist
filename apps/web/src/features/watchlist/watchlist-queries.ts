@@ -64,6 +64,9 @@ export function useReorderWatchlist() {
                 items
             );
         },
+        // The optimistic order wasn't saved; refetch the server's order
+        onError: () =>
+            queryClient.invalidateQueries({ queryKey: watchlistKeys.all }),
     });
 }
 
