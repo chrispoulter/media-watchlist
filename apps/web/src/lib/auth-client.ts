@@ -17,10 +17,10 @@ export const authClient = createAuthClient({
                 queryClient.clear();
             }
 
-            throw Object.assign(
-                new Error(error.message || error.statusText),
-                error
-            );
+            throw Object.assign(new Error(error.message || error.statusText), {
+                status: error.status,
+                code: error.code,
+            });
         },
     },
 });
