@@ -19,7 +19,7 @@ interface TwoFactorVerifyProps {
 }
 
 export function TwoFactorVerify({ onSuccess, onCancel }: TwoFactorVerifyProps) {
-    const { mutateAsync: verifyTotp, isPending } = useVerifyTotpSetup();
+    const { mutate: verifyTotp, isPending } = useVerifyTotpSetup();
 
     const form = useForm<VerifyTotpFormValues>({
         resolver: zodResolver(verifyTotpSchema),
@@ -28,17 +28,14 @@ export function TwoFactorVerify({ onSuccess, onCancel }: TwoFactorVerifyProps) {
         shouldFocusError: false,
     });
 
-    const onSubmit = async (values: VerifyTotpFormValues) => {
-        const result = await verifyTotp(values.code);
-
-        if (result.error) {
-            toast.error(result.error.message ?? 'Invalid code');
-            return;
-        }
-
-        toast.success('Two-factor authentication enabled');
-        onSuccess();
-    };
+    const onSubmit = (values: VerifyTotpFormValues) =>
+        verifyTotp(values.code, {
+            onSuccess: () => {
+                toast.success('Two-factor authentication enabled');
+                onSuccess();
+            },
+            onError: (err) => toast.error(err.message || 'Invalid code'),
+        });
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>

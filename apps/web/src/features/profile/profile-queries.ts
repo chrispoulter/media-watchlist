@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { authClient, fetchOptions } from '@/lib/auth-client';
+import { authClient } from '@/lib/auth-client';
 
 const profileKeys = {
     all: ['profile'] as const,
@@ -8,17 +8,7 @@ const profileKeys = {
 export function useAccounts() {
     return useQuery({
         queryKey: profileKeys.all,
-        queryFn: async () => {
-            const { data, error } = await authClient.listAccounts({
-                fetchOptions,
-            });
-
-            if (error) {
-                throw new Error(error.message ?? 'Failed to load accounts');
-            }
-
-            return data;
-        },
+        queryFn: () => authClient.listAccounts(),
     });
 }
 
@@ -27,7 +17,6 @@ export function useUpdateUser() {
         mutationFn: (values: { name: string }) =>
             authClient.updateUser({
                 ...values,
-                fetchOptions,
             }),
     });
 }
@@ -38,7 +27,6 @@ export function useChangeEmail() {
             authClient.changeEmail({
                 newEmail,
                 callbackURL: `${window.location.origin}/profile`,
-                fetchOptions,
             }),
     });
 }
@@ -58,7 +46,6 @@ export function useChangePassword() {
                 currentPassword,
                 newPassword,
                 revokeOtherSessions: true,
-                fetchOptions,
             }),
     });
 }
@@ -75,24 +62,18 @@ export function useSetPasswordReset() {
 
 export function useDeleteUser() {
     return useMutation({
-        mutationFn: () => authClient.deleteUser({ fetchOptions }),
+        mutationFn: () => authClient.deleteUser(),
     });
 }
 
 export function useLinkSocial() {
-    const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (provider: string) =>
             authClient.linkSocial({
                 provider,
                 callbackURL: window.location.href,
                 errorCallbackURL: `${window.location.origin}/auth/error`,
-                fetchOptions,
             }),
-        // NOTE: linkSocial redirects for OAuth; onSuccess only fires on error paths.
-        // Successful link re-fetches naturally when callbackURL remounts the page.
-        onSuccess: () =>
-            queryClient.invalidateQueries({ queryKey: profileKeys.all }),
     });
 }
 
@@ -107,7 +88,6 @@ export function useUnlinkAccount() {
         mutationFn: ({ accountId }: UnlinkAccountVariables) =>
             authClient.unlinkAccount({
                 accountId,
-                fetchOptions,
             }),
         onSuccess: () =>
             queryClient.invalidateQueries({ queryKey: profileKeys.all }),
@@ -119,7 +99,6 @@ export function useEnableTwoFactor() {
         mutationFn: (password: string) =>
             authClient.twoFactor.enable({
                 password,
-                fetchOptions,
             }),
     });
 }
@@ -129,7 +108,6 @@ export function useDisableTwoFactor() {
         mutationFn: (password: string) =>
             authClient.twoFactor.disable({
                 password,
-                fetchOptions,
             }),
     });
 }
@@ -139,7 +117,6 @@ export function useVerifyTotpSetup() {
         mutationFn: (code: string) =>
             authClient.twoFactor.verifyTotp({
                 code,
-                fetchOptions,
             }),
     });
 }
@@ -149,7 +126,6 @@ export function useGenerateRecoveryCodes() {
         mutationFn: (password: string) =>
             authClient.twoFactor.generateBackupCodes({
                 password,
-                fetchOptions,
             }),
     });
 }

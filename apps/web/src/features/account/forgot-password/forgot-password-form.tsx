@@ -17,23 +17,19 @@ type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
 export function ForgotPasswordForm() {
     const [isSent, setIsSent] = useState(false);
-    const { mutateAsync: forgotPassword, isPending } = useForgotPassword();
+    const { mutate: forgotPassword, isPending } = useForgotPassword();
 
     const form = useForm<ForgotPasswordFormValues>({
         resolver: zodResolver(forgotPasswordSchema),
         defaultValues: { email: '' },
     });
 
-    const onSubmit = async (values: ForgotPasswordFormValues) => {
-        const { error } = await forgotPassword(values.email);
-
-        if (error) {
-            toast.error(error.message ?? 'Failed to send reset email');
-            return;
-        }
-
-        setIsSent(true);
-    };
+    const onSubmit = (values: ForgotPasswordFormValues) =>
+        forgotPassword(values.email, {
+            onSuccess: () => setIsSent(true),
+            onError: (err) =>
+                toast.error(err.message || 'Failed to send reset email'),
+        });
 
     if (isSent) {
         return (

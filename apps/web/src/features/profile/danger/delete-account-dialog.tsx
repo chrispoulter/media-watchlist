@@ -16,20 +16,18 @@ import { useDeleteUser } from '../profile-queries';
 export function DeleteAccountDialog() {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
-    const { mutateAsync: deleteUser, isPending } = useDeleteUser();
+    const { mutate: deleteUser, isPending } = useDeleteUser();
 
-    const handleDelete = async () => {
-        const { error } = await deleteUser();
-
-        if (error) {
-            toast.error(error.message ?? 'Failed to delete account');
-            return;
-        }
-
-        setIsOpen(false);
-        toast.success('Account deleted');
-        await navigate('/login');
-    };
+    const handleDelete = () =>
+        deleteUser(undefined, {
+            onSuccess: async () => {
+                setIsOpen(false);
+                toast.success('Account deleted');
+                await navigate('/login');
+            },
+            onError: (err) =>
+                toast.error(err.message || 'Failed to delete account'),
+        });
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>

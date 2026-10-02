@@ -16,7 +16,7 @@ export function LinkedAccounts({ accounts }: LinkedAccountsProps) {
     } = useLinkSocial();
 
     const {
-        mutateAsync: unlinkAccount,
+        mutate: unlinkAccount,
         isPending: isUnlinking,
         variables: unlinkVariables,
     } = useUnlinkAccount();
@@ -27,24 +27,27 @@ export function LinkedAccounts({ accounts }: LinkedAccountsProps) {
     const canUnlink = (providerId: string) =>
         accounts?.some((a) => a.providerId !== providerId);
 
-    const handleConnect = (providerId: string) => linkSocial(providerId);
+    const handleConnect = (providerId: string) =>
+        linkSocial(providerId, {
+            onError: (err) =>
+                toast.error(err.message || 'Failed to connect account'),
+        });
 
-    const handleDisconnect = async (
+    const handleDisconnect = (
         accountId: string,
         providerId: string,
         label: string
-    ) => {
-        const { error } = await unlinkAccount({ accountId, providerId });
-
-        if (error) {
-            toast.error(
-                error.message ?? `Failed to disconnect ${label} account`
-            );
-            return;
-        }
-
-        toast.success(`${label} account disconnected`);
-    };
+    ) =>
+        unlinkAccount(
+            { accountId, providerId },
+            {
+                onSuccess: () => toast.success(`${label} account disconnected`),
+                onError: (err) =>
+                    toast.error(
+                        err.message || `Failed to disconnect ${label} account`
+                    ),
+            }
+        );
 
     return (
         <div className="space-y-4">
