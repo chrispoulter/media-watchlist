@@ -1,5 +1,6 @@
+import { Link } from 'react-router';
 import { Metadata } from '@/components/metadata';
-import { AccountLayout, AccountLink } from '../account-layout';
+import { AccountLayout } from '../account-layout';
 import { ResetPasswordForm } from './reset-password-form';
 
 export function ResetPasswordPage() {
@@ -7,7 +8,14 @@ export function ResetPasswordPage() {
         <AccountLayout
             title="Reset your password"
             description="Enter your new password below"
-            footer={<AccountLink to="/login">Back to sign in</AccountLink>}
+            footer={
+                <Link
+                    className="underline underline-offset-4 hover:text-foreground"
+                    to="/login"
+                >
+                    Back to sign in
+                </Link>
+            }
         >
             <Metadata title="Reset Password" />
 

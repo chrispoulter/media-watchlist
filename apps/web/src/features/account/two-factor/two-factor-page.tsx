@@ -1,6 +1,7 @@
+import { Link } from 'react-router';
 import { useState } from 'react';
 import { Metadata } from '@/components/metadata';
-import { AccountLayout, AccountLink } from '../account-layout';
+import { AccountLayout } from '../account-layout';
 import { TwoFactorForm } from './two-factor-form';
 import { RecoveryCodeForm } from './recovery-code-form';
 
@@ -17,7 +18,14 @@ export function TwoFactorPage() {
                     ? 'Enter the 6-digit code from your authenticator app'
                     : 'Enter one of your recovery codes'
             }
-            footer={<AccountLink to="/login">Back to sign in</AccountLink>}
+            footer={
+                <Link
+                    className="underline underline-offset-4 hover:text-foreground"
+                    to="/login"
+                >
+                    Back to sign in
+                </Link>
+            }
         >
             <Metadata title="Two-Factor Authentication" />
 

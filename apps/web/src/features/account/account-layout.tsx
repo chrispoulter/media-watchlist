@@ -1,5 +1,3 @@
-import { Link } from 'react-router';
-import { cn } from '@/lib/utils';
 import {
     Card,
     CardContent,
@@ -7,6 +5,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface AccountLayoutProps {
     title: React.ReactNode;
@@ -43,20 +42,5 @@ export function AccountLayout({
                 )}
             </div>
         </div>
-    );
-}
-
-export function AccountLink({
-    className,
-    ...props
-}: React.ComponentProps<typeof Link>) {
-    return (
-        <Link
-            className={cn(
-                'underline underline-offset-4 hover:text-foreground',
-                className
-            )}
-            {...props}
-        />
     );
 }

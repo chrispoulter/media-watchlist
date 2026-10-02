@@ -1,6 +1,7 @@
+import { Link } from 'react-router';
 import { Separator } from '@/components/ui/separator';
 import { Metadata } from '@/components/metadata';
-import { AccountLayout, AccountLink } from '../account-layout';
+import { AccountLayout } from '../account-layout';
 import { SocialLoginButtons } from '../social-login-buttons';
 import { LoginForm } from './login-form';
 
@@ -13,7 +14,12 @@ export function LoginPage() {
             footer={
                 <>
                     Don't have an account?{' '}
-                    <AccountLink to="/register">Sign up</AccountLink>
+                    <Link
+                        className="underline underline-offset-4 hover:text-foreground"
+                        to="/register"
+                    >
+                        Sign up
+                    </Link>
                 </>
             }
         >
