@@ -26,7 +26,7 @@ type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 export function ResetPasswordForm() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    const { mutateAsync: resetPassword, isPending } = useResetPassword();
+    const { mutate: resetPassword, isPending } = useResetPassword();
 
     const token = searchParams.get('token') ?? '';
 
@@ -35,20 +35,20 @@ export function ResetPasswordForm() {
         defaultValues: { newPassword: '', confirmPassword: '' },
     });
 
-    const onSubmit = async (values: ResetPasswordFormValues) => {
-        const { error } = await resetPassword({
-            newPassword: values.newPassword,
-            token,
-        });
-
-        if (error) {
-            toast.error(error.message ?? 'Failed to reset password');
-            return;
-        }
-
-        toast.success('Password reset successfully. Please sign in.');
-        await navigate('/login');
-    };
+    const onSubmit = (values: ResetPasswordFormValues) =>
+        resetPassword(
+            { newPassword: values.newPassword, token },
+            {
+                onSuccess: async () => {
+                    toast.success(
+                        'Password reset successfully. Please sign in.'
+                    );
+                    await navigate('/login');
+                },
+                onError: (err) =>
+                    toast.error(err.message || 'Failed to reset password'),
+            }
+        );
 
     if (!token) {
         return (

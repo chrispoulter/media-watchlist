@@ -22,25 +22,23 @@ export function TwoFactorConfirmEnable({
     onTotpSetup,
     onCancel,
 }: TwoFactorConfirmEnableProps) {
-    const { mutateAsync: enableTwoFactor, isPending } = useEnableTwoFactor();
+    const { mutate: enableTwoFactor, isPending } = useEnableTwoFactor();
 
     const form = useForm<EnableTwoFactorFormValues>({
         resolver: zodResolver(enableTwoFactorSchema),
         defaultValues: { password: '' },
     });
 
-    const onSubmit = async (values: EnableTwoFactorFormValues) => {
-        const result = await enableTwoFactor(values.password);
-
-        if (result.error) {
-            toast.error(result.error.message ?? 'Failed to enable 2FA');
-            return;
-        }
-
-        if (result.data && result.data.method === 'totp') {
-            onTotpSetup(result.data.totpURI, result.data.backupCodes);
-        }
-    };
+    const onSubmit = (values: EnableTwoFactorFormValues) =>
+        enableTwoFactor(values.password, {
+            onSuccess: (data) => {
+                if (data.method === 'totp') {
+                    onTotpSetup(data.totpURI, data.backupCodes);
+                }
+            },
+            onError: (err) =>
+                toast.error(err.message || 'Failed to enable 2FA'),
+        });
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>

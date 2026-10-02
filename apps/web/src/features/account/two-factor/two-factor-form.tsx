@@ -22,7 +22,7 @@ export function TwoFactorForm({ onBack }: TwoFactorFormProps) {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const { mutateAsync: verifyTotp, isPending } = useVerifyTotpLogin();
+    const { mutate: verifyTotp, isPending } = useVerifyTotpLogin();
 
     const form = useForm<TwoFactorFormValues>({
         resolver: zodResolver(twoFactorSchema),
@@ -31,16 +31,12 @@ export function TwoFactorForm({ onBack }: TwoFactorFormProps) {
         shouldFocusError: false,
     });
 
-    const onSubmit = async (values: TwoFactorFormValues) => {
-        const { error } = await verifyTotp(values.code);
-
-        if (error) {
-            toast.error(error.message ?? 'Invalid code');
-            return;
-        }
-
-        await navigate(location.state?.from ?? '/', { replace: true });
-    };
+    const onSubmit = (values: TwoFactorFormValues) =>
+        verifyTotp(values.code, {
+            onSuccess: () =>
+                navigate(location.state?.from ?? '/', { replace: true }),
+            onError: (err) => toast.error(err.message || 'Invalid code'),
+        });
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>

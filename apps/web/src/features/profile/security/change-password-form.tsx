@@ -23,7 +23,7 @@ const changePasswordSchema = z
 type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;
 
 export function ChangePasswordForm() {
-    const { mutateAsync: changePassword, isPending } = useChangePassword();
+    const { mutate: changePassword, isPending } = useChangePassword();
 
     const form = useForm<ChangePasswordFormValues>({
         resolver: zodResolver(changePasswordSchema),
@@ -34,20 +34,21 @@ export function ChangePasswordForm() {
         },
     });
 
-    const onSubmit = async (values: ChangePasswordFormValues) => {
-        const { error } = await changePassword({
-            currentPassword: values.currentPassword,
-            newPassword: values.newPassword,
-        });
-
-        if (error) {
-            toast.error(error.message ?? 'Failed to change password');
-            return;
-        }
-
-        toast.success('Password changed successfully');
-        form.reset();
-    };
+    const onSubmit = (values: ChangePasswordFormValues) =>
+        changePassword(
+            {
+                currentPassword: values.currentPassword,
+                newPassword: values.newPassword,
+            },
+            {
+                onSuccess: () => {
+                    toast.success('Password changed successfully');
+                    form.reset();
+                },
+                onError: (err) =>
+                    toast.error(err.message || 'Failed to change password'),
+            }
+        );
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>

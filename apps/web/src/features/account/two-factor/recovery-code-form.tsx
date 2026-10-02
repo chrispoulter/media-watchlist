@@ -22,24 +22,19 @@ export function RecoveryCodeForm({ onBack }: RecoveryCodeFormProps) {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const { mutateAsync: verifyRecoveryCode, isPending } =
-        useVerifyRecoveryCode();
+    const { mutate: verifyRecoveryCode, isPending } = useVerifyRecoveryCode();
 
     const form = useForm<RecoveryCodeFormValues>({
         resolver: zodResolver(recoveryCodeSchema),
         defaultValues: { code: '' },
     });
 
-    const onSubmit = async (values: RecoveryCodeFormValues) => {
-        const { error } = await verifyRecoveryCode(values.code);
-
-        if (error) {
-            toast.error(error.message ?? 'Invalid code');
-            return;
-        }
-
-        await navigate(location.state?.from ?? '/', { replace: true });
-    };
+    const onSubmit = (values: RecoveryCodeFormValues) =>
+        verifyRecoveryCode(values.code, {
+            onSuccess: () =>
+                navigate(location.state?.from ?? '/', { replace: true }),
+            onError: (err) => toast.error(err.message || 'Invalid code'),
+        });
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
