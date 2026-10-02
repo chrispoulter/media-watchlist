@@ -22,7 +22,7 @@ export const apiClient = ky.create({
             async ({ response }) => {
                 switch (response.status) {
                     case 401:
-                        await authClient.signOut();
+                        await authClient.signOut().catch(() => {});
                         queryClient.clear();
                         break;
                 }
