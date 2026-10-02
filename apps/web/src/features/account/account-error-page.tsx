@@ -1,14 +1,8 @@
 import { Link, useSearchParams } from 'react-router';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
 import { Metadata } from '@/components/metadata';
+import { AccountLayout } from './account-layout';
 
 const ERROR_MESSAGES: Record<string, string> = {
     "email_doesn't_match":
@@ -36,30 +30,18 @@ export function AccountErrorPage() {
     const message = ERROR_MESSAGES[error] ?? DEFAULT_MESSAGE;
 
     return (
-        <>
+        <AccountLayout
+            title="Authentication error"
+            description="Something went wrong during authentication"
+        >
             <Metadata title="Authentication Error" />
-            <div className="flex flex-1 items-center justify-center">
-                <div className="w-full max-w-sm">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-2xl">
-                                Authentication error
-                            </CardTitle>
-                            <CardDescription>
-                                Something went wrong during authentication
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <Alert variant="destructive">
-                                <AlertDescription>{message}</AlertDescription>
-                            </Alert>
-                            <Button asChild className="w-full">
-                                <Link to="/">Home</Link>
-                            </Button>
-                        </CardContent>
-                    </Card>
-                </div>
-            </div>
-        </>
+
+            <Alert variant="destructive">
+                <AlertDescription>{message}</AlertDescription>
+            </Alert>
+            <Button asChild className="w-full">
+                <Link to="/">Home</Link>
+            </Button>
+        </AccountLayout>
     );
 }

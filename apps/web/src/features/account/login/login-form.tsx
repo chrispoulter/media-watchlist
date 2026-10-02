@@ -20,25 +20,27 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export function LoginForm() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { mutateAsync: signIn, isPending } = useSignIn();
+    const { mutate: signIn, isPending } = useSignIn();
 
-    const from = location.state?.from?.pathname ?? '/';
+    const from = location.state?.from ?? '/';
 
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
         defaultValues: { email: '', password: '', rememberMe: false },
     });
 
-    const onSubmit = async (values: LoginFormValues) => {
-        const { error } = await signIn(values);
+    const onSubmit = (values: LoginFormValues) =>
+        signIn(values, {
+            onSuccess: async (data) => {
+                if ('twoFactorRedirect' in data && data.twoFactorRedirect) {
+                    await navigate('/two-factor', { state: { from } });
+                    return;
+                }
 
-        if (error) {
-            toast.error(error.message ?? 'Sign in failed');
-            return;
-        }
-
-        await navigate(from, { replace: true });
-    };
+                await navigate(from, { replace: true });
+            },
+            onError: (err) => toast.error(err.message || 'Sign in failed'),
+        });
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>

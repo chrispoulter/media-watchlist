@@ -22,24 +22,22 @@ export function TwoFactorConfirmDisable({
     onDisabled,
     onCancel,
 }: TwoFactorConfirmDisableProps) {
-    const { mutateAsync: disableTwoFactor, isPending } = useDisableTwoFactor();
+    const { mutate: disableTwoFactor, isPending } = useDisableTwoFactor();
 
     const form = useForm<DisableTwoFactorFormValues>({
         resolver: zodResolver(disableTwoFactorSchema),
         defaultValues: { password: '' },
     });
 
-    const onSubmit = async (values: DisableTwoFactorFormValues) => {
-        const result = await disableTwoFactor(values.password);
-
-        if (result.error) {
-            toast.error(result.error.message ?? 'Failed to disable 2FA');
-            return;
-        }
-
-        toast.success('Two-factor authentication disabled');
-        onDisabled();
-    };
+    const onSubmit = (values: DisableTwoFactorFormValues) =>
+        disableTwoFactor(values.password, {
+            onSuccess: () => {
+                toast.success('Two-factor authentication disabled');
+                onDisabled();
+            },
+            onError: (err) =>
+                toast.error(err.message || 'Failed to disable 2FA'),
+        });
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>

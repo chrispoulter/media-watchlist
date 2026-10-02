@@ -8,15 +8,7 @@ const profileKeys = {
 export function useAccounts() {
     return useQuery({
         queryKey: profileKeys.all,
-        queryFn: async () => {
-            const { data, error } = await authClient.listAccounts();
-
-            if (error) {
-                throw new Error(error.message ?? 'Failed to load accounts');
-            }
-
-            return data;
-        },
+        queryFn: () => authClient.listAccounts(),
     });
 }
 
@@ -72,7 +64,6 @@ export function useDeleteUser() {
 }
 
 export function useLinkSocial() {
-    const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (provider: string) =>
             authClient.linkSocial({
@@ -80,10 +71,6 @@ export function useLinkSocial() {
                 callbackURL: window.location.href,
                 errorCallbackURL: `${window.location.origin}/auth/error`,
             }),
-        // NOTE: linkSocial redirects for OAuth; onSuccess only fires on error paths.
-        // Successful link re-fetches naturally when callbackURL remounts the page.
-        onSuccess: () =>
-            queryClient.invalidateQueries({ queryKey: profileKeys.all }),
     });
 }
 
@@ -96,7 +83,9 @@ export function useUnlinkAccount() {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: ({ accountId }: UnlinkAccountVariables) =>
-            authClient.unlinkAccount({ accountId }),
+            authClient.unlinkAccount({
+                accountId,
+            }),
         onSuccess: () =>
             queryClient.invalidateQueries({ queryKey: profileKeys.all }),
     });
@@ -105,26 +94,35 @@ export function useUnlinkAccount() {
 export function useEnableTwoFactor() {
     return useMutation({
         mutationFn: (password: string) =>
-            authClient.twoFactor.enable({ password }),
+            authClient.twoFactor.enable({
+                password,
+            }),
     });
 }
 
 export function useDisableTwoFactor() {
     return useMutation({
         mutationFn: (password: string) =>
-            authClient.twoFactor.disable({ password }),
+            authClient.twoFactor.disable({
+                password,
+            }),
     });
 }
 
 export function useVerifyTotpSetup() {
     return useMutation({
-        mutationFn: (code: string) => authClient.twoFactor.verifyTotp({ code }),
+        mutationFn: (code: string) =>
+            authClient.twoFactor.verifyTotp({
+                code,
+            }),
     });
 }
 
 export function useGenerateRecoveryCodes() {
     return useMutation({
         mutationFn: (password: string) =>
-            authClient.twoFactor.generateBackupCodes({ password }),
+            authClient.twoFactor.generateBackupCodes({
+                password,
+            }),
     });
 }

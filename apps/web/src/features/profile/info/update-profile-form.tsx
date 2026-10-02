@@ -16,7 +16,7 @@ type UpdateProfileFormValues = z.infer<typeof updateProfileSchema>;
 
 export function UpdateProfileForm() {
     const { data: session } = authClient.useSession();
-    const { mutateAsync: updateUser, isPending } = useUpdateUser();
+    const { mutate: updateUser, isPending } = useUpdateUser();
 
     const user = session?.user;
 
@@ -27,16 +27,15 @@ export function UpdateProfileForm() {
         },
     });
 
-    const onSubmit = async (values: UpdateProfileFormValues) => {
-        const { error } = await updateUser({ name: values.name });
-
-        if (error) {
-            toast.error(error.message ?? 'Failed to update profile');
-            return;
-        }
-
-        toast.success('Profile updated');
-    };
+    const onSubmit = (values: UpdateProfileFormValues) =>
+        updateUser(
+            { name: values.name },
+            {
+                onSuccess: () => toast.success('Profile updated'),
+                onError: (err) =>
+                    toast.error(err.message || 'Failed to update profile'),
+            }
+        );
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>

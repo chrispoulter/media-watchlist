@@ -1,13 +1,7 @@
-import { useState } from 'react';
 import { Link } from 'react-router';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { useState } from 'react';
 import { Metadata } from '@/components/metadata';
+import { AccountLayout } from '../account-layout';
 import { TwoFactorForm } from './two-factor-form';
 import { RecoveryCodeForm } from './recovery-code-form';
 
@@ -17,46 +11,30 @@ export function TwoFactorPage() {
     const [mode, setMode] = useState<TwoFactorMode>('totp');
 
     return (
-        <>
+        <AccountLayout
+            title="Two-factor authentication"
+            description={
+                mode === 'totp'
+                    ? 'Enter the 6-digit code from your authenticator app'
+                    : 'Enter one of your recovery codes'
+            }
+            footer={
+                <Link
+                    className="underline underline-offset-4 hover:text-foreground"
+                    to="/login"
+                >
+                    Back to sign in
+                </Link>
+            }
+        >
             <Metadata title="Two-Factor Authentication" />
-            <div className="flex flex-1 items-center justify-center">
-                <div className="w-full max-w-sm space-y-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-2xl">
-                                Two-factor authentication
-                            </CardTitle>
-                            <CardDescription>
-                                {mode === 'totp' &&
-                                    'Enter the 6-digit code from your authenticator app'}
-                                {mode === 'recovery' &&
-                                    'Enter one of your recovery codes'}
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            {mode === 'totp' && (
-                                <TwoFactorForm
-                                    onBack={() => setMode('recovery')}
-                                />
-                            )}
-                            {mode === 'recovery' && (
-                                <RecoveryCodeForm
-                                    onBack={() => setMode('totp')}
-                                />
-                            )}
-                        </CardContent>
-                    </Card>
 
-                    <p className="text-center text-sm text-muted-foreground">
-                        <Link
-                            to="/login"
-                            className="underline underline-offset-4 hover:text-foreground"
-                        >
-                            Back to sign in
-                        </Link>
-                    </p>
-                </div>
-            </div>
-        </>
+            {mode === 'totp' && (
+                <TwoFactorForm onBack={() => setMode('recovery')} />
+            )}
+            {mode === 'recovery' && (
+                <RecoveryCodeForm onBack={() => setMode('totp')} />
+            )}
+        </AccountLayout>
     );
 }

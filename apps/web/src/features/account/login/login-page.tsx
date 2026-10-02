@@ -1,56 +1,40 @@
 import { Link } from 'react-router';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { SocialSignInButtons } from '@/components/social-sign-in-buttons';
 import { Metadata } from '@/components/metadata';
+import { AccountLayout } from '../account-layout';
+import { SocialLoginButtons } from '../social-login-buttons';
 import { LoginForm } from './login-form';
 
 export function LoginPage() {
     return (
-        <>
+        <AccountLayout
+            title="Welcome Back"
+            description="Sign in to your account"
+            className="max-w-md"
+            footer={
+                <>
+                    Don't have an account?{' '}
+                    <Link
+                        className="underline underline-offset-4 hover:text-foreground"
+                        to="/register"
+                    >
+                        Sign up
+                    </Link>
+                </>
+            }
+        >
             <Metadata title="Sign In" />
-            <div className="flex flex-1 items-center justify-center">
-                <div className="w-full max-w-md space-y-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-2xl">
-                                Welcome Back
-                            </CardTitle>
-                            <CardDescription>
-                                Sign in to your account
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <SocialSignInButtons />
 
-                            <div className="relative">
-                                <Separator />
-                                <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
-                                    or
-                                </span>
-                            </div>
+            <SocialLoginButtons />
 
-                            <LoginForm />
-                        </CardContent>
-                    </Card>
-
-                    <p className="text-center text-sm text-muted-foreground">
-                        Don't have an account?{' '}
-                        <Link
-                            to="/register"
-                            className="underline underline-offset-4 hover:text-foreground"
-                        >
-                            Sign up
-                        </Link>
-                    </p>
-                </div>
+            <div className="relative">
+                <Separator />
+                <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
+                    or
+                </span>
             </div>
-        </>
+
+            <LoginForm />
+        </AccountLayout>
     );
 }

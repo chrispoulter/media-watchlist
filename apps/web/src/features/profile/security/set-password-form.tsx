@@ -8,20 +8,18 @@ import { useSetPasswordReset } from '../profile-queries';
 export function SetPasswordForm() {
     const [isSent, setIsSent] = useState(false);
     const { data: session } = authClient.useSession();
-    const { mutateAsync: requestReset, isPending } = useSetPasswordReset();
+    const { mutate: requestReset, isPending } = useSetPasswordReset();
 
     const email = session?.user.email ?? '';
 
-    const handleSend = async () => {
-        const { error } = await requestReset(email);
-
-        if (error) {
-            toast.error(error.message ?? 'Failed to send password setup email');
-            return;
-        }
-
-        setIsSent(true);
-    };
+    const handleSend = () =>
+        requestReset(email, {
+            onSuccess: () => setIsSent(true),
+            onError: (err) =>
+                toast.error(
+                    err.message || 'Failed to send password setup email'
+                ),
+        });
 
     if (isSent) {
         return (

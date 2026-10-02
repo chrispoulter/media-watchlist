@@ -24,7 +24,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export function RegisterForm() {
     const navigate = useNavigate();
-    const { mutateAsync: signUp, isPending } = useSignUp();
+    const { mutate: signUp, isPending } = useSignUp();
 
     const form = useForm<RegisterFormValues>({
         resolver: zodResolver(registerSchema),
@@ -36,21 +36,22 @@ export function RegisterForm() {
         },
     });
 
-    const onSubmit = async (values: RegisterFormValues) => {
-        const { error } = await signUp({
-            email: values.email,
-            password: values.password,
-            name: values.name,
-        });
-
-        if (error) {
-            toast.error(error.message ?? 'Registration failed');
-            return;
-        }
-
-        toast.success('Account created! Welcome.');
-        await navigate('/');
-    };
+    const onSubmit = (values: RegisterFormValues) =>
+        signUp(
+            {
+                email: values.email,
+                password: values.password,
+                name: values.name,
+            },
+            {
+                onSuccess: async () => {
+                    toast.success('Account created! Welcome.');
+                    await navigate('/');
+                },
+                onError: (err) =>
+                    toast.error(err.message || 'Registration failed'),
+            }
+        );
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>

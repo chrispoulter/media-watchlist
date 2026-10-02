@@ -11,7 +11,9 @@ const generateRecoveryCodesSchema = z.object({
     password: z.string().min(1, 'Password is required'),
 });
 
-type GenerateRecoveryCodesFormValues = z.infer<typeof generateRecoveryCodesSchema>;
+type GenerateRecoveryCodesFormValues = z.infer<
+    typeof generateRecoveryCodesSchema
+>;
 
 interface TwoFactorConfirmRecoveryCodesProps {
     onRegenerated: (newCodes: string[]) => void;
@@ -22,7 +24,7 @@ export function TwoFactorConfirmRecoveryCodes({
     onRegenerated,
     onCancel,
 }: TwoFactorConfirmRecoveryCodesProps) {
-    const { mutateAsync: generateRecoveryCodes, isPending } =
+    const { mutate: generateRecoveryCodes, isPending } =
         useGenerateRecoveryCodes();
 
     const form = useForm<GenerateRecoveryCodesFormValues>({
@@ -30,18 +32,14 @@ export function TwoFactorConfirmRecoveryCodes({
         defaultValues: { password: '' },
     });
 
-    const onSubmit = async (values: GenerateRecoveryCodesFormValues) => {
-        const result = await generateRecoveryCodes(values.password);
-
-        if (result.error) {
-            toast.error(
-                result.error.message ?? 'Failed to regenerate recovery codes'
-            );
-            return;
-        }
-
-        onRegenerated(result.data?.backupCodes ?? []);
-    };
+    const onSubmit = (values: GenerateRecoveryCodesFormValues) =>
+        generateRecoveryCodes(values.password, {
+            onSuccess: (data) => onRegenerated(data.backupCodes),
+            onError: (err) =>
+                toast.error(
+                    err.message || 'Failed to regenerate recovery codes'
+                ),
+        });
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>

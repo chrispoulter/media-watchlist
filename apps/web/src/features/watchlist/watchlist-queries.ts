@@ -64,6 +64,8 @@ export function useReorderWatchlist() {
                 items
             );
         },
+        onError: () =>
+            queryClient.invalidateQueries({ queryKey: watchlistKeys.all }),
     });
 }
 

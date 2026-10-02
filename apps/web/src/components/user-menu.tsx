@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import { useNavigate } from 'react-router';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,12 +15,13 @@ import { authClient, isAdmin } from '@/lib/auth-client';
 export function UserMenu() {
     const navigate = useNavigate();
     const { data: session } = authClient.useSession();
-    const { mutateAsync: signOut, isPending } = useSignOut();
+    const { mutate: signOut, isPending } = useSignOut();
 
-    const handleSignOut = async () => {
-        await signOut();
-        await navigate('/login');
-    };
+    const handleSignOut = () =>
+        signOut(undefined, {
+            onSuccess: () => navigate('/login'),
+            onError: (err) => toast.error(err.message || 'Sign out failed'),
+        });
 
     if (!session) {
         return null;

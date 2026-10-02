@@ -7,7 +7,7 @@ import { TwoFactorConfirmDisable } from './two-factor-confirm-disable';
 import { TwoFactorConfirmEnable } from './two-factor-confirm-enable';
 import { TwoFactorConfirmRecoveryCodes } from './two-factor-confirm-recovery-codes';
 import { TwoFactorVerify } from './two-factor-verify';
-import { TwoFactorQRCode } from './two-factor-qr-code';
+import { TwoFactorQrCode } from './two-factor-qr-code';
 
 type TwoFactorStep =
     | 'idle'
@@ -83,7 +83,7 @@ export function TwoFactorSettings() {
             )}
 
             {step === 'qr' && (
-                <TwoFactorQRCode
+                <TwoFactorQrCode
                     totpUri={totpUri}
                     onDone={() => setStep('verify')}
                 />

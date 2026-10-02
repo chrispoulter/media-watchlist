@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -20,7 +20,9 @@ interface TwoFactorFormProps {
 
 export function TwoFactorForm({ onBack }: TwoFactorFormProps) {
     const navigate = useNavigate();
-    const { mutateAsync: verifyTotp, isPending } = useVerifyTotpLogin();
+    const location = useLocation();
+
+    const { mutate: verifyTotp, isPending } = useVerifyTotpLogin();
 
     const form = useForm<TwoFactorFormValues>({
         resolver: zodResolver(twoFactorSchema),
@@ -29,16 +31,12 @@ export function TwoFactorForm({ onBack }: TwoFactorFormProps) {
         shouldFocusError: false,
     });
 
-    const onSubmit = async (values: TwoFactorFormValues) => {
-        const { error } = await verifyTotp(values.code);
-
-        if (error) {
-            toast.error(error.message ?? 'Invalid code');
-            return;
-        }
-
-        await navigate('/');
-    };
+    const onSubmit = (values: TwoFactorFormValues) =>
+        verifyTotp(values.code, {
+            onSuccess: () =>
+                navigate(location.state?.from ?? '/', { replace: true }),
+            onError: (err) => toast.error(err.message || 'Invalid code'),
+        });
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>

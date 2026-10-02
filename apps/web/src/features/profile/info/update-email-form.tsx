@@ -26,7 +26,7 @@ export function UpdateEmailForm() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [pendingEmail, setPendingEmail] = useState<string | null>(null);
     const { data: session } = authClient.useSession();
-    const { mutateAsync: changeEmail, isPending } = useChangeEmail();
+    const { mutate: changeEmail, isPending } = useChangeEmail();
 
     useEffect(() => {
         const error = searchParams.get('error');
@@ -47,17 +47,15 @@ export function UpdateEmailForm() {
         defaultValues: { newEmail: '' },
     });
 
-    const onSubmit = async (values: UpdateEmailFormValues) => {
-        const { error } = await changeEmail(values.newEmail);
-
-        if (error) {
-            toast.error(error.message ?? 'Failed to update email');
-            return;
-        }
-
-        setPendingEmail(values.newEmail);
-        form.reset();
-    };
+    const onSubmit = (values: UpdateEmailFormValues) =>
+        changeEmail(values.newEmail, {
+            onSuccess: () => {
+                setPendingEmail(values.newEmail);
+                form.reset();
+            },
+            onError: (err) =>
+                toast.error(err.message || 'Failed to update email'),
+        });
 
     if (pendingEmail) {
         return (

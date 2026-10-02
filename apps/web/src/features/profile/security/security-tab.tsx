@@ -1,3 +1,4 @@
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
     Card,
     CardContent,
@@ -15,7 +16,7 @@ import { TwoFactorSettings } from './two-factor/two-factor-settings';
 import { LinkedAccounts } from './linked-accounts';
 
 export function SecurityTab() {
-    const { data: accounts = [], isLoading } = useAccounts();
+    const { data: accounts = [], isLoading, error } = useAccounts();
 
     const hasCredentialAccount = accounts?.some(
         (a) => a.providerId === 'credential'
@@ -49,6 +50,14 @@ export function SecurityTab() {
                             </div>
                         </CardContent>
                     </Card>
+                ) : error ? (
+                    <Alert variant="destructive">
+                        <AlertTitle>Error</AlertTitle>
+                        <AlertDescription>
+                            Failed to load your account details. Please try
+                            again.
+                        </AlertDescription>
+                    </Alert>
                 ) : (
                     <Card>
                         <CardHeader>
@@ -104,6 +113,10 @@ export function SecurityTab() {
                                     />
                                 ))}
                             </div>
+                        ) : error ? (
+                            <p className="text-sm text-destructive">
+                                Failed to load linked accounts.
+                            </p>
                         ) : (
                             <LinkedAccounts accounts={accounts} />
                         )}

@@ -1,8 +1,9 @@
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { useSocialSignIn } from '@/features/account/account-queries';
 import { authProviders } from '@/lib/auth-providers';
 
-export function SocialSignInButtons() {
+export function SocialLoginButtons() {
     const { mutate: signIn, isPending, variables } = useSocialSignIn();
 
     return (
@@ -18,7 +19,14 @@ export function SocialSignInButtons() {
                         variant="outline"
                         className="w-full"
                         disabled={isProviderPending}
-                        onClick={() => signIn(provider.id)}
+                        onClick={() =>
+                            signIn(provider.id, {
+                                onError: (err) =>
+                                    toast.error(
+                                        err.message || 'Sign in failed'
+                                    ),
+                            })
+                        }
                     >
                         {provider.icon}
                         {isProviderPending
