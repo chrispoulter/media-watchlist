@@ -14,10 +14,7 @@ export function useAccounts() {
 
 export function useUpdateUser() {
     return useMutation({
-        mutationFn: (values: { name: string }) =>
-            authClient.updateUser({
-                ...values,
-            }),
+        mutationFn: (values: { name: string }) => authClient.updateUser(values),
     });
 }
 
