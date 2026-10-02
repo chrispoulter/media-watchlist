@@ -54,24 +54,22 @@ export function CreateUserDialog() {
 }
 
 function CreateUserForm({ onDone }: { onDone: () => void }) {
-    const { mutateAsync: createUser, isPending } = useCreateUser();
+    const { mutate: createUser, isPending } = useCreateUser();
 
     const form = useForm<CreateUserFormValues>({
         resolver: zodResolver(createUserSchema),
         defaultValues: { name: '', email: '', password: '', role: 'user' },
     });
 
-    const onSubmit = async (values: CreateUserFormValues) => {
-        const { error } = await createUser(values);
-
-        if (error) {
-            toast.error(error.message ?? 'Failed to create user');
-            return;
-        }
-
-        toast.success('User created');
-        onDone();
-    };
+    const onSubmit = (values: CreateUserFormValues) =>
+        createUser(values, {
+            onSuccess: () => {
+                toast.success('User created');
+                onDone();
+            },
+            onError: (err) =>
+                toast.error(err.message || 'Failed to create user'),
+        });
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>

@@ -23,20 +23,18 @@ export function RemoveUserDialog({
     onOpenChange,
     onRemoved,
 }: RemoveUserDialogProps) {
-    const { mutateAsync: removeUser, isPending } = useRemoveUser();
+    const { mutate: removeUser, isPending } = useRemoveUser();
 
-    const handleRemove = async () => {
-        const { error } = await removeUser(user.id);
-
-        if (error) {
-            toast.error(error.message ?? 'Failed to delete user');
-            return;
-        }
-
-        onOpenChange(false);
-        toast.success('User deleted');
-        onRemoved?.();
-    };
+    const handleRemove = () =>
+        removeUser(user.id, {
+            onSuccess: () => {
+                onOpenChange(false);
+                toast.success('User deleted');
+                onRemoved?.();
+            },
+            onError: (err) =>
+                toast.error(err.message || 'Failed to delete user'),
+        });
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>

@@ -65,29 +65,30 @@ interface BanUserFormProps {
 }
 
 function BanUserForm({ user, onDone }: BanUserFormProps) {
-    const { mutateAsync: banUser, isPending } = useBanUser();
+    const { mutate: banUser, isPending } = useBanUser();
 
     const form = useForm<BanUserFormValues>({
         resolver: zodResolver(banUserSchema),
         defaultValues: { reason: '', duration: 'permanent' },
     });
 
-    const onSubmit = async (values: BanUserFormValues) => {
-        const { error } = await banUser({
-            userId: user.id,
-            banReason: values.reason.trim() || undefined,
-            banExpiresIn: durations.find((d) => d.value === values.duration)
-                ?.seconds,
-        });
-
-        if (error) {
-            toast.error(error.message ?? 'Failed to ban user');
-            return;
-        }
-
-        toast.success('User banned');
-        onDone();
-    };
+    const onSubmit = (values: BanUserFormValues) =>
+        banUser(
+            {
+                userId: user.id,
+                banReason: values.reason.trim() || undefined,
+                banExpiresIn: durations.find((d) => d.value === values.duration)
+                    ?.seconds,
+            },
+            {
+                onSuccess: () => {
+                    toast.success('User banned');
+                    onDone();
+                },
+                onError: (err) =>
+                    toast.error(err.message || 'Failed to ban user'),
+            }
+        );
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>

@@ -21,19 +21,17 @@ export function UnbanUserDialog({
     open,
     onOpenChange,
 }: UnbanUserDialogProps) {
-    const { mutateAsync: unbanUser, isPending } = useUnbanUser();
+    const { mutate: unbanUser, isPending } = useUnbanUser();
 
-    const handleUnban = async () => {
-        const { error } = await unbanUser(user.id);
-
-        if (error) {
-            toast.error(error.message ?? 'Failed to unban user');
-            return;
-        }
-
-        onOpenChange(false);
-        toast.success('User unbanned');
-    };
+    const handleUnban = () =>
+        unbanUser(user.id, {
+            onSuccess: () => {
+                onOpenChange(false);
+                toast.success('User unbanned');
+            },
+            onError: (err) =>
+                toast.error(err.message || 'Failed to unban user'),
+        });
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>

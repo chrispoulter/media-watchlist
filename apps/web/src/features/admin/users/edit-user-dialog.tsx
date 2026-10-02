@@ -54,24 +54,25 @@ interface EditUserFormProps {
 }
 
 function EditUserForm({ user, onDone }: EditUserFormProps) {
-    const { mutateAsync: updateUser, isPending } = useUpdateAdminUser();
+    const { mutate: updateUser, isPending } = useUpdateAdminUser();
 
     const form = useForm<EditUserFormValues>({
         resolver: zodResolver(editUserSchema),
         defaultValues: { name: user.name, email: user.email },
     });
 
-    const onSubmit = async (values: EditUserFormValues) => {
-        const { error } = await updateUser({ userId: user.id, ...values });
-
-        if (error) {
-            toast.error(error.message ?? 'Failed to update user');
-            return;
-        }
-
-        toast.success('User updated');
-        onDone();
-    };
+    const onSubmit = (values: EditUserFormValues) =>
+        updateUser(
+            { userId: user.id, ...values },
+            {
+                onSuccess: () => {
+                    toast.success('User updated');
+                    onDone();
+                },
+                onError: (err) =>
+                    toast.error(err.message || 'Failed to update user'),
+            }
+        );
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>

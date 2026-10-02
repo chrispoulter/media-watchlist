@@ -30,7 +30,7 @@ export function useAdminUsers(params: ListUsersParams) {
     return useQuery({
         queryKey: adminKeys.users(params),
         queryFn: async () => {
-            const { data, error } = await authClient.admin.listUsers({
+            const data = await authClient.admin.listUsers({
                 query: {
                     searchValue: params.search || undefined,
                     searchField: 'email',
@@ -41,10 +41,6 @@ export function useAdminUsers(params: ListUsersParams) {
                     sortDirection: 'desc',
                 },
             });
-
-            if (error) {
-                throw new Error(error.message ?? 'Failed to load users');
-            }
 
             return {
                 users: data.users as AdminUser[],
@@ -58,17 +54,10 @@ export function useAdminUsers(params: ListUsersParams) {
 export function useAdminUser(userId: string) {
     return useQuery({
         queryKey: adminKeys.user(userId),
-        queryFn: async () => {
-            const { data, error } = await authClient.admin.getUser({
+        queryFn: async () =>
+            (await authClient.admin.getUser({
                 query: { id: userId },
-            });
-
-            if (error) {
-                throw new Error(error.message ?? 'Failed to load user');
-            }
-
-            return data as AdminUser;
-        },
+            })) as AdminUser,
     });
 }
 

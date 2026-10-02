@@ -55,24 +55,25 @@ interface SetRoleFormProps {
 }
 
 function SetRoleForm({ user, onDone }: SetRoleFormProps) {
-    const { mutateAsync: updateRole, isPending } = useSetRole();
+    const { mutate: updateRole, isPending } = useSetRole();
 
     const form = useForm<SetRoleFormValues>({
         resolver: zodResolver(setRoleSchema),
         defaultValues: { role: isAdmin(user) ? 'admin' : 'user' },
     });
 
-    const onSubmit = async ({ role }: SetRoleFormValues) => {
-        const { error } = await updateRole({ userId: user.id, role });
-
-        if (error) {
-            toast.error(error.message ?? 'Failed to change role');
-            return;
-        }
-
-        toast.success('Role updated');
-        onDone();
-    };
+    const onSubmit = ({ role }: SetRoleFormValues) =>
+        updateRole(
+            { userId: user.id, role },
+            {
+                onSuccess: () => {
+                    toast.success('Role updated');
+                    onDone();
+                },
+                onError: (err) =>
+                    toast.error(err.message || 'Failed to change role'),
+            }
+        );
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
