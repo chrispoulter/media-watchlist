@@ -86,9 +86,13 @@ export function UsersPage() {
                         <AlertDescription>{error.message}</AlertDescription>
                     </Alert>
                 ) : isLoading ? (
-                    <div className="space-y-2">
+                    <div aria-busy="true" className="space-y-2">
                         {Array.from({ length: 5 }, (_, i) => (
-                            <Skeleton key={i} className="h-10 w-full" />
+                            <Skeleton
+                                key={i}
+                                aria-hidden="true"
+                                className="h-10 w-full"
+                            />
                         ))}
                     </div>
                 ) : !data?.users.length ? (
@@ -104,6 +108,7 @@ export function UsersPage() {
                     </Empty>
                 ) : (
                     <div
+                        aria-busy={isPlaceholderData}
                         className={
                             isPlaceholderData ? 'opacity-60 transition' : ''
                         }
@@ -162,7 +167,7 @@ export function UsersPage() {
                                                         size="icon-sm"
                                                         aria-label={`Actions for ${user.name}`}
                                                     >
-                                                        <MoreHorizontal />
+                                                        <MoreHorizontal aria-hidden="true" />
                                                     </Button>
                                                 }
                                             />
@@ -190,7 +195,7 @@ export function UsersPage() {
                                 onClick={() => goToPage(page - 1)}
                                 disabled={page <= 1}
                             >
-                                <ChevronLeft />
+                                <ChevronLeft aria-hidden="true" />
                             </Button>
                             <Button
                                 variant="outline"
@@ -199,7 +204,7 @@ export function UsersPage() {
                                 onClick={() => goToPage(page + 1)}
                                 disabled={page >= pageCount}
                             >
-                                <ChevronRight />
+                                <ChevronRight aria-hidden="true" />
                             </Button>
                         </div>
                     </div>

@@ -36,7 +36,7 @@ export function CreateUserDialog() {
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
                 <Button>
-                    <UserPlus />
+                    <UserPlus aria-hidden="true" />
                     Create User
                 </Button>
             </DialogTrigger>

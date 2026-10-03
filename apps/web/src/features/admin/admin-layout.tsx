@@ -12,7 +12,7 @@ export function AdminLayout() {
                 </p>
             </div>
 
-            <nav>
+            <nav aria-label="Admin sections">
                 <ul className="flex h-9 items-center gap-1">
                     {navItems.map((item) => (
                         <li key={item.to} className="h-full">

@@ -34,7 +34,7 @@ export function UserDetailPage() {
             <div className="space-y-4">
                 <Button variant="ghost" size="sm" asChild>
                     <Link to="/admin/users">
-                        <ArrowLeft />
+                        <ArrowLeft aria-hidden="true" />
                         Back to users
                     </Link>
                 </Button>
@@ -45,11 +45,15 @@ export function UserDetailPage() {
                         <AlertDescription>{error.message}</AlertDescription>
                     </Alert>
                 ) : isLoading || !user ? (
-                    <Skeleton className="h-72 w-full" />
+                    <div aria-busy="true">
+                        <Skeleton aria-hidden="true" className="h-72 w-full" />
+                    </div>
                 ) : (
                     <Card>
                         <CardHeader>
-                            <CardTitle>{user.name}</CardTitle>
+                            <CardTitle>
+                                <h2>{user.name}</h2>
+                            </CardTitle>
                             <CardDescription>{user.email}</CardDescription>
                             <CardAction>
                                 <UserActionsMenu
@@ -62,7 +66,7 @@ export function UserDetailPage() {
                                     trigger={
                                         <Button variant="outline">
                                             Actions
-                                            <ChevronDown />
+                                            <ChevronDown aria-hidden="true" />
                                         </Button>
                                     }
                                 />
