@@ -16,7 +16,7 @@ export function MainMenu() {
     }
 
     return (
-        <nav className="flex items-center gap-1">
+        <nav aria-label="Main" className="flex items-center gap-1">
             {navItems.map(({ to, label, icon: Icon }) => (
                 <Button
                     key={to}
@@ -25,7 +25,7 @@ export function MainMenu() {
                     className="aria-[current=page]:bg-secondary aria-[current=page]:text-secondary-foreground"
                 >
                     <NavLink to={to}>
-                        <Icon className="sm:hidden" />
+                        <Icon aria-hidden="true" className="sm:hidden" />
                         <span className="sr-only sm:not-sr-only">{label}</span>
                     </NavLink>
                 </Button>

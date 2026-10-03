@@ -38,7 +38,10 @@ export function WatchlistGrid() {
 
     if (isLoading) {
         return (
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-4">
+            <div
+                aria-busy="true"
+                className="grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-4"
+            >
                 <MediaCardSkeleton />
                 <MediaCardSkeleton />
                 <MediaCardSkeleton />

@@ -15,7 +15,13 @@ interface WatchlistCardProps {
 
 function WatchlistCardComponent({ item, index }: WatchlistCardProps) {
     const [confirming, setConfirming] = useState(false);
-    const { ref, handleRef, isDragging } = useSortable({ id: item.id, index });
+
+    const { ref, handleRef, isDragging } = useSortable({
+        id: item.id,
+        index,
+        data: { title: item.title },
+    });
+
     const { mutate: removeFromWatchlist, isPending: isRemoving } =
         useRemoveFromWatchlist();
 
