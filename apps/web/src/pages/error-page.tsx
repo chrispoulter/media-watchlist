@@ -20,7 +20,7 @@ export function ErrorPage({ resetErrorBoundary }: FallbackProps) {
                     <Card>
                         <CardHeader>
                             <CardTitle className="text-2xl">
-                                Something went wrong
+                                <h1>Something went wrong</h1>
                             </CardTitle>
                             <CardDescription>
                                 An unexpected error occurred

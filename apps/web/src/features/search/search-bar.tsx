@@ -24,12 +24,13 @@ function SearchBarComponent({ onSearch }: SearchBarProps) {
         <InputGroup>
             <InputGroupInput
                 type="search"
+                aria-label="Search movies and TV shows"
                 placeholder="Search movies and TV shows..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
             />
             <InputGroupAddon>
-                <Search />
+                <Search aria-hidden="true" />
             </InputGroupAddon>
         </InputGroup>
     );

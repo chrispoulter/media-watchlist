@@ -15,8 +15,11 @@ export function ModeToggle() {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
-                    <Sun className="h-5 w-5 dark:hidden" />
-                    <Moon className="hidden h-5 w-5 dark:block" />
+                    <Sun aria-hidden="true" className="h-5 w-5 dark:hidden" />
+                    <Moon
+                        aria-hidden="true"
+                        className="hidden h-5 w-5 dark:block"
+                    />
                     <span className="sr-only">Toggle theme</span>
                 </Button>
             </DropdownMenuTrigger>

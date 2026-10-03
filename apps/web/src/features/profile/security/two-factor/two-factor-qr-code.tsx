@@ -13,7 +13,12 @@ export function TwoFactorQrCode({ totpUri, onDone }: TwoFactorQrCodeProps) {
                 Scan this QR code with your authenticator app:
             </p>
             <div className="inline-block rounded-lg border bg-white p-4">
-                <QRCodeSVG value={totpUri} size={200} />
+                <QRCodeSVG
+                    value={totpUri}
+                    size={200}
+                    role="img"
+                    aria-label="QR code for your authenticator app"
+                />
             </div>
             <p className="text-xs text-muted-foreground">
                 Or enter manually:{' '}

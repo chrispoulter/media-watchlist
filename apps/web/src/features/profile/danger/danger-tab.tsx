@@ -14,7 +14,9 @@ export function DangerTab() {
             <Metadata title="Danger Zone" />
             <Card>
                 <CardHeader>
-                    <CardTitle>Delete Account</CardTitle>
+                    <CardTitle>
+                        <h2>Delete Account</h2>
+                    </CardTitle>
                     <CardDescription>
                         Permanently delete your account and all associated data.
                         This cannot be undone.
