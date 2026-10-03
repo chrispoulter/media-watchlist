@@ -29,6 +29,8 @@ export function FormSelectField<T extends FieldValues>({
 }: FormSelectFieldProps<T>) {
     const id = useId();
 
+    const errorId = `${id}-error`;
+
     return (
         <Controller
             control={control}
@@ -46,6 +48,9 @@ export function FormSelectField<T extends FieldValues>({
                             ref={field.ref}
                             onBlur={field.onBlur}
                             aria-invalid={fieldState.invalid}
+                            aria-describedby={
+                                fieldState.invalid ? errorId : undefined
+                            }
                             className="w-full"
                         >
                             <SelectValue />
@@ -62,7 +67,7 @@ export function FormSelectField<T extends FieldValues>({
                         </SelectContent>
                     </Select>
                     {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
+                        <FieldError id={errorId} errors={[fieldState.error]} />
                     )}
                 </Field>
             )}

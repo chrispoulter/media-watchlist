@@ -25,6 +25,8 @@ export function FormTextareaField<T extends FieldValues>({
 }: FormTextareaFieldProps<T>) {
     const id = useId();
 
+    const errorId = `${id}-error`;
+
     return (
         <Controller
             control={control}
@@ -35,11 +37,14 @@ export function FormTextareaField<T extends FieldValues>({
                     <Textarea
                         id={id}
                         aria-invalid={fieldState.invalid}
+                        aria-describedby={
+                            fieldState.invalid ? errorId : undefined
+                        }
                         {...textareaProps}
                         {...field}
                     />
                     {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
+                        <FieldError id={errorId} errors={[fieldState.error]} />
                     )}
                 </Field>
             )}
