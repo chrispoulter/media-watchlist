@@ -20,7 +20,7 @@ export function ModeToggle() {
                         aria-hidden="true"
                         className="hidden h-5 w-5 dark:block"
                     />
-                    <span className="sr-only">Toggle theme</span>
+                    <span className="sr-only">Theme</span>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
