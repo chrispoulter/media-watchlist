@@ -17,7 +17,11 @@
         "lint": "turbo run lint",
         "lint:fix": "turbo run lint:fix",
         "format": "prettier --write .",
-        "format:check": "prettier --check ."
+        "format:check": "prettier --check .",
+        "docker:infra:up": "docker compose up -d --wait postgres mailpit",
+        "docker:infra:down": "docker compose stop postgres mailpit",
+        "docker:up": "docker compose up -d --build --wait",
+        "docker:down": "docker compose down"
     },
     "devDependencies": {
         "prettier": "^3.9.6",
