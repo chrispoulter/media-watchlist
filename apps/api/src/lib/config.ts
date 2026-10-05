@@ -30,7 +30,8 @@ const configSchema = z.object({
     SMTP_SECURE: z.stringbool().default(false),
     SMTP_USER: z.string().optional(),
     SMTP_PASS: z.string().optional(),
-    SMTP_FROM: z.email(),
+    SMTP_FROM_ADDRESS: z.email(),
+    SMTP_FROM_NAME: z.string().default('Media Watchlist'),
     LOG_LEVEL: z
         .enum(['fatal', 'error', 'warning', 'info', 'debug', 'trace'])
         .default('info'),

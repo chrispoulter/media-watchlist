@@ -1,6 +1,5 @@
 import nodemailer from 'nodemailer';
 import type { ReactElement } from 'react';
-import { render } from 'react-email';
 import { getLogger } from '@logtape/logtape';
 import type { HealthStatus } from '../types/index.js';
 import { config } from './config.js';
@@ -36,11 +35,16 @@ interface MailMessage {
 }
 
 export const sendMail = async ({ to, subject, template }: MailMessage) => {
+    const { render } = await import('react-email');
+    
     const html = await render(template);
 
     try {
         await mailer.sendMail({
-            from: config.SMTP_FROM,
+            from: {
+                name: config.SMTP_FROM_NAME,
+                address: config.SMTP_FROM_ADDRESS,
+            },
             to,
             subject,
             html,

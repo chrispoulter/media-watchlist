@@ -70,7 +70,7 @@ function SearchCardComponent({ result }: SearchCardProps) {
                             onClick={handleRemove}
                             disabled={isRemoving}
                         >
-                            {confirming ? 'Confirm remove' : 'Remove'}
+                            {confirming ? 'Confirm?' : 'Remove'}
                         </Button>
                     ) : (
                         <Button

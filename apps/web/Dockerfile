@@ -2,7 +2,7 @@ FROM node:24-alpine AS base
 
 FROM base AS pruner
 WORKDIR /app
-RUN npm install -g turbo
+RUN npm install -g turbo@2.11.6
 COPY . .
 RUN turbo prune @media-watchlist/web --docker
 

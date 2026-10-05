@@ -1,0 +1,40 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "turbo: build",
+            "type": "shell",
+            "command": "npx turbo run build --ui=stream",
+            "group": { "kind": "build", "isDefault": true },
+            "problemMatcher": ["$tsc"]
+        },
+        {
+            "label": "shared: watch",
+            "detail": "tsc --watch for packages/shared",
+            "type": "npm",
+            "script": "dev",
+            "path": "packages/shared",
+            "isBackground": true,
+            "problemMatcher": ["$tsc-watch"],
+            "presentation": { "group": "dev", "reveal": "silent" }
+        },
+        {
+            "label": "web: dev",
+            "detail": "Vite dev server for apps/web",
+            "type": "npm",
+            "script": "dev",
+            "path": "apps/web",
+            "isBackground": true,
+            "dependsOn": ["shared: watch"],
+            "presentation": { "group": "dev" },
+            "problemMatcher": {
+                "owner": "vite",
+                "pattern": { "regexp": "^__never_matches__$" },
+                "background": {
+                    "beginsPattern": ".",
+                    "endsPattern": "ready in"
+                }
+            }
+        }
+    ]
+}

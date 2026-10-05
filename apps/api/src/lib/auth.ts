@@ -1,4 +1,4 @@
-import { betterAuth } from 'better-auth';
+import { betterAuth } from 'better-auth/minimal';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { admin, twoFactor, openAPI } from 'better-auth/plugins';
 import { createElement } from 'react';
@@ -6,9 +6,6 @@ import { db } from '../db/index.js';
 import * as schema from '../db/schema.js';
 import { config } from './config.js';
 import { sendMail } from './mailer.js';
-
-import ResetPasswordEmail from '../emails/reset-password-email.js';
-import VerificationEmail from '../emails/verification-email.js';
 
 export const auth = betterAuth({
     baseURL: config.BETTER_AUTH_URL,
@@ -27,7 +24,11 @@ export const auth = betterAuth({
     },
     emailAndPassword: {
         enabled: true,
+        revokeSessionsOnPasswordReset: true,
         sendResetPassword: async ({ user, url }) => {
+            const { default: ResetPasswordEmail } =
+                await import('../emails/reset-password-email.js');
+
             await sendMail({
                 to: user.email,
                 subject: 'Reset your password | Media Watchlist',
@@ -40,6 +41,9 @@ export const auth = betterAuth({
     },
     emailVerification: {
         sendVerificationEmail: async ({ user, url }) => {
+            const { default: VerificationEmail } =
+                await import('../emails/verification-email.js');
+
             await sendMail({
                 to: user.email,
                 subject: 'Verify your email address | Media Watchlist',

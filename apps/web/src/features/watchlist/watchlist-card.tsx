@@ -71,11 +71,11 @@ function WatchlistCardComponent({ item, index }: WatchlistCardProps) {
                         <Button
                             size="sm"
                             variant={confirming ? 'destructive' : 'outline'}
-                            className="flex-1"
+                            className="min-w-0 flex-1 shrink"
                             onClick={handleRemove}
                             disabled={isRemoving}
                         >
-                            {confirming ? 'Confirm remove' : 'Remove'}
+                            {confirming ? 'Confirm?' : 'Remove'}
                         </Button>
                     </div>
                 }
