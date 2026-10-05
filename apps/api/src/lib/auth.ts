@@ -1,4 +1,4 @@
-import { betterAuth } from 'better-auth';
+import { betterAuth } from 'better-auth/minimal';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { twoFactor, openAPI } from 'better-auth/plugins';
 import { createElement } from 'react';
@@ -27,6 +27,7 @@ export const auth = betterAuth({
     },
     emailAndPassword: {
         enabled: true,
+        revokeSessionsOnPasswordReset: true, 
         sendResetPassword: async ({ user, url }) => {
             await sendMail({
                 to: user.email,
