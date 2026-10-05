@@ -33,7 +33,7 @@ export function MediaCard({
                 }}
                 className="h-60 w-40 shrink-0 object-cover"
             />
-            <div className="flex flex-col gap-3 p-4">
+            <div className="flex min-w-0 flex-1 flex-col gap-3 p-4">
                 <h2 className="line-clamp-1 font-semibold">{title}</h2>
                 {year && <Badge variant="secondary">{year}</Badge>}
                 <p className="line-clamp-3 text-sm text-muted-foreground">
