@@ -41,7 +41,10 @@ export const sendMail = async ({ to, subject, template }: MailMessage) => {
 
     try {
         await mailer.sendMail({
-            from: config.SMTP_FROM,
+            from: {
+                name: config.SMTP_FROM_NAME,
+                address: config.SMTP_FROM_ADDRESS,
+            },
             to,
             subject,
             html,

@@ -64,7 +64,8 @@ npm run dev
 | `SMTP_HOST`            | No       | `localhost`             | SMTP server host                                                    |
 | `SMTP_PORT`            | No       | `587`                   | SMTP server port                                                    |
 | `SMTP_SECURE`          | No       | `false`                 | Use TLS/SSL for SMTP                                                |
-| `SMTP_FROM`            | Yes      | —                       | From address for outgoing emails                                    |
+| `SMTP_FROM_ADDRESS`    | Yes      | —                       | From address for outgoing emails                                    |
+| `SMTP_FROM_NAME`       | No       | `Media Watchlist`       | From display name for outgoing emails                               |
 | `SMTP_USER`            | No       | —                       | SMTP username                                                       |
 | `SMTP_PASS`            | No       | —                       | SMTP password                                                       |
 | `LOG_LEVEL`            | No       | `info`                  | Log level: `fatal`, `error`, `warning`, `info`, `debug`, or `trace` |
