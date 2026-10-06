@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
 
 const gitCommitSha =
-    process.env.VITE_VERCEL_GIT_COMMIT_SHA ||
+    process.env.VERCEL_GIT_COMMIT_SHA ||
     process.env.GIT_COMMIT_SHA ||
     undefined;
 
