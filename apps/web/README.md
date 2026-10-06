@@ -8,7 +8,7 @@ Connects to the [API](../api/README.md) in this monorepo for data and authentica
 
 - **[Vite 8](https://vite.dev/)** + **[React 19](https://react.dev/)** + **[TypeScript](https://www.typescriptlang.org/)**
 - **[Tailwind CSS v4](https://tailwindcss.com/)** for styling
-- **[shadcn/ui](https://ui.shadcn.com/)** component library (New York style, Radix UI primitives)
+- **[shadcn/ui](https://ui.shadcn.com/)** component library (Vega style, Radix UI primitives)
 - **[TanStack Query v5](https://tanstack.com/query/latest)** for server state
 - **[React Hook Form](https://react-hook-form.com/)** + **[Zod](https://zod.dev/)** for forms and validation
 - **[better-auth](https://better-auth.com/)** for authentication (cookie-based sessions)
@@ -31,13 +31,15 @@ Connects to the [API](../api/README.md) in this monorepo for data and authentica
 - Search TMDB for movies and TV shows with debounced input and type filter (All / Movies / TV)
 - Add titles to your watchlist directly from search results
 - View your full watchlist as a poster grid
+- Reorder your watchlist
 - Remove titles from your watchlist
 
 ### Profile
 
 - Update name and date of birth
 - Change email address
-- Change password (revokes other sessions)
+- Change password (revokes other sessions), or set one if you signed up with a social provider
+- Link / unlink social accounts
 - Enable / disable TOTP two-factor authentication with QR code setup flow
 - Delete account
 
@@ -106,13 +108,15 @@ At container startup, nginx substitutes `API_URL` into its config and proxies `/
 
 ```
 src/
-├── lib/                    # API client, better-auth singleton, utilities
+├── lib/                    # API client, better-auth singleton, social providers, utilities
 ├── components/
 │   ├── ui/                 # shadcn/ui generated components
-│   └── ...                 # layout, route guards, header, shared UI
+│   ├── layout/             # app shell: root layout, header, footer, menus
+│   ├── form/               # React Hook Form field wrappers
+│   └── ...                 # route guards, metadata, shared media cards
 ├── pages/                  # error and not-found fallback pages
 └── features/
-    ├── auth/               # login, register, two-factor, forgot/reset password
+    ├── account/            # login, register, two-factor, forgot/reset password
     ├── profile/            # profile info, security (2FA settings), danger zone
     ├── watchlist/          # React Query hooks, grid, item cards
     └── search/             # debounced search bar, result cards
