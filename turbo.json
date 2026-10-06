@@ -18,13 +18,11 @@
         "SMTP_USER",
         "SMTP_PASS",
         "LOG_LEVEL",
-        "API_URL",
-        "VERCEL_GIT_COMMIT_SHA",
-        "GIT_COMMIT_SHA"
+        "API_URL"
     ],
     "tasks": {
         "build": {
-            "env": ["GIT_COMMIT_SHA", "npm_package_version"],
+            "env": ["VERCEL_GIT_COMMIT_SHA", "GIT_COMMIT_SHA", "npm_package_version"],
             "dependsOn": ["^build"],
             "inputs": ["$TURBO_DEFAULT$", ".env*"],
             "outputs": ["dist/**"]
