@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router';
-import { RootLayout } from '@/components/root-layout';
+import { RootLayout } from '@/components/layout/root-layout';
 import { NotFoundPage } from '@/pages/not-found-page';
 import { adminRoutes } from '@/features/admin/admin-routes';
 import { accountRoutes } from '@/features/account/account-routes';
