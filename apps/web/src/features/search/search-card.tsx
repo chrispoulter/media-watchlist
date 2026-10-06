@@ -1,22 +1,17 @@
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { toast } from 'sonner';
 import type { SearchResponse } from '@media-watchlist/shared';
 import { Button } from '@/components/ui/button';
 import { MediaCard } from '@/components/media-card';
-import {
-    useAddToWatchlist,
-    useRemoveFromWatchlist,
-} from '@/features/watchlist/watchlist-queries';
+import { RemoveFromWatchlistDialog } from '@/features/watchlist/remove-from-watchlist-dialog';
+import { useAddToWatchlist } from '@/features/watchlist/watchlist-queries';
 
 interface SearchCardProps {
     result: SearchResponse[number];
 }
 
 function SearchCardComponent({ result }: SearchCardProps) {
-    const [confirming, setConfirming] = useState(false);
     const { mutate: addToWatchlist, isPending: isAdding } = useAddToWatchlist();
-    const { mutate: removeFromWatchlist, isPending: isRemoving } =
-        useRemoveFromWatchlist();
 
     const handleAdd = () => {
         addToWatchlist(
@@ -37,22 +32,6 @@ function SearchCardComponent({ result }: SearchCardProps) {
         );
     };
 
-    const handleRemove = () => {
-        if (!confirming) {
-            setConfirming(true);
-            setTimeout(() => setConfirming(false), 3000);
-            return;
-        }
-
-        removeFromWatchlist(result.watchlistItemId!, {
-            onSuccess: () =>
-                toast.success(`"${result.title}" removed from watchlist`),
-            onError: (err) =>
-                toast.error(err.message ?? 'Failed to remove from watchlist'),
-            onSettled: () => setConfirming(false),
-        });
-    };
-
     return (
         <MediaCard
             title={result.title}
@@ -63,15 +42,11 @@ function SearchCardComponent({ result }: SearchCardProps) {
             actions={
                 <>
                     {result.watchlistItemId ? (
-                        <Button
-                            size="sm"
-                            variant={confirming ? 'destructive' : 'outline'}
-                            className="w-full"
-                            onClick={handleRemove}
-                            disabled={isRemoving}
-                        >
-                            {confirming ? 'Confirm?' : 'Remove'}
-                        </Button>
+                        <RemoveFromWatchlistDialog
+                            itemId={result.watchlistItemId}
+                            title={result.title}
+                            triggerClassName="w-full"
+                        />
                     ) : (
                         <Button
                             size="sm"

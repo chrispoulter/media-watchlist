@@ -1,6 +1,6 @@
 # TODO
 
-- replace timed confirm with regular dialog
+-
 
 ## Bugfixes
 

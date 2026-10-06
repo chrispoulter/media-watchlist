@@ -36,7 +36,7 @@ interface MailMessage {
 
 export const sendMail = async ({ to, subject, template }: MailMessage) => {
     const { render } = await import('react-email');
-    
+
     const html = await render(template);
 
     try {
