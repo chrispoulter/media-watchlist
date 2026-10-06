@@ -1,7 +1,7 @@
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { authProviders } from '@/lib/auth-providers';
+import { socialProviders } from '@/lib/social-providers';
 import { useLinkSocial, useUnlinkAccount } from '../profile-queries';
 
 interface LinkedAccountsProps {
@@ -51,7 +51,7 @@ export function LinkedAccounts({ accounts }: LinkedAccountsProps) {
 
     return (
         <div className="space-y-4">
-            {authProviders.map((provider) => {
+            {socialProviders.map((provider) => {
                 const linkedAccount = accounts?.find(
                     (a) => a.providerId === provider.id
                 );

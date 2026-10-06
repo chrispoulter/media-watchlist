@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Metadata } from '@/components/metadata';
-import { authProviders } from '@/lib/auth-providers';
+import { socialProviders } from '@/lib/social-providers';
 import { useAccounts } from '../profile-queries';
 import { ChangePasswordForm } from './change-password-form';
 import { SetPasswordForm } from './set-password-form';
@@ -112,7 +112,7 @@ export function SecurityTab() {
                     <CardContent>
                         {isLoading ? (
                             <div className="space-y-4">
-                                {authProviders.map((provider) => (
+                                {socialProviders.map((provider) => (
                                     <Skeleton
                                         key={provider.id}
                                         className="h-10 w-full"
