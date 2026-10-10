@@ -1,12 +1,11 @@
-import { memo, useState } from 'react';
-import { toast } from 'sonner';
+import { memo } from 'react';
 import { useSortable } from '@dnd-kit/react/sortable';
 import { GripVertical } from 'lucide-react';
 import type { WatchlistResponse } from '@media-watchlist/shared';
 import { Button } from '@/components/ui/button';
 import { MediaCard } from '@/components/media-card';
 import { cn } from '@/lib/utils';
-import { useRemoveFromWatchlist } from './watchlist-queries';
+import { RemoveFromWatchlistDialog } from './remove-from-watchlist-dialog';
 
 interface WatchlistCardProps {
     item: WatchlistResponse[number];
@@ -14,32 +13,11 @@ interface WatchlistCardProps {
 }
 
 function WatchlistCardComponent({ item, index }: WatchlistCardProps) {
-    const [confirming, setConfirming] = useState(false);
-
     const { ref, handleRef, isDragging } = useSortable({
         id: item.id,
         index,
         data: { title: item.title },
     });
-
-    const { mutate: removeFromWatchlist, isPending: isRemoving } =
-        useRemoveFromWatchlist();
-
-    const handleRemove = () => {
-        if (!confirming) {
-            setConfirming(true);
-            setTimeout(() => setConfirming(false), 3000);
-            return;
-        }
-
-        removeFromWatchlist(item.id, {
-            onSuccess: () =>
-                toast.success(`"${item.title}" removed from watchlist`),
-            onError: (err) =>
-                toast.error(err.message ?? 'Failed to remove from watchlist'),
-            onSettled: () => setConfirming(false),
-        });
-    };
 
     return (
         <div
@@ -68,15 +46,11 @@ function WatchlistCardComponent({ item, index }: WatchlistCardProps) {
                         >
                             <GripVertical />
                         </Button>
-                        <Button
-                            size="sm"
-                            variant={confirming ? 'destructive' : 'outline'}
-                            className="flex-1"
-                            onClick={handleRemove}
-                            disabled={isRemoving}
-                        >
-                            {confirming ? 'Confirm remove' : 'Remove'}
-                        </Button>
+                        <RemoveFromWatchlistDialog
+                            itemId={item.id}
+                            title={item.title}
+                            triggerClassName="min-w-0 flex-1 shrink"
+                        />
                     </div>
                 }
             />

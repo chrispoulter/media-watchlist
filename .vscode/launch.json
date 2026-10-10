@@ -6,11 +6,12 @@
             "request": "launch",
             "name": "Debug API",
             "cwd": "${workspaceFolder}/apps/api",
-            "runtimeExecutable": "node",
-            "runtimeArgs": ["--import", "tsx"],
-            "program": "${workspaceFolder}/apps/api/src/index.ts",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "dev"],
+            "preLaunchTask": "shared: watch",
             "console": "integratedTerminal",
-            "skipFiles": ["<node_internals>/**"]
+            "autoAttachChildProcesses": true,
+            "skipFiles": ["<node_internals>/**", "**/node_modules/**"]
         },
         {
             "type": "chrome",
@@ -18,13 +19,14 @@
             "name": "Debug Web (Chrome)",
             "url": "http://localhost:5173",
             "webRoot": "${workspaceFolder}/apps/web",
-            "preLaunchTask": "dev: web"
+            "preLaunchTask": "web: dev"
         }
     ],
     "compounds": [
         {
             "name": "Debug Full Stack",
-            "configurations": ["Debug API", "Debug Web (Chrome)"]
+            "configurations": ["Debug API", "Debug Web (Chrome)"],
+            "stopAll": true
         }
     ]
 }

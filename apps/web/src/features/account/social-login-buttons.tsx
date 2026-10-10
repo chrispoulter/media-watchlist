@@ -1,14 +1,14 @@
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { useSocialSignIn } from '@/features/account/account-queries';
-import { authProviders } from '@/lib/auth-providers';
+import { useSocialSignIn } from './account-queries';
+import { socialProviders } from '@/lib/social-providers';
 
 export function SocialLoginButtons() {
     const { mutate: signIn, isPending, variables } = useSocialSignIn();
 
     return (
         <>
-            {authProviders.map((provider) => {
+            {socialProviders.map((provider) => {
                 const isProviderPending =
                     isPending && variables === provider.id;
 
