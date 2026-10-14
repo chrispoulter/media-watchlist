@@ -1,3 +1,5 @@
+import { Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -40,6 +42,30 @@ export function ProfileTab() {
                     </CardHeader>
                     <CardContent>
                         <UpdateEmailForm />
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>
+                            <h2>Your Data</h2>
+                        </CardTitle>
+                        <CardDescription>
+                            Download a copy of your personal data, including
+                            your watchlist
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Button
+                            asChild
+                            variant="outline"
+                            className="w-full sm:w-auto"
+                        >
+                            <a href="/api/profile/personal-data" download>
+                                <Download />
+                                Download your data
+                            </a>
+                        </Button>
                     </CardContent>
                 </Card>
             </div>
