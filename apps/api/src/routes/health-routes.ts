@@ -23,9 +23,7 @@ const healthResponseSchema = z.object({
 const healthRoute = createRoute({
     method: 'get',
     path: '/health',
-    tags: ['Health'],
-    summary: 'Health Check',
-    description: 'Check the health of the API and its downstream services.',
+    hide: true,
     responses: {
         200: {
             description: 'OK',
@@ -67,10 +65,7 @@ const aliveResponseSchema = z.object({
 const aliveRoute = createRoute({
     method: 'get',
     path: '/alive',
-    tags: ['Health'],
-    summary: 'Liveness Check',
-    description:
-        'Check the API is running, without checking downstream services.',
+    hide: true,
     responses: {
         200: {
             description: 'OK',
