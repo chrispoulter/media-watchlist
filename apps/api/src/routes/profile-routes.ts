@@ -136,6 +136,7 @@ router.openapi(personalDataRoute, async (c) => {
         'Content-Disposition',
         'attachment; filename="media-watchlist-data.json"'
     );
+    c.header('Cache-Control', 'no-store');
 
     return c.json(data, 200);
 });
