@@ -26,10 +26,13 @@ export function registerDocRoutes(app: OpenAPIHono) {
     app.get('/auth-openapi.json', async (c) => {
         const authSchema = await auth.api.generateOpenAPISchema();
 
-        return c.json({
-            ...authSchema,
-            servers: [{ url: '/api/auth' }],
-        });
+        return c.json(
+            {
+                ...authSchema,
+                servers: [{ url: '/api/auth' }],
+            },
+            200
+        );
     });
 
     app.get(
