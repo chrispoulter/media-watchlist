@@ -1,12 +1,11 @@
 # TODO
 
 - new distinct icons
-- cloudflare hosting
+- cloudflare hosting /azure hosting ?
 
 ## Bugfixes
 
-- scalar documentation examples not working
-- open api doc not syncing to bruno
+-
 
 ## Future
 
