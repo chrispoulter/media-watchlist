@@ -8,6 +8,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Metadata } from '@/components/metadata';
+import { personalDataUrl } from '../profile-queries';
 import { UpdateProfileForm } from './update-profile-form';
 import { UpdateEmailForm } from './update-email-form';
 
@@ -61,7 +62,7 @@ export function ProfileTab() {
                             variant="outline"
                             className="w-full sm:w-auto"
                         >
-                            <a href="/api/profile/personal-data" download>
+                            <a href={personalDataUrl} download>
                                 <Download />
                                 Download your data
                             </a>

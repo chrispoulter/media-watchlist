@@ -5,6 +5,8 @@ const profileKeys = {
     all: ['profile'] as const,
 };
 
+export const personalDataUrl = '/api/profile/personal-data';
+
 export function useAccounts() {
     return useQuery({
         queryKey: profileKeys.all,
