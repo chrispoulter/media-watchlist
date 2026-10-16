@@ -24,14 +24,15 @@ const healthRoute = createRoute({
     method: 'get',
     path: '/health',
     tags: ['Health'],
-    summary: 'Health check',
+    summary: 'Health Check',
+    description: 'Check the health of the API and its downstream services.',
     responses: {
         200: {
-            description: 'All services are healthy.',
+            description: 'OK',
             content: { 'application/json': { schema: healthResponseSchema } },
         },
         503: {
-            description: 'One or more services are unhealthy.',
+            description: 'Service Unavailable',
             content: { 'application/json': { schema: healthResponseSchema } },
         },
     },
@@ -67,12 +68,12 @@ const aliveRoute = createRoute({
     method: 'get',
     path: '/alive',
     tags: ['Health'],
-    summary: 'Liveness probe',
+    summary: 'Liveness Check',
     description:
-        'Lightweight liveness check — always returns 200 without checking downstream services.',
+        'Check the API is running, without checking downstream services.',
     responses: {
         200: {
-            description: 'Service is alive.',
+            description: 'OK',
             content: { 'application/json': { schema: aliveResponseSchema } },
         },
     },

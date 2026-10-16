@@ -50,11 +50,13 @@ const personalDataRoute = createRoute({
     method: 'get',
     path: '/personal-data',
     tags: ['Profile'],
-    summary: 'Download a copy of the personal data held for the current user',
+    summary: 'Download Personal Data',
+    description:
+        'Download a copy of the personal data held for the current user as a JSON file. Passwords and two-factor secrets are not included.',
     security: [{ cookieAuth: [] }],
     responses: {
         200: {
-            description: 'Personal data, as a JSON file attachment.',
+            description: 'OK',
             content: { 'application/json': { schema: personalDataSchema } },
         },
         401: {

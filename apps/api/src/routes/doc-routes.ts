@@ -12,8 +12,7 @@ export function registerDocRoutes(app: OpenAPIHono) {
         type: 'apiKey',
         in: 'cookie',
         name: `${cookiePrefix}better-auth.session_token`,
-        description:
-            'Signed session cookie set by Better Auth on sign-in. Sent automatically by the browser.',
+        description: 'Session cookie set on login.',
     });
 
     app.doc('/openapi.json', {
