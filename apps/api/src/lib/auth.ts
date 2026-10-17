@@ -1,6 +1,6 @@
 import { betterAuth } from 'better-auth/minimal';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { twoFactor, openAPI } from 'better-auth/plugins';
+import { admin, twoFactor, openAPI } from 'better-auth/plugins';
 import { createElement } from 'react';
 import { db } from '../db/index.js';
 import * as schema from '../db/schema.js';
@@ -63,6 +63,7 @@ export const auth = betterAuth({
     },
     plugins: [
         twoFactor({ issuer: 'Media Watchlist' }),
+        admin({ defaultRole: 'user', adminRoles: ['admin'] }),
         openAPI({ disableDefaultReference: true }),
     ],
 });

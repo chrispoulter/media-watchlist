@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useSignOut } from '@/features/account/account-queries';
-import { authClient } from '@/lib/auth-client';
+import { authClient, isAdmin } from '@/lib/auth-client';
 
 export function UserMenu() {
     const navigate = useNavigate();
@@ -56,6 +56,11 @@ export function UserMenu() {
                 <DropdownMenuItem onClick={() => navigate('/profile')}>
                     Profile
                 </DropdownMenuItem>
+                {isAdmin(session.user) && (
+                    <DropdownMenuItem onClick={() => navigate('/admin')}>
+                        Admin
+                    </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} disabled={isPending}>
                     {isPending ? 'Signing Out...' : 'Sign Out'}
