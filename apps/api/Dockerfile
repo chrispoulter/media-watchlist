@@ -17,7 +17,7 @@ RUN npx turbo run build --filter=@media-watchlist/api
 FROM base AS prod-deps
 WORKDIR /app
 COPY --from=pruner /app/out/json/ .
-RUN npm ci --omit=dev && npm cache clean --force
+RUN npm ci --omit=dev --omit=optional && npm cache clean --force
 
 FROM base AS runner
 WORKDIR /app
