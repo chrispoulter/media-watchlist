@@ -1,5 +1,4 @@
 import { createRouter } from '../lib/create-router.js';
-import { version } from '../lib/config.js';
 
 import { check as checkDatabase } from '../db/index.js';
 import { check as checkMailer } from '../lib/mailer.js';
@@ -15,24 +14,13 @@ router.get('/health', async (c) => {
     ]);
 
     const failing = services.some((s) => s.status !== 'ok');
-
-    return c.json(
-        {
-            status: failing ? 'unhealthy' : 'ok',
-            version,
-            uptime: process.uptime(),
-            services,
-        },
-        failing ? 503 : 200
-    );
+    const response = failing ? 'Unhealthy' : 'Healthy';
+    const statusCode = failing ? 503 : 200;
+    return c.text(response, statusCode);
 });
 
 router.get('/alive', (c) => {
-    return c.json({
-        status: 'ok',
-        version,
-        uptime: process.uptime(),
-    });
+    return c.text('Healthy', 200);
 });
 
 export default router;
