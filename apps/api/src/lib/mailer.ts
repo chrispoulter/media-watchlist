@@ -1,7 +1,6 @@
 import nodemailer from 'nodemailer';
 import type { ReactElement } from 'react';
 import { getLogger } from '@logtape/logtape';
-import type { HealthStatus } from '../types/index.js';
 import { config } from './config.js';
 
 const logger = getLogger(['api', 'mailer']);
@@ -17,16 +16,6 @@ const mailer = nodemailer.createTransport({
 });
 
 export const shutdown = () => Promise.resolve(mailer.close());
-
-export const check = async (): Promise<HealthStatus> => {
-    try {
-        await mailer.verify();
-        return { name: 'mailer', status: 'ok' };
-    } catch (err) {
-        logger.error('Mailer health check failed {*}', { err });
-        return { name: 'mailer', status: 'unhealthy' };
-    }
-};
 
 interface MailMessage {
     to: string;
