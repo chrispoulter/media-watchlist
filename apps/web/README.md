@@ -88,21 +88,9 @@ Run from `apps/web`, or from the repo root with `-w @media-watchlist/web`.
 
 To run the full stack locally with Docker Compose, see the [root README](../../README.md#running-with-docker).
 
-Build the image from the repo root (nginx serves the static site):
+There is no separate web image. The [API Dockerfile](../api/Dockerfile) builds this app and copies `dist` into the API's `public` folder, so the API serves the SPA (falling back to `index.html` for client-side routes) and every `/api/*` endpoint from one origin.
 
-```bash
-docker build -f apps/web/Dockerfile -t media-watchlist-web .
-```
-
-Run with the API URL supplied at runtime:
-
-```bash
-docker run -p 80:80 \
-  -e API_URL=https://your-api.example.com \
-  media-watchlist-web
-```
-
-At container startup, nginx substitutes `API_URL` into its config and proxies `/api/*` to it, so the same image runs in any environment without rebuilding. Any other runtime config (e.g. feature flags or public keys) can be added to `env.js` in `20-generate-env-config.sh`; the app reads it via `window.__ENV__`. nginx serves the SPA via `try_files $uri /index.html`.
+Runtime config (e.g. feature flags or public keys) is set as `VITE_*` environment variables on the API, which serves them from `/env.js`; the app reads them via `window.__ENV__`. In development, Vite proxies `/env.js` to the API along with `/api/*`.
 
 ## Project Structure
 

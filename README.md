@@ -46,20 +46,20 @@ npm run dev
 
 ## Running with Docker
 
-`docker-compose.yml` runs the full stack: Postgres, Mailpit (for catching outgoing emails locally), a one-off migration job, the API, and the web app (served via nginx).
+`docker-compose.yml` runs the full stack: Postgres, Mailpit (for catching outgoing emails locally), a one-off migration job, and the API, which also serves the built web app.
 
 ```bash
 cp .env.example .env   # fill in GOOGLE_CLIENT_ID/SECRET and TMDB_API_READ_TOKEN
 docker compose up --build
 ```
 
-- Web: http://localhost:5173
-- API: http://localhost:3000 (docs at `/reference`, health at `/health`)
+- Web: http://localhost:3000
+- API: http://localhost:3000/api (docs at `/scalar`, health at `/health`)
 - Mailpit UI: http://localhost:8025
 
 ## CI/CD
 
-The [CI workflow](.github/workflows/ci.yml) runs on pushes to `main`, `develop`, `feature/**`, `release/**` and `hotfix/**`. It lints, type checks and builds all workspaces using Node.js 24, then builds the API and web Docker images and pushes them to GitHub Container Registry (`latest` on `main`, branch name otherwise, plus the short commit SHA).
+The [CI workflow](.github/workflows/ci.yml) runs on pushes to `main`, `develop`, `feature/**`, `release/**` and `hotfix/**`. It lints, type checks and builds all workspaces using Node.js 24, then builds the API Docker image (which bundles the web app) and pushes it to GitHub Container Registry (`latest` on `main`, branch name otherwise, plus the short commit SHA).
 
 ## License
 

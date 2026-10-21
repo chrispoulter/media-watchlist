@@ -18,7 +18,8 @@
         "SMTP_USER",
         "SMTP_PASS",
         "LOG_LEVEL",
-        "API_URL"
+        "API_URL",
+        "VITE_FEATURE_X"
     ],
     "tasks": {
         "build": {

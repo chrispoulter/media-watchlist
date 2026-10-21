@@ -51,28 +51,29 @@ npm run dev
 
 ## Environment Variables
 
-| Variable               | Required | Default                 | Description                                                         |
-| ---------------------- | -------- | ----------------------- | ------------------------------------------------------------------- |
-| `PORT`                 | No       | `3000`                  | Port the server listens on                                          |
-| `DATABASE_URL`         | Yes      | —                       | PostgreSQL connection string                                        |
-| `BETTER_AUTH_SECRET`   | Yes      | —                       | Auth signing secret (min 32 chars)                                  |
-| `BETTER_AUTH_URL`      | No       | `http://localhost:5173` | Public URL of the web app, which proxies `/api/*` to this API       |
-| `TRUSTED_ORIGINS`      | No       | —                       | Extra trusted web origins, comma-separated                          |
-| `GOOGLE_CLIENT_ID`     | No       | —                       | Google OAuth client ID                                              |
-| `GOOGLE_CLIENT_SECRET` | No       | —                       | Google OAuth client secret                                          |
-| `TMDB_API_READ_TOKEN`  | Yes      | —                       | TMDB API read access token                                          |
-| `SMTP_HOST`            | No       | `localhost`             | SMTP server host                                                    |
-| `SMTP_PORT`            | No       | `587`                   | SMTP server port                                                    |
-| `SMTP_SECURE`          | No       | `false`                 | Use TLS/SSL for SMTP                                                |
-| `SMTP_FROM_ADDRESS`    | Yes      | —                       | From address for outgoing emails                                    |
-| `SMTP_FROM_NAME`       | No       | `Media Watchlist`       | From display name for outgoing emails                               |
-| `SMTP_USER`            | No       | —                       | SMTP username                                                       |
-| `SMTP_PASS`            | No       | —                       | SMTP password                                                       |
-| `LOG_LEVEL`            | No       | `info`                  | Log level: `fatal`, `error`, `warning`, `info`, `debug`, or `trace` |
+| Variable               | Required | Default                 | Description                                                               |
+| ---------------------- | -------- | ----------------------- | ------------------------------------------------------------------------- |
+| `PORT`                 | No       | `3000`                  | Port the server listens on                                                |
+| `DATABASE_URL`         | Yes      | —                       | PostgreSQL connection string                                              |
+| `BETTER_AUTH_SECRET`   | Yes      | —                       | Auth signing secret (min 32 chars)                                        |
+| `BETTER_AUTH_URL`      | No       | `http://localhost:5173` | Public URL the app is served from (this API in production, Vite in dev)   |
+| `TRUSTED_ORIGINS`      | No       | —                       | Extra trusted web origins, comma-separated                                |
+| `GOOGLE_CLIENT_ID`     | No       | —                       | Google OAuth client ID                                                    |
+| `GOOGLE_CLIENT_SECRET` | No       | —                       | Google OAuth client secret                                                |
+| `TMDB_API_READ_TOKEN`  | Yes      | —                       | TMDB API read access token                                                |
+| `SMTP_HOST`            | No       | `localhost`             | SMTP server host                                                          |
+| `SMTP_PORT`            | No       | `587`                   | SMTP server port                                                          |
+| `SMTP_SECURE`          | No       | `false`                 | Use TLS/SSL for SMTP                                                      |
+| `SMTP_FROM_ADDRESS`    | Yes      | —                       | From address for outgoing emails                                          |
+| `SMTP_FROM_NAME`       | No       | `Media Watchlist`       | From display name for outgoing emails                                     |
+| `SMTP_USER`            | No       | —                       | SMTP username                                                             |
+| `SMTP_PASS`            | No       | —                       | SMTP password                                                             |
+| `LOG_LEVEL`            | No       | `info`                  | Log level: `fatal`, `error`, `warning`, `info`, `debug`, or `trace`       |
+| `VITE_*`               | No       | —                       | Runtime config for the web app, served as `window.__ENV__` from `/env.js` |
 
 ## API Documentation
 
-Interactive documentation with a request explorer is served at [`/reference`](http://localhost:3000/reference).
+Interactive documentation with a request explorer is served at [`/scalar`](http://localhost:3000/scalar).
 
 The raw OpenAPI specs are also available:
 

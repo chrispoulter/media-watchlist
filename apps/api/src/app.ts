@@ -1,8 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Hono } from 'hono';
 import { OpenAPIHono } from '@hono/zod-openapi';
+import { serveStatic } from '@hono/node-server/serve-static';
 import { bodyLimit } from 'hono/body-limit';
 import { honoLogger } from '@logtape/hono';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { errorHandler } from './middleware/error-handler.js';
 import { notFoundHandler } from './middleware/not-found-handler.js';
 import type { ErrorResponse } from './types/index.js';
@@ -11,6 +14,7 @@ import './lib/logger.js';
 
 import { registerDocRoutes } from './routes/doc-routes.js';
 import healthRoutes from './routes/health-routes.js';
+import envRoutes from './routes/env-routes.js';
 import authRoutes from './routes/auth-routes.js';
 import profileRoutes from './routes/profile-routes.js';
 import searchRoutes from './routes/search-routes.js';
@@ -40,10 +44,16 @@ app.route('/api/auth', authRoutes);
 app.route('/api/profile', profileRoutes);
 app.route('/api/search', searchRoutes);
 app.route('/api/watchlist', watchlistRoutes);
+app.all('/api/*', notFoundHandler);
+
 app.route('/', healthRoutes);
+app.route('/', envRoutes);
 
 registerDocRoutes(app);
 
-app.get('/', (c) => c.redirect('/reference'));
+const publicDir = fileURLToPath(new URL('../public', import.meta.url));
+
+app.get('*', serveStatic({ root: publicDir }));
+app.get('*', serveStatic({ path: join(publicDir, 'index.html') }));
 
 export default app;

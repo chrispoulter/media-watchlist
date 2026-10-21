@@ -36,7 +36,7 @@ export function registerDocRoutes(app: OpenAPIHono) {
     });
 
     app.get(
-        '/reference',
+        '/scalar',
         Scalar({
             pageTitle: 'Media Watchlist API',
             sources: [

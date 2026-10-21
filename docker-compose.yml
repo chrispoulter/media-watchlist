@@ -1,18 +1,4 @@
 services:
-    web:
-        image: media-watchlist-web:latest
-        build:
-            context: .
-            dockerfile: apps/web/Dockerfile
-        environment:
-            API_URL: http://api:3000
-            # VITE_FEATURE_X: ${VITE_FEATURE_X:-}
-        ports:
-            - 5173:80
-        depends_on:
-            api:
-                condition: service_healthy
-
     api:
         image: media-watchlist-api:latest
         build:
@@ -21,7 +7,7 @@ services:
         environment:
             PORT: 3000
             DATABASE_URL: postgresql://postgres:password@postgres:5432/media_watchlist
-            BETTER_AUTH_URL: http://localhost:5173
+            BETTER_AUTH_URL: http://localhost:3000
             BETTER_AUTH_SECRET: change-me-to-a-secret-that-is-at-least-32-chars
             GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
             GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
@@ -31,6 +17,7 @@ services:
             SMTP_FROM_ADDRESS: media-watchlist@chrispoulter.com
             SMTP_FROM_NAME: Media Watchlist
             LOG_LEVEL: info
+            # VITE_FEATURE_X: ${VITE_FEATURE_X:-}
         ports:
             - 3000:3000
         healthcheck:

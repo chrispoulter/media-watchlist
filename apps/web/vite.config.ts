@@ -29,7 +29,11 @@ export default defineConfig(({ mode }) => {
             proxy: {
                 '/api': {
                     target: env.API_URL || 'http://localhost:3000',
-                    changeOrigin: true,
+                    xfwd: true,
+                },
+                '/env.js': {
+                    target: env.API_URL || 'http://localhost:3000',
+                    xfwd: true,
                 },
             },
         },
