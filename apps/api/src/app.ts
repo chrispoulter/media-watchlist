@@ -3,6 +3,7 @@ import { Hono } from 'hono';
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { bodyLimit } from 'hono/body-limit';
+import { compress } from 'hono/compress';
 import { honoLogger } from '@logtape/hono';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -33,6 +34,8 @@ app.use(
     })
 );
 
+app.use(compress());
+
 app.use(
     honoLogger({
         skip: (c) => c.req.path === '/health' || c.req.path === '/alive',
@@ -53,7 +56,10 @@ registerDocRoutes(app);
 
 const publicDir = fileURLToPath(new URL('../public', import.meta.url));
 
-app.get('*', serveStatic({ root: publicDir }));
-app.get('*', serveStatic({ path: join(publicDir, 'index.html') }));
+app.get(
+    '*',
+    serveStatic({ root: publicDir }),
+    serveStatic({ path: join(publicDir, 'index.html') })
+);
 
 export default app;
