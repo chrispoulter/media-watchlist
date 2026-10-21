@@ -15,7 +15,7 @@ import './lib/logger.js';
 
 import { registerDocRoutes } from './routes/doc-routes.js';
 import healthRoutes from './routes/health-routes.js';
-import envRoutes from './routes/env-routes.js';
+import clientRoutes from './routes/client-routes.js';
 import authRoutes from './routes/auth-routes.js';
 import profileRoutes from './routes/profile-routes.js';
 import searchRoutes from './routes/search-routes.js';
@@ -50,7 +50,7 @@ app.route('/api/watchlist', watchlistRoutes);
 app.all('/api/*', notFoundHandler);
 
 app.route('/', healthRoutes);
-app.route('/', envRoutes);
+app.route('/', clientRoutes);
 
 registerDocRoutes(app);
 
