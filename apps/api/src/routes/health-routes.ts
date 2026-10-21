@@ -1,4 +1,3 @@
-import { createRoute, z } from '@hono/zod-openapi';
 import { createRouter } from '../lib/create-router.js';
 import { version } from '../lib/config.js';
 
@@ -8,35 +7,7 @@ import { check as checkTmdb } from '../lib/tmdb.js';
 
 const router = createRouter();
 
-const healthResponseSchema = z.object({
-    status: z.enum(['ok', 'unhealthy']),
-    version: z.string().openapi({ example: '1.0.0' }),
-    uptime: z.number(),
-    services: z.array(
-        z.object({
-            name: z.string(),
-            status: z.enum(['ok', 'unhealthy']),
-        })
-    ),
-});
-
-const healthRoute = createRoute({
-    method: 'get',
-    path: '/health',
-    hide: true,
-    responses: {
-        200: {
-            description: 'OK',
-            content: { 'application/json': { schema: healthResponseSchema } },
-        },
-        503: {
-            description: 'Service Unavailable',
-            content: { 'application/json': { schema: healthResponseSchema } },
-        },
-    },
-});
-
-router.openapi(healthRoute, async (c) => {
+router.get('/health', async (c) => {
     const services = await Promise.all([
         checkDatabase(),
         checkMailer(),
@@ -56,33 +27,12 @@ router.openapi(healthRoute, async (c) => {
     );
 });
 
-const aliveResponseSchema = z.object({
-    status: z.literal('ok'),
-    version: z.string().openapi({ example: '1.0.0' }),
-    uptime: z.number(),
-});
-
-const aliveRoute = createRoute({
-    method: 'get',
-    path: '/alive',
-    hide: true,
-    responses: {
-        200: {
-            description: 'OK',
-            content: { 'application/json': { schema: aliveResponseSchema } },
-        },
-    },
-});
-
-router.openapi(aliveRoute, (c) => {
-    return c.json(
-        {
-            status: 'ok' as const,
-            version,
-            uptime: process.uptime(),
-        },
-        200
-    );
+router.get('/alive', (c) => {
+    return c.json({
+        status: 'ok',
+        version,
+        uptime: process.uptime(),
+    });
 });
 
 export default router;
