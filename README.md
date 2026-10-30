@@ -10,7 +10,7 @@ A full-stack app for searching movies and TV shows (via TMDB) and keeping a pers
 
 ## Prerequisites
 
-- Node.js 24+
+- Node.js 26+
 - npm 11
 - Docker (for Postgres/Mailpit locally, or running the full stack)
 - A [TMDB](https://www.themoviedb.org/) API read access token
@@ -59,7 +59,7 @@ docker compose up --build
 
 ## CI/CD
 
-The [CI workflow](.github/workflows/ci.yml) runs on pushes to `main`, `develop`, `feature/**`, `release/**` and `hotfix/**`. It lints, type checks and builds all workspaces using Node.js 24, then builds the API and web Docker images and pushes them to GitHub Container Registry (`latest` on `main`, branch name otherwise, plus the short commit SHA).
+The [CI workflow](.github/workflows/ci.yml) runs on pushes to `main`, `develop`, `feature/**`, `release/**` and `hotfix/**`. It lints, type checks and builds all workspaces using Node.js 26, then builds the API and web Docker images and pushes them to GitHub Container Registry (`latest` on `main`, branch name otherwise, plus the short commit SHA).
 
 ## License
 

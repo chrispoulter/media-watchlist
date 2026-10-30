@@ -3,7 +3,7 @@
     "private": true,
     "version": "1.0.0",
     "engines": {
-        "node": ">=24.0.0"
+        "node": ">=26.0.0"
     },
     "packageManager": "npm@11.13.0",
     "workspaces": [
@@ -26,6 +26,6 @@
     "devDependencies": {
         "prettier": "^3.9.6",
         "prettier-plugin-tailwindcss": "^0.8.0",
-        "turbo": "^2.11.6"
+        "turbo": "^2.11.10"
     }
 }

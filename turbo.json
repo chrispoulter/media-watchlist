@@ -1,5 +1,5 @@
 {
-    "$schema": "https://v2-11-6.turborepo.dev/schema.json",
+    "$schema": "https://v2-11-10.turborepo.dev/schema.json",
     "globalPassThroughEnv": [
         "NODE_ENV",
         "PORT",
@@ -22,7 +22,11 @@
     ],
     "tasks": {
         "build": {
-            "env": ["VERCEL_GIT_COMMIT_SHA", "GIT_COMMIT_SHA", "npm_package_version"],
+            "env": [
+                "VERCEL_GIT_COMMIT_SHA",
+                "GIT_COMMIT_SHA",
+                "npm_package_version"
+            ],
             "dependsOn": ["^build"],
             "inputs": ["$TURBO_DEFAULT$", ".env*"],
             "outputs": ["dist/**"]
