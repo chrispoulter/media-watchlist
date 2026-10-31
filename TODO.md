@@ -1,6 +1,6 @@
 # TODO
 
--
+- cloudflare hosting /azure hosting ?
 
 ## Bugfixes
 

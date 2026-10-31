@@ -45,11 +45,12 @@ const listRoute = createRoute({
     method: 'get',
     path: '/',
     tags: ['Watchlist'],
-    summary: 'Get all watchlist items for the current user',
+    summary: 'Get Watchlist',
+    description: "List the items in the current user's watchlist, in order.",
     security: [{ cookieAuth: [] }],
     responses: {
         200: {
-            description: 'List of watchlist items.',
+            description: 'OK',
             content: {
                 'application/json': { schema: watchlistResponseSchema },
             },
@@ -88,7 +89,9 @@ const addRoute = createRoute({
     method: 'post',
     path: '/',
     tags: ['Watchlist'],
-    summary: 'Add an item to the watchlist',
+    summary: 'Add To Watchlist',
+    description:
+        "Add an item to the end of the current user's watchlist, up to a limit of 100 items.",
     security: [{ cookieAuth: [] }],
     request: {
         body: {
@@ -98,11 +101,11 @@ const addRoute = createRoute({
     },
     responses: {
         201: {
-            description: 'Item added to watchlist.',
+            description: 'Created',
             content: { 'application/json': { schema: watchlistItemSchema } },
         },
         400: {
-            description: 'Invalid request body.',
+            description: 'Bad Request',
             content: { 'application/json': { schema: errorResponseSchema } },
         },
         401: {
@@ -110,11 +113,11 @@ const addRoute = createRoute({
             content: { 'application/json': { schema: errorResponseSchema } },
         },
         409: {
-            description: 'Item already exists in watchlist.',
+            description: 'Conflict',
             content: { 'application/json': { schema: errorResponseSchema } },
         },
         429: {
-            description: 'Watchlist limit of items reached.',
+            description: 'Too Many Requests',
             content: { 'application/json': { schema: errorResponseSchema } },
         },
         500: {
@@ -205,9 +208,9 @@ const reorderRoute = createRoute({
     method: 'put',
     path: '/order',
     tags: ['Watchlist'],
-    summary: 'Set the order of the watchlist',
+    summary: 'Reorder Watchlist',
     description:
-        'Accepts every watchlist item id for the current user, in the desired order.',
+        "Set the order of the current user's watchlist. Every item must be included exactly once.",
     security: [{ cookieAuth: [] }],
     request: {
         body: {
@@ -216,10 +219,9 @@ const reorderRoute = createRoute({
         },
     },
     responses: {
-        204: { description: 'Watchlist reordered.' },
+        204: { description: 'No Content' },
         400: {
-            description:
-                'Invalid request body, or ids do not match the current watchlist.',
+            description: 'Bad Request',
             content: { 'application/json': { schema: errorResponseSchema } },
         },
         401: {
@@ -297,7 +299,8 @@ const deleteRoute = createRoute({
     method: 'delete',
     path: '/{id}',
     tags: ['Watchlist'],
-    summary: 'Remove an item from the watchlist',
+    summary: 'Remove From Watchlist',
+    description: "Remove an item from the current user's watchlist.",
     security: [{ cookieAuth: [] }],
     request: {
         params: z.object({
@@ -305,9 +308,9 @@ const deleteRoute = createRoute({
         }),
     },
     responses: {
-        204: { description: 'Item removed.' },
+        204: { description: 'No Content' },
         400: {
-            description: 'Invalid request parameters.',
+            description: 'Bad Request',
             content: { 'application/json': { schema: errorResponseSchema } },
         },
         401: {
@@ -315,7 +318,7 @@ const deleteRoute = createRoute({
             content: { 'application/json': { schema: errorResponseSchema } },
         },
         404: {
-            description: 'Item not found in watchlist.',
+            description: 'Not Found',
             content: { 'application/json': { schema: errorResponseSchema } },
         },
         500: {

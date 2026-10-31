@@ -3,6 +3,12 @@ name: CI
 on:
     push:
         branches: ['main', 'develop', 'feature/**', 'release/**', 'hotfix/**']
+        paths-ignore:
+            - '**.md'
+            - '.vscode/**'
+            - '**/.gitignore'
+            - '**/.env.example'
+            - 'LICENSE'
     workflow_dispatch:
 
 concurrency:
@@ -14,11 +20,11 @@ jobs:
         name: Build, Test and Lint
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
 
-            - uses: actions/setup-node@v6
+            - uses: actions/setup-node@v7
               with:
-                  node-version: 24
+                  node-version: 26
                   cache: 'npm'
 
             - run: npm ci
@@ -48,7 +54,7 @@ jobs:
                       dockerfile: apps/web/Dockerfile
         steps:
             - name: Checkout code
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
 
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v4

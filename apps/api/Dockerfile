@@ -1,4 +1,4 @@
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 
 FROM base AS pruner
 WORKDIR /app
@@ -17,7 +17,7 @@ RUN npx turbo run build --filter=@media-watchlist/api
 FROM base AS prod-deps
 WORKDIR /app
 COPY --from=pruner /app/out/json/ .
-RUN npm ci --omit=dev && npm cache clean --force
+RUN npm ci --omit=dev --omit=optional && npm cache clean --force
 
 FROM base AS runner
 WORKDIR /app

@@ -12,6 +12,7 @@ import './lib/logger.js';
 import { registerDocRoutes } from './routes/doc-routes.js';
 import healthRoutes from './routes/health-routes.js';
 import authRoutes from './routes/auth-routes.js';
+import profileRoutes from './routes/profile-routes.js';
 import searchRoutes from './routes/search-routes.js';
 import watchlistRoutes from './routes/watchlist-routes.js';
 
@@ -36,6 +37,7 @@ app.use(
 );
 
 app.route('/api/auth', authRoutes);
+app.route('/api/profile', profileRoutes);
 app.route('/api/search', searchRoutes);
 app.route('/api/watchlist', watchlistRoutes);
 app.route('/', healthRoutes);

@@ -27,7 +27,9 @@ const searchRoute = createRoute({
     method: 'get',
     path: '/',
     tags: ['Search'],
-    summary: 'Search for movies and TV shows',
+    summary: 'Search',
+    description:
+        "Search for movies and TV shows, flagging any already in the current user's watchlist.",
     security: [{ cookieAuth: [] }],
     request: {
         query: z.object({
@@ -36,11 +38,11 @@ const searchRoute = createRoute({
     },
     responses: {
         200: {
-            description: 'Search results.',
+            description: 'OK',
             content: { 'application/json': { schema: searchResponseSchema } },
         },
         400: {
-            description: 'Invalid request query.',
+            description: 'Bad Request',
             content: { 'application/json': { schema: errorResponseSchema } },
         },
         401: {
