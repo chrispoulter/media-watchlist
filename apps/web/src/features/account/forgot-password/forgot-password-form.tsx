@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -16,8 +15,11 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
 export function ForgotPasswordForm() {
-    const [isSent, setIsSent] = useState(false);
-    const { mutate: forgotPassword, isPending } = useForgotPassword();
+    const {
+        mutate: forgotPassword,
+        isPending,
+        isSuccess,
+    } = useForgotPassword();
 
     const form = useForm<ForgotPasswordFormValues>({
         resolver: zodResolver(forgotPasswordSchema),
@@ -26,12 +28,11 @@ export function ForgotPasswordForm() {
 
     const onSubmit = (values: ForgotPasswordFormValues) =>
         forgotPassword(values.email, {
-            onSuccess: () => setIsSent(true),
             onError: (err) =>
                 toast.error(err.message || 'Failed to send reset email'),
         });
 
-    if (isSent) {
+    if (isSuccess) {
         return (
             <Alert>
                 <AlertDescription>
