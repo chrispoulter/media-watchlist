@@ -45,7 +45,6 @@ export function RegisterForm() {
             },
             {
                 onSuccess: async () => {
-                    toast.success('Account created! Welcome.');
                     await navigate('/');
                 },
                 onError: (err) =>
