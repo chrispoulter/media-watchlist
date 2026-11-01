@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { toast } from 'sonner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -6,22 +5,24 @@ import { authClient } from '@/lib/auth-client';
 import { useSetPasswordReset } from '../profile-queries';
 
 export function SetPasswordForm() {
-    const [isSent, setIsSent] = useState(false);
     const { data: session } = authClient.useSession();
-    const { mutate: requestReset, isPending } = useSetPasswordReset();
+    const {
+        mutate: requestReset,
+        isPending,
+        isSuccess,
+    } = useSetPasswordReset();
 
     const email = session?.user.email ?? '';
 
     const handleSend = () =>
         requestReset(email, {
-            onSuccess: () => setIsSent(true),
             onError: (err) =>
                 toast.error(
                     err.message || 'Failed to send password setup email'
                 ),
         });
 
-    if (isSent) {
+    if (isSuccess) {
         return (
             <Alert>
                 <AlertDescription>

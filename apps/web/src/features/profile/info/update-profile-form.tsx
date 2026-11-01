@@ -18,12 +18,12 @@ export function UpdateProfileForm() {
     const { data: session } = authClient.useSession();
     const { mutate: updateUser, isPending } = useUpdateUser();
 
-    const user = session?.user;
+    const name = session?.user.name ?? '';
 
     const form = useForm<UpdateProfileFormValues>({
         resolver: zodResolver(updateProfileSchema),
         defaultValues: {
-            name: user?.name ?? '',
+            name,
         },
     });
 
