@@ -8,11 +8,15 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Metadata } from '@/components/metadata';
+import { authClient } from '@/lib/auth-client';
 import { personalDataUrl } from '../profile-queries';
 import { UpdateProfileForm } from './update-profile-form';
 import { UpdateEmailForm } from './update-email-form';
+import { VerifyEmailForm } from './verify-email-form';
 
 export function ProfileTab() {
+    const { data: session } = authClient.useSession();
+
     return (
         <>
             <Metadata title="Profile" />
@@ -31,10 +35,27 @@ export function ProfileTab() {
                     </CardContent>
                 </Card>
 
+                {session && !session.user.emailVerified && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>
+                                <h2>Verify Email Address</h2>
+                            </CardTitle>
+                            <CardDescription>
+                                Verify your email address so you can recover
+                                your account if you forget your password
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <VerifyEmailForm />
+                        </CardContent>
+                    </Card>
+                )}
+
                 <Card>
                     <CardHeader>
                         <CardTitle>
-                            <h2>Email Address</h2>
+                            <h2>Update Email Address</h2>
                         </CardTitle>
                         <CardDescription>
                             Update your email address — a verification link will

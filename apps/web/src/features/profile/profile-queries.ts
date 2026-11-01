@@ -30,6 +30,16 @@ export function useChangeEmail() {
     });
 }
 
+export function useSendVerificationEmail() {
+    return useMutation({
+        mutationFn: (email: string) =>
+            authClient.sendVerificationEmail({
+                email,
+                callbackURL: `${window.location.origin}/profile`,
+            }),
+    });
+}
+
 interface ChangePasswordVariables {
     currentPassword: string;
     newPassword: string;

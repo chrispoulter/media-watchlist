@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSearchParams } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,9 +24,16 @@ type UpdateEmailFormValues = z.infer<typeof updateEmailSchema>;
 
 export function UpdateEmailForm() {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [pendingEmail, setPendingEmail] = useState<string | null>(null);
     const { data: session } = authClient.useSession();
-    const { mutate: changeEmail, isPending } = useChangeEmail();
+    const {
+        mutate: changeEmail,
+        isPending,
+        isSuccess,
+        variables: pendingEmail,
+        reset,
+    } = useChangeEmail();
+
+    const email = session?.user.email ?? '';
 
     useEffect(() => {
         const error = searchParams.get('error');
@@ -49,21 +56,18 @@ export function UpdateEmailForm() {
 
     const onSubmit = (values: UpdateEmailFormValues) =>
         changeEmail(values.newEmail, {
-            onSuccess: () => {
-                setPendingEmail(values.newEmail);
-                form.reset();
-            },
+            onSuccess: () => form.reset(),
             onError: (err) =>
                 toast.error(err.message || 'Failed to update email'),
         });
 
-    if (pendingEmail) {
+    if (isSuccess) {
         return (
             <div className="space-y-4">
                 <p className="text-sm text-muted-foreground">
                     Current email:{' '}
                     <span className="font-medium break-all text-foreground">
-                        {session?.user.email}
+                        {email}
                     </span>
                 </p>
                 <Alert>
@@ -83,7 +87,7 @@ export function UpdateEmailForm() {
                 </Alert>
                 <Button
                     variant="outline"
-                    onClick={() => setPendingEmail(null)}
+                    onClick={reset}
                     className="w-full sm:w-auto"
                 >
                     Use a Different Email
@@ -97,7 +101,7 @@ export function UpdateEmailForm() {
             <p className="text-sm text-muted-foreground">
                 Current email:{' '}
                 <span className="font-medium break-all text-foreground">
-                    {session?.user.email}
+                    {email}
                 </span>
             </p>
             <form onSubmit={form.handleSubmit(onSubmit)}>
