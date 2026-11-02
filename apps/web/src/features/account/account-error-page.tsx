@@ -6,19 +6,19 @@ import { AccountLayout } from './account-layout';
 
 const ERROR_MESSAGES: Record<string, string> = {
     account_not_linked:
-        "An account with this email already exists, but its email hasn't been verified. Sign in with your password and verify your email from your profile, then try Google again.",
+        "An account with this email already exists, but its email hasn't been verified. Sign in with your password and verify your email from your profile, then try again.",
     "email_doesn't_match":
-        "The Google account email doesn't match your account email. Please link a Google account that uses the same email address.",
+        "The email on this social account doesn't match your account email. Please link an account that uses the same email address.",
     account_already_linked_to_different_user:
-        'This Google account is already linked to a different user. Please use a different Google account.',
+        'This social account is already linked to a different user. Please use a different account.',
     unable_to_link_account:
         'Unable to link this account. Please try again or contact support if the issue persists.',
     invalid_code:
         'The authentication code was invalid or expired. Please try signing in again.',
     unable_to_get_user_info:
-        'Could not retrieve your account information from Google. Please try again.',
+        'Could not retrieve your account information from the sign-in provider. Please try again.',
     email_not_found:
-        'No email address was returned by Google. Please ensure your Google account has a verified email.',
+        'No email address was returned by the sign-in provider. Please ensure your account with them has a verified email.',
     oauth_provider_not_found:
         'The requested sign-in provider is not configured. Please contact support.',
 };

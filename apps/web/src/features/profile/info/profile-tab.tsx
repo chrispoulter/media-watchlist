@@ -42,8 +42,8 @@ export function ProfileTab() {
                                 <h2>Verify Email Address</h2>
                             </CardTitle>
                             <CardDescription>
-                                Verify your email address so you can recover
-                                your account if you forget your password
+                                Verify your email address so you can use social
+                                sign-in with the same address
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
