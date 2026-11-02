@@ -5,6 +5,8 @@ import { Metadata } from '@/components/metadata';
 import { AccountLayout } from './account-layout';
 
 const ERROR_MESSAGES: Record<string, string> = {
+    account_not_linked:
+        "An account with this email already exists, but its email hasn't been verified. Sign in with your password and verify your email from your profile, then try Google again.",
     "email_doesn't_match":
         "The Google account email doesn't match your account email. Please link a Google account that uses the same email address.",
     account_already_linked_to_different_user:
