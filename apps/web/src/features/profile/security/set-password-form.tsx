@@ -33,7 +33,7 @@ export function SetPasswordForm() {
                     </p>
                     <p>
                         Once set, you'll be able to sign in with your email
-                        address in addition to Google.
+                        address in addition to your linked account.
                     </p>
                 </AlertDescription>
             </Alert>
