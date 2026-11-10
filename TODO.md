@@ -4,7 +4,7 @@
 
 ## Bugfixes
 
--
+- remove missing item
 
 ## Future
 
