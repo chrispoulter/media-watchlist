@@ -1,14 +1,37 @@
-import { Link } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { Metadata } from '@/components/metadata';
+import { useVerifyRecoveryCode, useVerifyTotpLogin } from '../account-queries';
 import { AccountLayout } from '../account-layout';
-import { TwoFactorForm } from './two-factor-form';
-import { RecoveryCodeForm } from './recovery-code-form';
+import { TwoFactorForm, type TwoFactorFormValues } from './two-factor-form';
+import {
+    RecoveryCodeForm,
+    type RecoveryCodeFormValues,
+} from './recovery-code-form';
 
 type TwoFactorMode = 'totp' | 'recovery';
 
 export function TwoFactorPage() {
+    const navigate = useNavigate();
+    const location = useLocation();
     const [mode, setMode] = useState<TwoFactorMode>('totp');
+
+    const { mutate: verifyTotp, isPending: isVerifyingTotp } =
+        useVerifyTotpLogin();
+    const { mutate: verifyRecoveryCode, isPending: isVerifyingRecoveryCode } =
+        useVerifyRecoveryCode();
+
+    const from = location.state?.from ?? '/';
+
+    const onSuccess = () => navigate(from, { replace: true });
+    const onError = (err: Error) => toast.error(err.message || 'Invalid code');
+
+    const onSubmitTotp = (values: TwoFactorFormValues) =>
+        verifyTotp(values.code, { onSuccess, onError });
+
+    const onSubmitRecoveryCode = (values: RecoveryCodeFormValues) =>
+        verifyRecoveryCode(values.code, { onSuccess, onError });
 
     return (
         <AccountLayout
@@ -30,10 +53,18 @@ export function TwoFactorPage() {
             <Metadata title="Two-Factor Authentication" />
 
             {mode === 'totp' && (
-                <TwoFactorForm onBack={() => setMode('recovery')} />
+                <TwoFactorForm
+                    loading={isVerifyingTotp}
+                    onSubmit={onSubmitTotp}
+                    onUseRecoveryCode={() => setMode('recovery')}
+                />
             )}
             {mode === 'recovery' && (
-                <RecoveryCodeForm onBack={() => setMode('totp')} />
+                <RecoveryCodeForm
+                    loading={isVerifyingRecoveryCode}
+                    onSubmit={onSubmitRecoveryCode}
+                    onUseAuthenticator={() => setMode('totp')}
+                />
             )}
         </AccountLayout>
     );

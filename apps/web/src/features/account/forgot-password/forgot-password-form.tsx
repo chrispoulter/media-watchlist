@@ -1,50 +1,29 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { toast } from 'sonner';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { useForgotPassword } from '../account-queries';
 
 const forgotPasswordSchema = z.object({
     email: z.email('Invalid email address'),
 });
 
-type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
+export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
-export function ForgotPasswordForm() {
-    const {
-        mutate: forgotPassword,
-        isPending,
-        isSuccess,
-    } = useForgotPassword();
+interface ForgotPasswordFormProps {
+    loading?: boolean;
+    onSubmit: (values: ForgotPasswordFormValues) => void;
+}
 
+export function ForgotPasswordForm({
+    loading,
+    onSubmit,
+}: ForgotPasswordFormProps) {
     const form = useForm<ForgotPasswordFormValues>({
         resolver: zodResolver(forgotPasswordSchema),
         defaultValues: { email: '' },
     });
-
-    const onSubmit = (values: ForgotPasswordFormValues) =>
-        forgotPassword(values.email, {
-            onError: (err) =>
-                toast.error(err.message || 'Failed to send reset email'),
-        });
-
-    if (isSuccess) {
-        return (
-            <Alert>
-                <AlertDescription>
-                    <p>
-                        If an account with that email exists, we've sent a
-                        password reset link.
-                    </p>
-                    <p>Please check your inbox.</p>
-                </AlertDescription>
-            </Alert>
-        );
-    }
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -58,8 +37,8 @@ export function ForgotPasswordForm() {
                     autoComplete="email"
                 />
 
-                <Button type="submit" disabled={isPending}>
-                    {isPending ? 'Sending...' : 'Send Reset Link'}
+                <Button type="submit" disabled={loading}>
+                    {loading ? 'Sending...' : 'Send Reset Link'}
                 </Button>
             </FieldGroup>
         </form>

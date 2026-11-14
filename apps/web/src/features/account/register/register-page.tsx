@@ -1,11 +1,28 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 import { Metadata } from '@/components/metadata';
+import { useSignUp } from '../account-queries';
 import { AccountLayout } from '../account-layout';
 import { SocialLoginButtons } from '../social-login-buttons';
-import { RegisterForm } from './register-form';
+import { RegisterForm, type RegisterFormValues } from './register-form';
 
 export function RegisterPage() {
+    const navigate = useNavigate();
+    const { mutate: signUp, isPending } = useSignUp();
+
+    const onSubmit = ({ name, email, password }: RegisterFormValues) =>
+        signUp(
+            { email, password, name },
+            {
+                onSuccess: async () => {
+                    await navigate('/');
+                },
+                onError: (err) =>
+                    toast.error(err.message || 'Registration failed'),
+            }
+        );
+
     return (
         <AccountLayout
             title="Create an Account"
@@ -34,7 +51,7 @@ export function RegisterPage() {
                 </span>
             </div>
 
-            <RegisterForm />
+            <RegisterForm loading={isPending} onSubmit={onSubmit} />
         </AccountLayout>
     );
 }

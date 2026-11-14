@@ -11,7 +11,7 @@ import { Metadata } from '@/components/metadata';
 import { socialProviders } from '@/lib/social-providers';
 import { useAccounts } from '../profile-queries';
 import { ChangePasswordForm } from './change-password-form';
-import { SetPasswordForm } from './set-password-form';
+import { SetPassword } from './set-password';
 import { TwoFactorSettings } from './two-factor/two-factor-settings';
 import { LinkedAccounts } from './linked-accounts';
 
@@ -78,7 +78,7 @@ export function SecurityTab() {
                             {hasCredentialAccount ? (
                                 <ChangePasswordForm />
                             ) : (
-                                <SetPasswordForm />
+                                <SetPassword />
                             )}
                         </CardContent>
                     </Card>

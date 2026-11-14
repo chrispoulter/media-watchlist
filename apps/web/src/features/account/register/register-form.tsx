@@ -1,12 +1,9 @@
-import { useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { toast } from 'sonner';
 import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { useSignUp } from '../account-queries';
 
 const registerSchema = z
     .object({
@@ -20,12 +17,14 @@ const registerSchema = z
         path: ['confirmPassword'],
     });
 
-type RegisterFormValues = z.infer<typeof registerSchema>;
+export type RegisterFormValues = z.infer<typeof registerSchema>;
 
-export function RegisterForm() {
-    const navigate = useNavigate();
-    const { mutate: signUp, isPending } = useSignUp();
+interface RegisterFormProps {
+    loading?: boolean;
+    onSubmit: (values: RegisterFormValues) => void;
+}
 
+export function RegisterForm({ loading, onSubmit }: RegisterFormProps) {
     const form = useForm<RegisterFormValues>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
@@ -35,22 +34,6 @@ export function RegisterForm() {
             confirmPassword: '',
         },
     });
-
-    const onSubmit = (values: RegisterFormValues) =>
-        signUp(
-            {
-                email: values.email,
-                password: values.password,
-                name: values.name,
-            },
-            {
-                onSuccess: async () => {
-                    await navigate('/');
-                },
-                onError: (err) =>
-                    toast.error(err.message || 'Registration failed'),
-            }
-        );
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -90,8 +73,8 @@ export function RegisterForm() {
                     autoComplete="new-password"
                 />
 
-                <Button type="submit" disabled={isPending}>
-                    {isPending ? 'Creating Account...' : 'Create Account'}
+                <Button type="submit" disabled={loading}>
+                    {loading ? 'Creating Account...' : 'Create Account'}
                 </Button>
             </FieldGroup>
         </form>

@@ -1,13 +1,9 @@
-import { useSearchParams, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { toast } from 'sonner';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { useResetPassword } from '../account-queries';
 
 const resetPasswordSchema = z
     .object({
@@ -21,44 +17,21 @@ const resetPasswordSchema = z
         path: ['confirmPassword'],
     });
 
-type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
+export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
-export function ResetPasswordForm() {
-    const [searchParams] = useSearchParams();
-    const navigate = useNavigate();
-    const { mutate: resetPassword, isPending } = useResetPassword();
+interface ResetPasswordFormProps {
+    loading?: boolean;
+    onSubmit: (values: ResetPasswordFormValues) => void;
+}
 
-    const token = searchParams.get('token') ?? '';
-
+export function ResetPasswordForm({
+    loading,
+    onSubmit,
+}: ResetPasswordFormProps) {
     const form = useForm<ResetPasswordFormValues>({
         resolver: zodResolver(resetPasswordSchema),
         defaultValues: { newPassword: '', confirmPassword: '' },
     });
-
-    const onSubmit = (values: ResetPasswordFormValues) =>
-        resetPassword(
-            { newPassword: values.newPassword, token },
-            {
-                onSuccess: async () => {
-                    toast.success(
-                        'Password reset successfully. Please sign in.'
-                    );
-                    await navigate('/login');
-                },
-                onError: (err) =>
-                    toast.error(err.message || 'Failed to reset password'),
-            }
-        );
-
-    if (!token) {
-        return (
-            <Alert variant="destructive">
-                <AlertDescription>
-                    Invalid or expired reset link. Please request a new one.
-                </AlertDescription>
-            </Alert>
-        );
-    }
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -81,8 +54,8 @@ export function ResetPasswordForm() {
                     autoComplete="new-password"
                 />
 
-                <Button type="submit" disabled={isPending}>
-                    {isPending ? 'Resetting...' : 'Reset Password'}
+                <Button type="submit" disabled={loading}>
+                    {loading ? 'Resetting...' : 'Reset Password'}
                 </Button>
             </FieldGroup>
         </form>

@@ -1,42 +1,33 @@
-import { useNavigate, useLocation } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { toast } from 'sonner';
 import { FormOtpField } from '@/components/form/form-otp-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { useVerifyTotpLogin } from '../account-queries';
 
 const twoFactorSchema = z.object({
     code: z.string().length(6, 'Code must be 6 digits'),
 });
 
-type TwoFactorFormValues = z.infer<typeof twoFactorSchema>;
+export type TwoFactorFormValues = z.infer<typeof twoFactorSchema>;
 
 interface TwoFactorFormProps {
-    onBack?: () => void;
+    loading?: boolean;
+    onSubmit: (values: TwoFactorFormValues) => void;
+    onUseRecoveryCode: () => void;
 }
 
-export function TwoFactorForm({ onBack }: TwoFactorFormProps) {
-    const navigate = useNavigate();
-    const location = useLocation();
-
-    const { mutate: verifyTotp, isPending } = useVerifyTotpLogin();
-
+export function TwoFactorForm({
+    loading,
+    onSubmit,
+    onUseRecoveryCode,
+}: TwoFactorFormProps) {
     const form = useForm<TwoFactorFormValues>({
         resolver: zodResolver(twoFactorSchema),
         defaultValues: { code: '' },
         // HACK: prevent RHF from auto-focusing the first invalid field on submit, which breaks error state render
         shouldFocusError: false,
     });
-
-    const onSubmit = (values: TwoFactorFormValues) =>
-        verifyTotp(values.code, {
-            onSuccess: () =>
-                navigate(location.state?.from ?? '/', { replace: true }),
-            onError: (err) => toast.error(err.message || 'Invalid code'),
-        });
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -49,10 +40,14 @@ export function TwoFactorForm({ onBack }: TwoFactorFormProps) {
                     className="items-center *:w-auto"
                 />
 
-                <Button type="submit" disabled={isPending}>
-                    {isPending ? 'Verifying...' : 'Verify'}
+                <Button type="submit" disabled={loading}>
+                    {loading ? 'Verifying...' : 'Verify'}
                 </Button>
-                <Button type="button" variant="link" onClick={onBack}>
+                <Button
+                    type="button"
+                    variant="link"
+                    onClick={onUseRecoveryCode}
+                >
                     Use Recovery Code Instead
                 </Button>
             </FieldGroup>

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { authClient } from '@/lib/auth-client';
 import { useSetPasswordReset } from '../profile-queries';
 
-export function SetPasswordForm() {
+export function SetPassword() {
     const { data: session } = authClient.useSession();
     const {
         mutate: requestReset,

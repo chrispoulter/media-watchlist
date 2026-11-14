@@ -5,7 +5,6 @@ import { toast } from 'sonner';
 import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { authClient } from '@/lib/auth-client';
 import { useUpdateUser } from '../profile-queries';
 
 const updateProfileSchema = z.object({
@@ -14,11 +13,12 @@ const updateProfileSchema = z.object({
 
 type UpdateProfileFormValues = z.infer<typeof updateProfileSchema>;
 
-export function UpdateProfileForm() {
-    const { data: session } = authClient.useSession();
-    const { mutate: updateUser, isPending } = useUpdateUser();
+interface UpdateProfileFormProps {
+    name: string;
+}
 
-    const name = session?.user.name ?? '';
+export function UpdateProfileForm({ name }: UpdateProfileFormProps) {
+    const { mutate: updateUser, isPending } = useUpdateUser();
 
     const form = useForm<UpdateProfileFormValues>({
         resolver: zodResolver(updateProfileSchema),
