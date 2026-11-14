@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router';
+import { useCallback, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Metadata } from '@/components/metadata';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
     Empty,
@@ -14,31 +12,21 @@ import {
 } from '@/components/ui/empty';
 import { useAdminUsers } from '../admin-queries';
 import { CreateUserDialog } from './create-user-dialog';
+import { UsersSearchBar } from './users-search-bar';
 import { UsersTable } from './users-table';
 
 const PAGE_SIZE = 20;
-const SEARCH_DEBOUNCE_MS = 300;
+const MIN_SEARCH_LENGTH = 2;
 
 export function UsersPage() {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const search = searchParams.get('q') ?? '';
-    const page = Math.max(1, Number(searchParams.get('page')) || 1);
+    const [search, setSearch] = useState('');
+    const [page, setPage] = useState(1);
 
-    const [searchInput, setSearchInput] = useState(search);
-
-    useEffect(() => {
-        if (searchInput === search) {
-            return;
-        }
-
-        const timeout = setTimeout(() => {
-            setSearchParams(searchInput ? { q: searchInput } : {}, {
-                replace: true,
-            });
-        }, SEARCH_DEBOUNCE_MS);
-
-        return () => clearTimeout(timeout);
-    }, [searchInput, search, setSearchParams]);
+    const handleSearch = useCallback((query: string) => {
+        const trimmed = query.trim();
+        setSearch(trimmed.length >= MIN_SEARCH_LENGTH ? trimmed : '');
+        setPage(1);
+    }, []);
 
     const { data, isLoading, isPlaceholderData, error } = useAdminUsers({
         search,
@@ -49,25 +37,12 @@ export function UsersPage() {
     const total = data?.total ?? 0;
     const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
-    const goToPage = (nextPage: number) => {
-        const params = new URLSearchParams(searchParams);
-        params.set('page', String(nextPage));
-        setSearchParams(params);
-    };
-
     return (
         <>
             <Metadata title="Users" />
             <div className="space-y-4">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <Input
-                        type="search"
-                        placeholder="Search by email..."
-                        aria-label="Search users by email"
-                        value={searchInput}
-                        onChange={(e) => setSearchInput(e.target.value)}
-                        className="sm:max-w-xs"
-                    />
+                    <UsersSearchBar onSearch={handleSearch} />
                     <CreateUserDialog />
                 </div>
 
@@ -121,7 +96,7 @@ export function UsersPage() {
                                 variant="outline"
                                 size="icon-sm"
                                 aria-label="Previous page"
-                                onClick={() => goToPage(page - 1)}
+                                onClick={() => setPage(page - 1)}
                                 disabled={page <= 1}
                             >
                                 <ChevronLeft aria-hidden="true" />
@@ -130,7 +105,7 @@ export function UsersPage() {
                                 variant="outline"
                                 size="icon-sm"
                                 aria-label="Next page"
-                                onClick={() => goToPage(page + 1)}
+                                onClick={() => setPage(page + 1)}
                                 disabled={page >= pageCount}
                             >
                                 <ChevronRight aria-hidden="true" />
