@@ -1,26 +1,13 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { FieldGroup } from '@/components/ui/field';
-import { FormInputField } from '@/components/form/form-input-field';
 import { useUpdateAdminUser, type AdminUser } from '../admin-queries';
-
-const editUserSchema = z.object({
-    name: z.string().min(1, 'Name is required'),
-    email: z.email('Enter a valid email address'),
-});
-
-type EditUserFormValues = z.infer<typeof editUserSchema>;
+import { EditUserForm, type EditUserFormValues } from './edit-user-form';
 
 interface EditUserDialogProps {
     user: AdminUser;
@@ -33,6 +20,21 @@ export function EditUserDialog({
     open,
     onOpenChange,
 }: EditUserDialogProps) {
+    const { mutate: updateUser, isPending } = useUpdateAdminUser();
+
+    const onSubmit = (values: EditUserFormValues) =>
+        updateUser(
+            { userId: user.id, ...values },
+            {
+                onSuccess: () => {
+                    toast.success('User updated');
+                    onOpenChange(false);
+                },
+                onError: (err) =>
+                    toast.error(err.message || 'Failed to update user'),
+            }
+        );
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
@@ -42,64 +44,13 @@ export function EditUserDialog({
                         Update the name and email address for this account.
                     </DialogDescription>
                 </DialogHeader>
-                <EditUserForm user={user} onDone={() => onOpenChange(false)} />
+                <EditUserForm
+                    defaultValues={{ name: user.name, email: user.email }}
+                    loading={isPending}
+                    onSubmit={onSubmit}
+                    onCancel={() => onOpenChange(false)}
+                />
             </DialogContent>
         </Dialog>
-    );
-}
-
-interface EditUserFormProps {
-    user: AdminUser;
-    onDone: () => void;
-}
-
-function EditUserForm({ user, onDone }: EditUserFormProps) {
-    const { mutate: updateUser, isPending } = useUpdateAdminUser();
-
-    const form = useForm<EditUserFormValues>({
-        resolver: zodResolver(editUserSchema),
-        defaultValues: { name: user.name, email: user.email },
-    });
-
-    const onSubmit = (values: EditUserFormValues) =>
-        updateUser(
-            { userId: user.id, ...values },
-            {
-                onSuccess: () => {
-                    toast.success('User updated');
-                    onDone();
-                },
-                onError: (err) =>
-                    toast.error(err.message || 'Failed to update user'),
-            }
-        );
-
-    return (
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-            <FieldGroup>
-                <FormInputField
-                    control={form.control}
-                    name="name"
-                    label="Name"
-                    autoComplete="off"
-                />
-                <FormInputField
-                    control={form.control}
-                    name="email"
-                    label="Email"
-                    type="email"
-                    autoComplete="off"
-                />
-
-                <DialogFooter>
-                    <Button type="button" variant="outline" onClick={onDone}>
-                        Cancel
-                    </Button>
-                    <Button type="submit" disabled={isPending}>
-                        {isPending ? 'Saving...' : 'Save Changes'}
-                    </Button>
-                </DialogFooter>
-            </FieldGroup>
-        </form>
     );
 }
