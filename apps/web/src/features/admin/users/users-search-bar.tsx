@@ -6,6 +6,8 @@ import {
     InputGroupInput,
 } from '@/components/ui/input-group';
 
+const MIN_SEARCH_LENGTH = 2;
+
 interface UsersSearchBarProps {
     onSearch: (query: string) => void;
 }
@@ -15,7 +17,8 @@ function UsersSearchBarComponent({ onSearch }: UsersSearchBarProps) {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            onSearch(query);
+            const trimmed = query.trim();
+            onSearch(trimmed.length >= MIN_SEARCH_LENGTH ? trimmed : '');
         }, 300);
         return () => clearTimeout(timer);
     }, [query, onSearch]);

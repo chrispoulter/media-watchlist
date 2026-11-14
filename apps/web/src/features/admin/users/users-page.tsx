@@ -15,20 +15,18 @@ import { UsersSearchBar } from './users-search-bar';
 import { UsersTable } from './users-table';
 
 const PAGE_SIZE = 20;
-const MIN_SEARCH_LENGTH = 2;
 
 export function UsersPage() {
-    const [search, setSearch] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
     const [page, setPage] = useState(1);
 
     const handleSearch = useCallback((query: string) => {
-        const trimmed = query.trim();
-        setSearch(trimmed.length >= MIN_SEARCH_LENGTH ? trimmed : '');
+        setSearchQuery(query);
         setPage(1);
     }, []);
 
     const { data, isLoading, isPlaceholderData, error } = useAdminUsers({
-        search,
+        search: searchQuery,
         limit: PAGE_SIZE,
         offset: (page - 1) * PAGE_SIZE,
     });
@@ -64,7 +62,7 @@ export function UsersPage() {
                         <EmptyHeader>
                             <EmptyTitle>No users found</EmptyTitle>
                             <EmptyDescription>
-                                {search
+                                {searchQuery
                                     ? 'Try a different search term'
                                     : 'There are no user accounts yet'}
                             </EmptyDescription>
