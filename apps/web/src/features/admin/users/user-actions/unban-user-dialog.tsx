@@ -8,43 +8,38 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { useRemoveUser, type AdminUser } from '../admin-queries';
+import { useUnbanUser, type AdminUser } from '../../admin-queries';
 
-interface RemoveUserDialogProps {
+interface UnbanUserDialogProps {
     user: AdminUser;
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    onRemoved?: () => void;
 }
 
-export function RemoveUserDialog({
+export function UnbanUserDialog({
     user,
     open,
     onOpenChange,
-    onRemoved,
-}: RemoveUserDialogProps) {
-    const { mutate: removeUser, isPending } = useRemoveUser();
+}: UnbanUserDialogProps) {
+    const { mutate: unbanUser, isPending } = useUnbanUser();
 
-    const handleRemove = () =>
-        removeUser(user.id, {
+    const handleUnban = () =>
+        unbanUser(user.id, {
             onSuccess: () => {
                 onOpenChange(false);
-                toast.success('User deleted');
-                onRemoved?.();
+                toast.success('User unbanned');
             },
             onError: (err) =>
-                toast.error(err.message || 'Failed to delete user'),
+                toast.error(err.message || 'Failed to unban user'),
         });
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Delete {user.name}?</DialogTitle>
+                    <DialogTitle>Unban {user.name}?</DialogTitle>
                     <DialogDescription>
-                        This action cannot be undone. The account for{' '}
-                        {user.email} and all associated data, including their
-                        watchlist, will be permanently deleted.
+                        The user will be able to sign in again.
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
@@ -54,12 +49,8 @@ export function RemoveUserDialog({
                     >
                         Cancel
                     </Button>
-                    <Button
-                        variant="destructive"
-                        onClick={handleRemove}
-                        disabled={isPending}
-                    >
-                        {isPending ? 'Deleting...' : 'Delete'}
+                    <Button onClick={handleUnban} disabled={isPending}>
+                        {isPending ? 'Unbanning...' : 'Unban'}
                     </Button>
                 </DialogFooter>
             </DialogContent>

@@ -14,10 +14,10 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { useAdminUser } from '../admin-queries';
-import { RoleBadge, StatusBadge } from './user-badges';
-import { isBanned } from './user-utils';
-import { UserActionsMenu } from './user-actions-menu';
+import { useAdminUser } from '../../admin-queries';
+import { RoleBadge, StatusBadge } from '../user-badges';
+import { isBanned } from '../user-utils';
+import { UserActionsMenu } from '../user-actions/user-actions-menu';
 
 function formatDate(value: Date | string | null | undefined) {
     return value ? new Date(value).toLocaleString() : '—';

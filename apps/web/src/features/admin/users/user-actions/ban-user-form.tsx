@@ -6,7 +6,7 @@ import { DialogFooter } from '@/components/ui/dialog';
 import { FieldGroup } from '@/components/ui/field';
 import { FormSelectField } from '@/components/form/form-select-field';
 import { FormTextareaField } from '@/components/form/form-textarea-field';
-import { banDurations } from './user-utils';
+import { banDurations } from '../user-utils';
 
 const banUserSchema = z.object({
     reason: z.string().max(500),

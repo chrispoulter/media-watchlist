@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/table';
 import type { AdminUser } from '../admin-queries';
 import { RoleBadge, StatusBadge } from './user-badges';
-import { UserActionsMenu } from './user-actions-menu';
+import { UserActionsMenu } from './user-actions/user-actions-menu';
 
 interface UsersTableProps {
     users: AdminUser[];

@@ -6,7 +6,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { useUpdateAdminUser, type AdminUser } from '../admin-queries';
+import { useUpdateAdminUser, type AdminUser } from '../../admin-queries';
 import { EditUserForm, type EditUserFormValues } from './edit-user-form';
 
 interface EditUserDialogProps {

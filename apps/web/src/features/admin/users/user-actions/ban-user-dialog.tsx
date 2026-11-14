@@ -6,9 +6,9 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { useBanUser, type AdminUser } from '../admin-queries';
+import { useBanUser, type AdminUser } from '../../admin-queries';
 import { BanUserForm, type BanUserFormValues } from './ban-user-form';
-import { banDurations } from './user-utils';
+import { banDurations } from '../user-utils';
 
 interface BanUserDialogProps {
     user: AdminUser;

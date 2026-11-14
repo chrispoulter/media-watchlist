@@ -8,8 +8,8 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { authClient } from '@/lib/auth-client';
-import type { AdminUser } from '../admin-queries';
-import { isBanned } from './user-utils';
+import type { AdminUser } from '../../admin-queries';
+import { isBanned } from '../user-utils';
 import { EditUserDialog } from './edit-user-dialog';
 import { SetRoleDialog } from './set-role-dialog';
 import { BanUserDialog } from './ban-user-dialog';

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { DialogFooter } from '@/components/ui/dialog';
 import { FieldGroup } from '@/components/ui/field';
 import { FormSelectField } from '@/components/form/form-select-field';
-import { roleOptions } from './user-utils';
+import { roleOptions } from '../user-utils';
 
 const setRoleSchema = z.object({
     role: z.enum(['user', 'admin']),

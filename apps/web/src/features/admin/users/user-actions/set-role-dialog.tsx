@@ -7,7 +7,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { isAdmin } from '@/lib/auth-client';
-import { useSetRole, type AdminUser } from '../admin-queries';
+import { useSetRole, type AdminUser } from '../../admin-queries';
 import { SetRoleForm, type SetRoleFormValues } from './set-role-form';
 
 interface SetRoleDialogProps {
