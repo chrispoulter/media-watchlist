@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Metadata } from '@/components/metadata';
+import { Pagination } from '@/components/pagination';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
     Empty,
@@ -35,7 +34,6 @@ export function UsersPage() {
     });
 
     const total = data?.total ?? 0;
-    const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
     return (
         <>
@@ -83,36 +81,13 @@ export function UsersPage() {
                     </div>
                 )}
 
-                {total > 0 && (
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                        <span>
-                            {total} {total === 1 ? 'user' : 'users'}
-                        </span>
-                        <div className="flex items-center gap-2">
-                            <span>
-                                Page {page} of {pageCount}
-                            </span>
-                            <Button
-                                variant="outline"
-                                size="icon-sm"
-                                aria-label="Previous page"
-                                onClick={() => setPage(page - 1)}
-                                disabled={page <= 1}
-                            >
-                                <ChevronLeft aria-hidden="true" />
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="icon-sm"
-                                aria-label="Next page"
-                                onClick={() => setPage(page + 1)}
-                                disabled={page >= pageCount}
-                            >
-                                <ChevronRight aria-hidden="true" />
-                            </Button>
-                        </div>
-                    </div>
-                )}
+                <Pagination
+                    page={page}
+                    pageSize={PAGE_SIZE}
+                    total={total}
+                    onPageChange={setPage}
+                    summary={`${total} ${total === 1 ? 'user' : 'users'}`}
+                />
             </div>
         </>
     );
