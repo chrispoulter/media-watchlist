@@ -1,19 +1,18 @@
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { authClient } from '@/lib/auth-client';
 import { useSendVerificationEmail } from '../profile-queries';
 
-export function VerifyEmailForm() {
-    const { data: session } = authClient.useSession();
+interface VerifyEmailProps {
+    email: string;
+}
 
+export function VerifyEmail({ email }: VerifyEmailProps) {
     const {
         mutate: sendVerificationEmail,
         isPending,
         isSuccess,
     } = useSendVerificationEmail();
-
-    const email = session?.user.email ?? '';
 
     const handleSend = () =>
         sendVerificationEmail(email, {

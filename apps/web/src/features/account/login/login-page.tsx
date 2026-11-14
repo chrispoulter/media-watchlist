@@ -1,11 +1,32 @@
-import { Link } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
+import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 import { Metadata } from '@/components/metadata';
+import { useSignIn } from '../account-queries';
 import { AccountLayout } from '../account-layout';
 import { SocialLoginButtons } from '../social-login-buttons';
-import { LoginForm } from './login-form';
+import { LoginForm, type LoginFormValues } from './login-form';
 
 export function LoginPage() {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { mutate: signIn, isPending } = useSignIn();
+
+    const from = location.state?.from ?? '/';
+
+    const onSubmit = (values: LoginFormValues) =>
+        signIn(values, {
+            onSuccess: async (data) => {
+                if ('twoFactorRedirect' in data && data.twoFactorRedirect) {
+                    await navigate('/two-factor', { state: { from } });
+                    return;
+                }
+
+                await navigate(from, { replace: true });
+            },
+            onError: (err) => toast.error(err.message || 'Sign in failed'),
+        });
+
     return (
         <AccountLayout
             title="Welcome Back"
@@ -34,7 +55,7 @@ export function LoginPage() {
                 </span>
             </div>
 
-            <LoginForm />
+            <LoginForm loading={isPending} onSubmit={onSubmit} />
         </AccountLayout>
     );
 }

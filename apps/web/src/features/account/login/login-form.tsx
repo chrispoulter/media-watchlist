@@ -1,13 +1,11 @@
-import { useNavigate, useLocation, Link } from 'react-router';
+import { Link } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { toast } from 'sonner';
 import { FormCheckboxField } from '@/components/form/form-checkbox-field';
 import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { useSignIn } from '../account-queries';
 
 const loginSchema = z.object({
     email: z.email('Invalid email address'),
@@ -15,32 +13,18 @@ const loginSchema = z.object({
     rememberMe: z.boolean(),
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+export type LoginFormValues = z.infer<typeof loginSchema>;
 
-export function LoginForm() {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { mutate: signIn, isPending } = useSignIn();
+interface LoginFormProps {
+    loading?: boolean;
+    onSubmit: (values: LoginFormValues) => void;
+}
 
-    const from = location.state?.from ?? '/';
-
+export function LoginForm({ loading, onSubmit }: LoginFormProps) {
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
         defaultValues: { email: '', password: '', rememberMe: false },
     });
-
-    const onSubmit = (values: LoginFormValues) =>
-        signIn(values, {
-            onSuccess: async (data) => {
-                if ('twoFactorRedirect' in data && data.twoFactorRedirect) {
-                    await navigate('/two-factor', { state: { from } });
-                    return;
-                }
-
-                await navigate(from, { replace: true });
-            },
-            onError: (err) => toast.error(err.message || 'Sign in failed'),
-        });
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -77,8 +61,8 @@ export function LoginForm() {
                     </Link>
                 </div>
 
-                <Button type="submit" disabled={isPending}>
-                    {isPending ? 'Signing In...' : 'Sign In'}
+                <Button type="submit" disabled={loading}>
+                    {loading ? 'Signing In...' : 'Sign In'}
                 </Button>
             </FieldGroup>
         </form>

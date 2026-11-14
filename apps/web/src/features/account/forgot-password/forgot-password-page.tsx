@@ -1,9 +1,27 @@
 import { Link } from 'react-router';
+import { toast } from 'sonner';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Metadata } from '@/components/metadata';
+import { useForgotPassword } from '../account-queries';
 import { AccountLayout } from '../account-layout';
-import { ForgotPasswordForm } from './forgot-password-form';
+import {
+    ForgotPasswordForm,
+    type ForgotPasswordFormValues,
+} from './forgot-password-form';
 
 export function ForgotPasswordPage() {
+    const {
+        mutate: forgotPassword,
+        isPending,
+        isSuccess,
+    } = useForgotPassword();
+
+    const onSubmit = (values: ForgotPasswordFormValues) =>
+        forgotPassword(values.email, {
+            onError: (err) =>
+                toast.error(err.message || 'Failed to send reset email'),
+        });
+
     return (
         <AccountLayout
             title="Forgot Your Password?"
@@ -19,7 +37,19 @@ export function ForgotPasswordPage() {
         >
             <Metadata title="Forgot Password" />
 
-            <ForgotPasswordForm />
+            {isSuccess ? (
+                <Alert>
+                    <AlertDescription>
+                        <p>
+                            If an account with that email exists, we've sent a
+                            password reset link.
+                        </p>
+                        <p>Please check your inbox.</p>
+                    </AlertDescription>
+                </Alert>
+            ) : (
+                <ForgotPasswordForm loading={isPending} onSubmit={onSubmit} />
+            )}
         </AccountLayout>
     );
 }

@@ -1,9 +1,36 @@
-import { Link } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
+import { toast } from 'sonner';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Metadata } from '@/components/metadata';
+import { useResetPassword } from '../account-queries';
 import { AccountLayout } from '../account-layout';
-import { ResetPasswordForm } from './reset-password-form';
+import {
+    ResetPasswordForm,
+    type ResetPasswordFormValues,
+} from './reset-password-form';
 
 export function ResetPasswordPage() {
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const { mutate: resetPassword, isPending } = useResetPassword();
+
+    const token = searchParams.get('token') ?? '';
+
+    const onSubmit = (values: ResetPasswordFormValues) =>
+        resetPassword(
+            { newPassword: values.newPassword, token },
+            {
+                onSuccess: async () => {
+                    toast.success(
+                        'Password reset successfully. Please sign in.'
+                    );
+                    await navigate('/login');
+                },
+                onError: (err) =>
+                    toast.error(err.message || 'Failed to reset password'),
+            }
+        );
+
     return (
         <AccountLayout
             title="Reset your password"
@@ -19,7 +46,15 @@ export function ResetPasswordPage() {
         >
             <Metadata title="Reset Password" />
 
-            <ResetPasswordForm />
+            {token ? (
+                <ResetPasswordForm loading={isPending} onSubmit={onSubmit} />
+            ) : (
+                <Alert variant="destructive">
+                    <AlertDescription>
+                        Invalid or expired reset link. Please request a new one.
+                    </AlertDescription>
+                </Alert>
+            )}
         </AccountLayout>
     );
 }

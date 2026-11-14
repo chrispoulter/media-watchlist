@@ -12,10 +12,15 @@ import { authClient } from '@/lib/auth-client';
 import { personalDataUrl } from '../profile-queries';
 import { UpdateProfileForm } from './update-profile-form';
 import { UpdateEmailForm } from './update-email-form';
-import { VerifyEmailForm } from './verify-email-form';
+import { VerifyEmail } from './verify-email';
 
 export function ProfileTab() {
     const { data: session } = authClient.useSession();
+
+    // RequireAuth only renders this once the session has loaded
+    if (!session) {
+        return null;
+    }
 
     return (
         <>
@@ -31,11 +36,11 @@ export function ProfileTab() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <UpdateProfileForm />
+                        <UpdateProfileForm name={session.user.name} />
                     </CardContent>
                 </Card>
 
-                {session && !session.user.emailVerified && (
+                {!session.user.emailVerified && (
                     <Card>
                         <CardHeader>
                             <CardTitle>
@@ -47,7 +52,7 @@ export function ProfileTab() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <VerifyEmailForm />
+                            <VerifyEmail email={session.user.email} />
                         </CardContent>
                     </Card>
                 )}

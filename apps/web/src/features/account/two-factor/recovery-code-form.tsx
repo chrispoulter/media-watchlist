@@ -1,40 +1,31 @@
-import { useNavigate, useLocation } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { toast } from 'sonner';
 import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { useVerifyRecoveryCode } from '../account-queries';
 
 const recoveryCodeSchema = z.object({
     code: z.string().min(1, 'Recovery code is required'),
 });
 
-type RecoveryCodeFormValues = z.infer<typeof recoveryCodeSchema>;
+export type RecoveryCodeFormValues = z.infer<typeof recoveryCodeSchema>;
 
 interface RecoveryCodeFormProps {
-    onBack?: () => void;
+    loading?: boolean;
+    onSubmit: (values: RecoveryCodeFormValues) => void;
+    onUseAuthenticator: () => void;
 }
 
-export function RecoveryCodeForm({ onBack }: RecoveryCodeFormProps) {
-    const navigate = useNavigate();
-    const location = useLocation();
-
-    const { mutate: verifyRecoveryCode, isPending } = useVerifyRecoveryCode();
-
+export function RecoveryCodeForm({
+    loading,
+    onSubmit,
+    onUseAuthenticator,
+}: RecoveryCodeFormProps) {
     const form = useForm<RecoveryCodeFormValues>({
         resolver: zodResolver(recoveryCodeSchema),
         defaultValues: { code: '' },
     });
-
-    const onSubmit = (values: RecoveryCodeFormValues) =>
-        verifyRecoveryCode(values.code, {
-            onSuccess: () =>
-                navigate(location.state?.from ?? '/', { replace: true }),
-            onError: (err) => toast.error(err.message || 'Invalid code'),
-        });
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -48,10 +39,14 @@ export function RecoveryCodeForm({ onBack }: RecoveryCodeFormProps) {
                     autoComplete="off"
                 />
 
-                <Button type="submit" disabled={isPending}>
-                    {isPending ? 'Verifying...' : 'Verify'}
+                <Button type="submit" disabled={loading}>
+                    {loading ? 'Verifying...' : 'Verify'}
                 </Button>
-                <Button type="button" variant="link" onClick={onBack}>
+                <Button
+                    type="button"
+                    variant="link"
+                    onClick={onUseAuthenticator}
+                >
                     Use Authenticator App Instead
                 </Button>
             </FieldGroup>
