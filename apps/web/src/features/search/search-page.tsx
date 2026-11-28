@@ -14,7 +14,7 @@ import { SearchGrid } from './search-grid';
 
 export function SearchPage() {
     const [searchQuery, setSearchQuery] = useState('');
-    const searchEnabled = searchQuery.trim().length >= 2;
+    const searchEnabled = searchQuery !== '';
 
     const {
         data: results,
